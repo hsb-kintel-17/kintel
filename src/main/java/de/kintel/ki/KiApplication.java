@@ -32,6 +32,9 @@ public class KiApplication implements CommandLineRunner {
 		Scanner s = new Scanner(System.in);
 		while( true ) {
 			final Move bestMove = ki.getBestMove();
+			if(null == bestMove ) {
+				throw new IllegalStateException("No next move found");
+			}
 			ki.makeMove(bestMove);
 			logger.debug(ki.toString());
 			s.nextLine();

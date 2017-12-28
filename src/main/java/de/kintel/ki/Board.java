@@ -157,18 +157,6 @@ public class Board {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("");
-        /*for (int i = 0; i < fields.length; i++) {
-            for (int j = 0; j < fields[0].length; j++) {
-                if( j == 0) {
-                    sb.append((char)((char) i  + 65) + "\t");
-                }
-                if(i == 0) {
-                    sb.append(j + "\t");
-                }
-                sb.append(fields[i][j] + "\t");
-            }
-            sb.append("\n");
-        }*/
 
         String[] letters = {" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
         String[] letters2 = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
@@ -201,7 +189,7 @@ public class Board {
     }
 
     public void move(Move move) {
-        logger.debug("Making move from {}({}) to {}({})", move.from, getCoordinate(move.from), getCoordinate(move.to));
+        logger.debug("Making move from {}({}) to {}({}) for player {}", move.from, getCoordinate(move.from), move.to, getCoordinate(move.to), move.currentPlayer);
         logger.debug("Making move: {}", move);
         List<Field> path = Pathfinder.find(move);
     }

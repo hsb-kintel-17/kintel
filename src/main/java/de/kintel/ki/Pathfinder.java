@@ -26,12 +26,8 @@ public class Pathfinder {
         final Coordinate2D coordFrom = board.getCoordinate(from);
         final Coordinate2D coordTo = board.getCoordinate(to);
 
-        // Rekursions-Endbedingung
-        if( coordFrom.getX() == coordTo.getX() && coordFrom.getY() == coordTo.getY() ) {
-            return path;
-        }
-
         final List<Field> surroundings = getDiagonalSurroundings(board, coordFrom.getX(), coordFrom.getX());
+
         // Map Fields to coords for comparision
         List<Coordinate2D> coords = new LinkedList<>();
         for (Field currentField : surroundings ) {
@@ -42,6 +38,12 @@ public class Pathfinder {
             final Coordinate2D currentCoord2D = board.getCoordinate(currentField);
             coords.add(currentCoord2D);
         }
+
+        // Rekursions-Endbedingung
+        if( ( coordFrom.getX() == coordTo.getX() && coordFrom.getY() == coordTo.getY() ) || coords.isEmpty() ) {
+            return path;
+        }
+
         // Sort by distance
         coords.sort(coordTo.distanceToOrder());
 

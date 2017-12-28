@@ -1,9 +1,7 @@
 package de.kintel.ki.ruleset;
 
 import de.kintel.ki.Move;
-import de.kintel.ki.ruleset.rules.RuleDirection;
-import de.kintel.ki.ruleset.rules.RuleNotForbiddenField;
-import de.kintel.ki.ruleset.rules.RuleNotSameColor;
+import de.kintel.ki.ruleset.rules.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,6 +16,8 @@ public class RulesChecker implements IRulesChecker {
     public RulesChecker() {
         this.rules = new ArrayList<>();
         rules.add( new RuleNotForbiddenField() );
+        rules.add( new RuleDestinationNotOccupied() );
+        rules.add( new NotOwnColorOnPath() );
         rules.add( new RuleNotSameColor() );
         rules.add( new RuleDiagonal() );
         rules.add( new RuleDirection() );

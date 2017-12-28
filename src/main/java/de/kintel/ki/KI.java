@@ -42,7 +42,7 @@ public class KI extends IA<Move> {
     @Override
     public Difficulty getDifficulty() {
         // This is the level minimax will evaluate all moves.
-        return () -> 2;
+        return () -> 1;
     }
 
     /**
@@ -65,7 +65,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public void makeMove(Move move) {
-        logger.debug("TODO: implement move " + move);
+        logger.debug("TODO: implement makeMove " + move);
         board.move(move);
         next();
     }
@@ -111,6 +111,7 @@ public class KI extends IA<Move> {
             }
 
         }
+
         logger.info("{} possible moves for player {}", possibleMoves.size(), currentPlayer);
         return possibleMoves;
     }
