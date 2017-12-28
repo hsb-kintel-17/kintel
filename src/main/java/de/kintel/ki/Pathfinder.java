@@ -15,14 +15,8 @@ public class Pathfinder {
             path.add(from);
         }
 
-        final Optional<Coordinate2D> coordFromOpt = board.getCoordinate(from);
-        final Optional<Coordinate2D> coordToOpt = board.getCoordinate(to);
-        if( !coordFromOpt.isPresent() || !coordToOpt.isPresent() ) {
-            throw new IllegalStateException("Could not find fields on board.");
-        }
-
-        final Coordinate2D coordFrom = coordFromOpt.get();
-        final Coordinate2D coordTo = coordToOpt.get();
+        final Coordinate2D coordFrom = board.getCoordinate(from);
+        final Coordinate2D coordTo = board.getCoordinate(to);
 
         // Rekursions-Endbedingung
         if( coordFrom.getX() == coordTo.getX() && coordFrom.getY() == coordTo.getY() ) {
@@ -37,18 +31,14 @@ public class Pathfinder {
                 // Don't move backwards
                 continue;
             }
-            final Optional<Coordinate2D> coordinateOpt = board.getCoordinate(currentField);
-            if( !coordinateOpt.isPresent() ) {
-                throw new IllegalStateException("Could not find surrounding field on board!");
-            }
-            final Coordinate2D currentCoord2D = coordinateOpt.get();
+            final Coordinate2D currentCoord2D = board.getCoordinate(currentField);
             coords.add(currentCoord2D);
         }
         // Sort by distance
         coords.sort(coordTo.distanceToOrder());
 
         // Shortest distance is at index 0
-        Field closestField = board.getField(coords.get(0)).orElseThrow(IllegalStateException::new);
+        Field closestField = board.getField(coords.get(0));
 
         path.add(closestField);
 
@@ -73,9 +63,9 @@ public class Pathfinder {
             int cy = y + direction[1];
             if(cy >=0 && cy < board.getHeight()) {
                 if(cx >= 0 && cx < board.getWidth()) {
-                    final Optional<Field> field = board.getField(cy, cx);
-                    if( field.isPresent() && !field.get().isForbidden()) {
-                        res.add(field.get());
+                    final Field field = board.getField(cy, cx);
+                    if( !field.isForbidden()) {
+                        res.add(field);
                     }
                 }
             }

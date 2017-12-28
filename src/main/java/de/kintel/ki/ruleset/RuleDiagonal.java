@@ -13,15 +13,8 @@ public class RuleDiagonal implements IRule {
 
     @Override
     public boolean isValidMove(Move move) {
-        Optional<Coordinate2D> coordFromOpt = move.board.getCoordinate(move.from);
-        Optional<Coordinate2D> coordToOpt = move.board.getCoordinate(move.to);
-
-        if( !coordFromOpt.isPresent() || !coordToOpt.isPresent() ) {
-           throw new IllegalStateException("Could not find coordinates for field.");
-        }
-
-        final Coordinate2D coordFrom = coordFromOpt.get();
-        final Coordinate2D coordTo = coordToOpt.get();
+        final Coordinate2D coordFrom = move.board.getCoordinate(move.from);
+        final Coordinate2D coordTo = move.board.getCoordinate(move.to);
 
         int dx = Math.abs(coordFrom.getX() - coordTo.getX());
         int dy = Math.abs(coordFrom.getY() - coordTo.getY());

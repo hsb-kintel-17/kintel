@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Board {
 
@@ -108,28 +107,28 @@ public class Board {
 
         for (int x = 0; x < height; x++) {
             for (int y = 0; y < width; y++) {
-                final Optional<Field> field = getField(x, y);
-                if(field.isPresent() && field.get().getOwner().isPresent() && field.get().getOwner().get().equals( player ) ) {
-                    fieldsCollector.add(field.get());
+                final Field field = getField(x, y);
+                if(field.getOwner().isPresent() && field.getOwner().get().equals( player ) ) {
+                    fieldsCollector.add(field);
                 }
             }
         }
         return fieldsCollector;
     }
 
-    public Optional<Coordinate2D> getCoordinate(Field searchField) {
+    public Coordinate2D getCoordinate(Field searchField) {
         for (int i = 0 ; i < height ; i++){
             for (int j = 0 ; j < width ; j++){
                 Field current = fields[i][j];
                 if( current.equals(searchField) ) {
-                    return Optional.of( new Coordinate2D(i,j) );
+                    return new Coordinate2D(i,j);
                 }
             }
         }
-        return Optional.empty();
+        throw new IllegalArgumentException(String.format("Searched field %s is not on board.", searchField));
     }
 
-    public Optional<Field> getField(int x, int y) {
+    public Field getField(int x, int y) {
         Preconditions.checkArgument( x < height, "Can't access x out of bounds." );
         Preconditions.checkArgument( y < width, "Can't access y out of bounds." );
 
@@ -140,10 +139,10 @@ public class Board {
             throw new IllegalStateException(msg);
         }
 
-        return Optional.of( field );
+        return field;
     }
 
-    public Optional<Field> getField(Coordinate2D coordinate2D) {
+    public Field getField(Coordinate2D coordinate2D) {
         return getField(coordinate2D.getX(), coordinate2D.getY());
     }
 

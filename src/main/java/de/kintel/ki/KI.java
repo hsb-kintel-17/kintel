@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by kintel on 19.12.2017.
@@ -103,8 +102,7 @@ public class KI extends IA<Move> {
         for( Field fieldFrom : fieldsOccupiedBy) {
             for (int i = 0; i < board.getHeight(); i++) {
                 for (int j = 0; j < board.getWidth(); j++) {
-                    Optional<Field> f = board.getField(i, j);
-                    final Field fieldTo = f.orElseThrow(IllegalArgumentException::new);
+                    Field fieldTo = board.getField(i, j);
                     Move move = new Move(board, fieldFrom, fieldTo, currentPlayer);
                     if( rulesChecker.isValidMove( move )) {
                         possibleMoves.add( move );
