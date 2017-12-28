@@ -14,9 +14,9 @@ public class PathfinderTest {
     public void find() {
 
         Field[][] fields = {
-                {new Field(false), new Field(false), new Field(false)},
-                {new Field(false), new Field(false), new Field(false)},
-                {new Field(false), new Field(false), new Field(false)},
+            {new Field(false), new Field(false), new Field(false)},
+            {new Field(false), new Field(false), new Field(false)},
+            {new Field(false), new Field(false), new Field(false)},
         };
 
         final Field srcField = fields[0][0];

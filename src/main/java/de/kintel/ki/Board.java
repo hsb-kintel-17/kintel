@@ -202,6 +202,8 @@ public class Board {
     }
 
     public void move(Move move) {
+        logger.debug("Making move from {}{} to {}{}", move.from, getCoordinate(move.from), getCoordinate(move.to));
+        logger.debug("Making move: {}", move);
         List<Field> path = Pathfinder.find(move);
     }
 }

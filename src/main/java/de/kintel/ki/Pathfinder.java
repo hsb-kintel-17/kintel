@@ -1,8 +1,6 @@
 package de.kintel.ki;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Pathfinder {
 
@@ -12,6 +10,10 @@ public class Pathfinder {
 
     public static List<Field> calcPath(Board board, Field from, Field to, List<Field> path) {
 
+        if(path.isEmpty()) {
+            // The path shall contain all fields from src to destination. This is the easiest way to archive
+            path.add(from);
+        }
 
         final Optional<Coordinate2D> coordFromOpt = board.getCoordinate(from);
         final Optional<Coordinate2D> coordToOpt = board.getCoordinate(to);
@@ -28,34 +30,29 @@ public class Pathfinder {
         }
 
         final List<Field> surroundings = getDiagonalSurroundings(board, coordFrom.getX(), coordFrom.getX());
-        int minX = -1;
-        Field closestField = surroundings.get(0);
-
-        for( Field currentField : surroundings ) {
-            if( path.contains( currentField ) ) {
-                // Do not move backwards
+        // Map Fields to coords for comparision
+        List<Coordinate2D> coords = new LinkedList<>();
+        for (Field currentField : surroundings ) {
+            if(path.contains(currentField)) {
+                // Don't move backwards
                 continue;
             }
-
             final Optional<Coordinate2D> coordinateOpt = board.getCoordinate(currentField);
             if( !coordinateOpt.isPresent() ) {
                 throw new IllegalStateException("Could not find surrounding field on board!");
             }
-
             final Coordinate2D currentCoord2D = coordinateOpt.get();
-            int dx = Math.abs( currentCoord2D.getX() - coordTo.getX() );
-
-            if( -1 == minX ) {
-                minX = dx;
-            } else if ( dx < minX) {
-                minX = dx;
-                closestField = currentField;
-            } else {
-                // The currentField is not closer than the current closest field.
-            }
+            coords.add(currentCoord2D);
         }
+        // Sort by distance
+        coords.sort(coordTo.distanceToOrder());
+
+        // Shortest distance is at index 0
+        Field closestField = board.getField(coords.get(0)).orElseThrow(IllegalStateException::new);
 
         path.add(closestField);
+
+        // move nearer to target and repeat
         return calcPath(board, closestField, to, path);
     }
 

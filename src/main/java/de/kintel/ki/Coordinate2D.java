@@ -16,7 +16,7 @@ public class Coordinate2D {
     }
 
 
-    public class ClosestCoordinateComparator implements Comparator<Coordinate2D> {
+    public class DistanceToOrder implements Comparator<Coordinate2D> {
         @Override
         public int compare(Coordinate2D e1, Coordinate2D e2) {
             int dist1 = distanceSquaredTo(e1);
@@ -25,6 +25,15 @@ public class Coordinate2D {
             else if (dist1 > dist2) return +1;
             else                    return  0;
         }
+    }
+
+    /**
+     * Compares two points by distance to this point.
+     *
+     * @return the comparator
+     */
+    public Comparator<Coordinate2D> distanceToOrder() {
+        return new DistanceToOrder();
     }
 
     private final int x;
