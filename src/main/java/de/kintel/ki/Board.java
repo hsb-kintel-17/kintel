@@ -97,6 +97,12 @@ public class Board {
         fields[4][6].addStein(new Stein(Player.SCHWARZ));
     }
 
+    public Board(int height, int width, Field[][] fields) {
+        this.height = height;
+        this.width = width;
+        this.fields = fields;
+    }
+
     public List<Field> getFieldsOccupiedBy(Player player) {
         final List<Field> fieldsCollector = new ArrayList<>();
 
@@ -189,5 +195,13 @@ public class Board {
         }
 
         return sb.toString();
+    }
+
+    public Field[][] getFields() {
+        return fields;
+    }
+
+    public void move(Move move) {
+        List<Field> path = Pathfinder.find(move);
     }
 }

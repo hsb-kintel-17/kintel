@@ -19,6 +19,7 @@ public class RulesChecker implements IRulesChecker {
         this.rules = new ArrayList<>();
         rules.add( new RuleNotForbiddenField() );
         rules.add( new RuleNotSameColor() );
+        rules.add( new RuleDiagonal() );
         rules.add( new RuleDirection() );
     }
 

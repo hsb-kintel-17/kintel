@@ -33,7 +33,6 @@ public class KiApplication implements CommandLineRunner {
 		while( true ) {
 			final Move bestMove = ki.getBestMove();
 			ki.makeMove(bestMove);
-			ki.next();
 			logger.debug(ki.toString());
 			s.nextLine();
 		}

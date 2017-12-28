@@ -67,6 +67,8 @@ public class KI extends IA<Move> {
     @Override
     public void makeMove(Move move) {
         logger.debug("TODO: implement move " + move);
+        board.move(move);
+        next();
     }
 
     /**
@@ -80,6 +82,7 @@ public class KI extends IA<Move> {
     @Override
     public void unmakeMove(Move move) {
         logger.debug("TODO: implement unmakeMove " + move);
+        previous();
     }
 
     /**
@@ -159,7 +162,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public void previous() {
-
+        currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
     }
 
     @Override

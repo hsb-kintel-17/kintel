@@ -25,6 +25,14 @@ public class Field {
         }
     }
 
+    public Optional<Stein> pollHead() {
+        if (steine.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(steine.pollFirst());
+        }
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
