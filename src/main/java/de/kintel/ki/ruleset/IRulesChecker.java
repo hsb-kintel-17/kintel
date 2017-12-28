@@ -1,6 +1,6 @@
 package de.kintel.ki.ruleset;
 
-import de.kintel.ki.Move;
+import de.kintel.ki.model.Move;
 
 import java.util.List;
 

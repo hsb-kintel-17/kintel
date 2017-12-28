@@ -1,4 +1,4 @@
-package de.kintel.ki;
+package de.kintel.ki.model;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -13,7 +13,7 @@ public class Field {
         this.isForbidden = isForbidden;
     }
 
-    void addStein(Stein s) {
+    public void addStein(Stein s) {
         steine.push(s);
     }
 

@@ -1,4 +1,4 @@
-package de.kintel.ki;
+package de.kintel.ki.model;
 
 /**
  * Created by kintel on 19.12.2017.

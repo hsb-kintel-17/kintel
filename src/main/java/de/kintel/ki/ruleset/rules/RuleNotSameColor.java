@@ -1,6 +1,6 @@
 package de.kintel.ki.ruleset.rules;
 
-import de.kintel.ki.Move;
+import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.IRule;
 
 public class RuleNotSameColor implements IRule {

@@ -1,5 +1,9 @@
-package de.kintel.ki;
+package de.kintel.ki.algorithm;
 
+import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Field;
+import de.kintel.ki.model.Player;
 import de.kintel.ki.ruleset.RulesChecker;
 import fr.pixelprose.minimax4j.Difficulty;
 import fr.pixelprose.minimax4j.IA;
@@ -149,7 +153,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public void next() {
-        currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
+        togglePlayer();
     }
 
     /**
@@ -161,6 +165,10 @@ public class KI extends IA<Move> {
      */
     @Override
     public void previous() {
+        togglePlayer();
+    }
+
+    private void togglePlayer() {
         currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
     }
 
@@ -168,4 +176,5 @@ public class KI extends IA<Move> {
     public String toString() {
         return board.toString();
     }
+
 }

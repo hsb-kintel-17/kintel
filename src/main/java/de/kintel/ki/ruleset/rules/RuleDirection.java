@@ -1,8 +1,8 @@
 package de.kintel.ki.ruleset.rules;
 
-import de.kintel.ki.Move;
-import de.kintel.ki.Rank;
-import de.kintel.ki.Stein;
+import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Rank;
+import de.kintel.ki.model.Stein;
 import de.kintel.ki.ruleset.IRule;
 
 import java.util.Optional;

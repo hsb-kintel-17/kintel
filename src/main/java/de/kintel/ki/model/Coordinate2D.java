@@ -1,4 +1,4 @@
-package de.kintel.ki;
+package de.kintel.ki.model;
 
 import java.util.Comparator;
 

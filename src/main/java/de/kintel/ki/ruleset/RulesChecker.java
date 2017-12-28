@@ -1,6 +1,6 @@
 package de.kintel.ki.ruleset;
 
-import de.kintel.ki.Move;
+import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.rules.*;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ public class RulesChecker implements IRulesChecker {
         this.rules = new ArrayList<>();
         rules.add( new RuleNotForbiddenField() );
         rules.add( new RuleDestinationNotOccupied() );
-        rules.add( new NotOwnColorOnPath() );
+        rules.add( new RuleNotOwnColorOnPath() );
         rules.add( new RuleNotSameColor() );
         rules.add( new RuleDiagonal() );
         rules.add( new RuleDirection() );

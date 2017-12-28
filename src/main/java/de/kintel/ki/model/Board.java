@@ -1,6 +1,7 @@
-package de.kintel.ki;
+package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
+import de.kintel.ki.algorithm.Pathfinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,80 +21,7 @@ public class Board {
         this.height = height;
         this.width = width;
 
-        fields = new Field[height][width];
-
-        // Initialize whole board with forbidden fields
-        for (int i = 0 ; i < height ; i++){
-            for (int j = 0 ; j < width ; j++){
-                fields[i][j] = new Field(true);
-            }
-        }
-
-        // x,y
-        fields[0][0] = new Field(false);
-        fields[0][2] = new Field(false);
-        fields[0][4] = new Field(false);
-        fields[0][6] = new Field(false);
-        fields[0][8] = new Field(false);
-
-        fields[1][1] = new Field(false);
-        fields[1][3] = new Field(false);
-        fields[1][5] = new Field(false);
-        fields[1][7] = new Field(false);
-
-        fields[2][2] = new Field(false);
-        fields[2][4] = new Field(false);
-        fields[2][6] = new Field(false);
-
-        fields[3][1] = new Field(false);
-        fields[3][3] = new Field(false);
-        fields[3][5] = new Field(false);
-        fields[3][7] = new Field(false);
-
-        fields[4][2] = new Field(false);
-        fields[4][4] = new Field(false);
-        fields[4][6] = new Field(false);
-
-        fields[5][1] = new Field(false);
-        fields[5][3] = new Field(false);
-        fields[5][5] = new Field(false);
-        fields[5][7] = new Field(false);
-
-        fields[6][0] = new Field(false);
-        fields[6][2] = new Field(false);
-        fields[6][4] = new Field(false);
-        fields[6][6] = new Field(false);
-        fields[6][8] = new Field(false);
-
-        fields[0][0].addStein(new Stein(Player.WEISS));
-        fields[0][2].addStein(new Stein(Player.WEISS));
-        fields[0][4].addStein(new Stein(Player.WEISS));
-        fields[0][6].addStein(new Stein(Player.WEISS));
-        fields[0][8].addStein(new Stein(Player.WEISS));
-
-        fields[1][1].addStein(new Stein(Player.WEISS));
-        fields[1][3].addStein(new Stein(Player.WEISS));
-        fields[1][5].addStein(new Stein(Player.WEISS));
-        fields[1][7].addStein(new Stein(Player.WEISS));
-
-        fields[2][2].addStein(new Stein(Player.WEISS));
-        fields[2][4].addStein(new Stein(Player.WEISS));
-        fields[2][6].addStein(new Stein(Player.WEISS));
-
-        fields[6][0].addStein(new Stein(Player.SCHWARZ));
-        fields[6][2].addStein(new Stein(Player.SCHWARZ));
-        fields[6][4].addStein(new Stein(Player.SCHWARZ));
-        fields[6][6].addStein(new Stein(Player.SCHWARZ));
-        fields[6][8].addStein(new Stein(Player.SCHWARZ));
-
-        fields[5][1].addStein(new Stein(Player.SCHWARZ));
-        fields[5][3].addStein(new Stein(Player.SCHWARZ));
-        fields[5][5].addStein(new Stein(Player.SCHWARZ));
-        fields[5][7].addStein(new Stein(Player.SCHWARZ));
-
-        fields[4][2].addStein(new Stein(Player.SCHWARZ));
-        fields[4][4].addStein(new Stein(Player.SCHWARZ));
-        fields[4][6].addStein(new Stein(Player.SCHWARZ));
+        fields = GridFactory.getLaskaInitGrid();
     }
 
     public Board(int height, int width, Field[][] fields) {
@@ -117,8 +45,8 @@ public class Board {
     }
 
     public Coordinate2D getCoordinate(Field searchField) {
-        for (int i = 0 ; i < height ; i++){
-            for (int j = 0 ; j < width ; j++){
+        for (int i = 0 ; i < height; i++){
+            for (int j = 0 ; j < width; j++){
                 Field current = fields[i][j];
                 if( current.equals(searchField) ) {
                     return new Coordinate2D(i,j);

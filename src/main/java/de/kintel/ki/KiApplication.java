@@ -1,5 +1,7 @@
 package de.kintel.ki;
 
+import de.kintel.ki.algorithm.KI;
+import de.kintel.ki.model.Move;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,8 @@
 package de.kintel.ki;
 
+import de.kintel.ki.model.Field;
+import de.kintel.ki.model.Player;
+import de.kintel.ki.model.Stein;
 import org.junit.Before;
 import org.junit.Test;
 

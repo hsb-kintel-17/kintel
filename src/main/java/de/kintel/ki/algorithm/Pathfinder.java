@@ -1,5 +1,9 @@
-package de.kintel.ki;
+package de.kintel.ki.algorithm;
 
+import de.kintel.ki.model.Coordinate2D;
+import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

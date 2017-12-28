@@ -1,7 +1,7 @@
 package de.kintel.ki.ruleset.rules;
 
-import de.kintel.ki.Coordinate2D;
-import de.kintel.ki.Move;
+import de.kintel.ki.model.Coordinate2D;
+import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.IRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
