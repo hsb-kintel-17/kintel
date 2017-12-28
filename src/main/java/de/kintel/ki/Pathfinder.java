@@ -1,14 +1,22 @@
 package de.kintel.ki;
 
-import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Pathfinder {
+
+    static Logger logger = LoggerFactory.getLogger(Pathfinder.class);
 
     public static List<Field> find(Move move) {
         return calcPath(move.board, move.from, move.to, new ArrayList<>());
     }
 
     public static List<Field> calcPath(Board board, Field from, Field to, List<Field> path) {
+        logger.debug("Try to find path from {}({}) to {}({})", from, board.getCoordinate(from), board.getCoordinate(to));
 
         if(path.isEmpty()) {
             // The path shall contain all fields from src to destination. This is the easiest way to archive
