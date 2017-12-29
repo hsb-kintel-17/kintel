@@ -30,7 +30,7 @@ public class Pathfinder {
         final Coordinate2D coordFrom = board.getCoordinate(from);
         final Coordinate2D coordTo = board.getCoordinate(to);
 
-        final List<Field> surroundings = getDiagonalSurroundings(board, coordFrom.getX(), coordFrom.getX());
+        final List<Field> surroundings = getDiagonalSurroundings(board, coordFrom);
 
         // Map Fields to coords for comparision
         List<Coordinate2D> coords = new LinkedList<>();
@@ -64,20 +64,20 @@ public class Pathfinder {
     /**
      * Get surrounding fields on the diagonals.
      * @param board
-     * @param x
-     * @param y
-     * @return the surrounding fields
+     * @param coordFrom coord to find surroundings of
+     * @return the surrounding fields in diagonal
      */
-    private static List<Field> getDiagonalSurroundings(Board board, int x, int y){
+    private static List<Field> getDiagonalSurroundings(Board board, Coordinate2D coordFrom){
         int[][] directions = new int[][]{{-1,-1}, {-1,1}, {1,1},  {1,-1}};
-
+        int x = coordFrom.getX();
+        int y = coordFrom.getY();
         List<Field> res = new ArrayList<>();
         for (int[] direction : directions) {
             int cx = x + direction[0];
             int cy = y + direction[1];
-            if(cy >=0 && cy < board.getHeight()) {
-                if(cx >= 0 && cx < board.getWidth()) {
-                    final Field field = board.getField(cy, cx);
+            if(cx >=0 && cx < board.getHeight()) {
+                if(cy >= 0 && cy < board.getWidth()) {
+                    final Field field = board.getField(cx, cy);
                     if( !field.isForbidden()) {
                         res.add(field);
                     }
