@@ -1,24 +1,22 @@
 package de.kintel.ki.algorithm;
 
-import de.kintel.ki.model.Move;
-import de.kintel.ki.model.Board;
-import de.kintel.ki.model.Field;
-import de.kintel.ki.model.Player;
+import de.kintel.ki.model.*;
 import de.kintel.ki.ruleset.RulesChecker;
 import fr.pixelprose.minimax4j.Difficulty;
 import fr.pixelprose.minimax4j.IA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by kintel on 19.12.2017.
  */
 @Component
+@Scope("singleton")
 public class KI extends IA<Move> {
 
     Logger logger = LoggerFactory.getLogger(KI.class);
@@ -26,6 +24,8 @@ public class KI extends IA<Move> {
     private final RulesChecker rulesChecker;
     private Board board;
     private Player currentPlayer;
+
+    Deque<Board> history = new LinkedList<>();
 
     /**
      * Creates a new IA using the {@link Algorithm#NEGAMAX} algorithm<br/>
@@ -46,7 +46,7 @@ public class KI extends IA<Move> {
     @Override
     public Difficulty getDifficulty() {
         // This is the level minimax will evaluate all moves.
-        return () -> 1;
+        return () -> 2;
     }
 
     /**
@@ -70,6 +70,7 @@ public class KI extends IA<Move> {
     @Override
     public void makeMove(Move move) {
         logger.debug("TODO: implement makeMove " + move);
+        history.push(board);
         board.move(move);
         next();
     }
@@ -85,6 +86,7 @@ public class KI extends IA<Move> {
     @Override
     public void unmakeMove(Move move) {
         logger.debug("TODO: implement unmakeMove " + move);
+        board = history.pop();
         previous();
     }
 
@@ -103,7 +105,7 @@ public class KI extends IA<Move> {
         final List<Move> possibleMoves = new ArrayList<>();
         final List<Field> fieldsOccupiedBy = board.getFieldsOccupiedBy(currentPlayer);
 
-        for( Field fieldFrom : fieldsOccupiedBy) {
+        for( Field fieldFrom : fieldsOccupiedBy ) {
             for (int i = 0; i < board.getHeight(); i++) {
                 for (int j = 0; j < board.getWidth(); j++) {
                     Field fieldTo = board.getField(i, j);
@@ -113,10 +115,10 @@ public class KI extends IA<Move> {
                     }
                 }
             }
-
         }
 
         logger.info("{} possible moves for player {}", possibleMoves.size(), currentPlayer);
+        logger.info("possible moves: {}", possibleMoves);
         return possibleMoves;
     }
 

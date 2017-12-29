@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Scanner;
 
 @SpringBootApplication
+@ComponentScan({"de.kintel"})
 public class KiApplication implements CommandLineRunner {
 
 	@Autowired
@@ -31,15 +33,20 @@ public class KiApplication implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-		Scanner s = new Scanner(System.in);
-		while( true ) {
-			final Move bestMove = ki.getBestMove();
-			if(null == bestMove ) {
-				throw new IllegalStateException("No next move found");
-			}
-			ki.makeMove(bestMove);
+
+		if (args.length > 0 && args[0].equals("run")) {
 			logger.debug(ki.toString());
-			s.nextLine();
+			Scanner s = new Scanner(System.in);
+			while( true ) {
+				final Move bestMove = ki.getBestMove();
+				if(null == bestMove ) {
+					logger.debug(ki.toString());
+					throw new IllegalStateException("No next move found");
+				}
+				ki.makeMove(bestMove);
+				logger.debug(ki.toString());
+				s.nextLine();
+			}
 		}
 	}
 }

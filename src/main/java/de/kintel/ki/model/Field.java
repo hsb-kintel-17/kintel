@@ -37,7 +37,7 @@ public class Field {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         if( isForbidden ) {
-            sb.append( "X");
+            sb.append( String.valueOf('\u25A8'));
         } else {
             steine.forEach( s -> sb.append(s) );
         }

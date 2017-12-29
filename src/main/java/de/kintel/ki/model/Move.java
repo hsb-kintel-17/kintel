@@ -26,8 +26,26 @@ public class Move implements fr.pixelprose.minimax4j.Move {
         Coordinate2D cooFrom = board.getCoordinate(from);
         Coordinate2D cooTo = board.getCoordinate(to);
 
-        boolean isForward = cooFrom.getY() < cooTo.getY();
+
+        boolean isForward = currentPlayer.equals(Player.SCHWARZ) ? cooFrom.getX() < cooTo.getX() : cooFrom.getX() > cooTo.getX();
 
         return isForward;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Move{");
+        sb.append(from)
+          .append("(")
+        .append(board.getCoordinate(from))
+        .append(")")
+        .append(" to ")
+        .append(to)
+          .append("(")
+          .append(board.getCoordinate(to))
+          .append(")")
+          .append(" for player ")
+          .append(currentPlayer);
+        return sb.toString();
     }
 }

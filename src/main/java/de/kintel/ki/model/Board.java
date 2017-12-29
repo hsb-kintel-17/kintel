@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class Board {
@@ -118,7 +119,10 @@ public class Board {
 
     public void move(Move move) {
         logger.debug("Making move from {}({}) to {}({}) for player {}", move.from, getCoordinate(move.from), move.to, getCoordinate(move.to), move.currentPlayer);
-        logger.debug("Making move: {}", move);
-        List<Field> path = Pathfinder.find(move);
+
+        Deque<Field> path = Pathfinder.find(move);
+        // Remove src and target field because they are irrelevant
+        path.remove(move.from);
+        path.remove(move.to);
     }
 }

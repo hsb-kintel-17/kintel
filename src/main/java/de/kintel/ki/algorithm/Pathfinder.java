@@ -8,18 +8,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Finds path on grid.
+ */
 public class Pathfinder {
 
     static Logger logger = LoggerFactory.getLogger(Pathfinder.class);
 
-    public static List<Field> find(Move move) {
-        return calcPath(move.board, move.from, move.to, new ArrayList<>());
+    public static Deque<Field> find(Move move) {
+        return calcPath(move.board, move.from, move.to, new LinkedList<>());
     }
 
-    public static List<Field> calcPath(Board board, Field from, Field to, List<Field> path) {
+    public static Deque<Field> calcPath(Board board, Field from, Field to, Deque<Field> path) {
         logger.debug("Try to find path from {}({}) to {}({})", from, board.getCoordinate(from), board.getCoordinate(to));
 
         if(path.isEmpty()) {

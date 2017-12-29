@@ -2,5 +2,6 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="de.kintel" level="DEBUG"/>
-    <logger name="de.kintel.ki.ruleset.rules" level="DEBUG"/>
+    <logger name="de.kintel.ki.ruleset.rules" level="INFO"/>
+    <logger name="de.kintel.ki.algorithm" level="ERROR"/>
 </configuration>
