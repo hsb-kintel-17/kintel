@@ -41,8 +41,9 @@ public class KiApplication implements CommandLineRunner {
 				final Move bestMove = ki.getBestMove();
 				if(null == bestMove ) {
 					logger.debug(ki.toString());
-					throw new IllegalStateException("No next move found");
+					throw new IllegalStateException("No best move found");
 				}
+				logger.debug("Found best move to execute now: {}", bestMove);
 				ki.makeMove(bestMove);
 				logger.debug(ki.toString());
 				s.nextLine();
