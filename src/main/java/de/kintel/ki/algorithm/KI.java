@@ -1,6 +1,9 @@
 package de.kintel.ki.algorithm;
 
-import de.kintel.ki.model.*;
+import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Field;
+import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Player;
 import de.kintel.ki.ruleset.RulesChecker;
 import fr.pixelprose.minimax4j.Difficulty;
 import fr.pixelprose.minimax4j.IA;
@@ -10,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by kintel on 19.12.2017.
@@ -22,6 +28,7 @@ public class KI extends IA<Move> {
     Logger logger = LoggerFactory.getLogger(KI.class);
 
     private final RulesChecker rulesChecker;
+    private Weighting weighting;
     private Board board;
     private Player currentPlayer;
 
@@ -32,8 +39,9 @@ public class KI extends IA<Move> {
      * {@link Algorithm#NEGASCOUT} performs slowly on several tests at the moment...
      */
     @Autowired
-    public KI(RulesChecker rulesChecker) {
+    public KI(RulesChecker rulesChecker, Weighting weighting) {
         this.rulesChecker = rulesChecker;
+        this.weighting = weighting;
         this.board = new Board(7, 9);
         this.currentPlayer = Player.SCHWARZ;
     }
@@ -131,7 +139,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public double evaluate() {
-        return 0;
+        return weighting.evaluate(board);
     }
 
     /**
@@ -143,7 +151,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public double maxEvaluateValue() {
-        return 0;
+        return weighting.maxEvaluateValue();
     }
 
     /**

@@ -19,14 +19,7 @@ import static org.junit.Assert.assertThat;
 public class KITest {
 
     @Autowired
-    private RulesChecker rulesChecker;
-
     private KI ki;
-
-    @Before
-    public void setUp() {
-        this.ki = new KI(rulesChecker);
-    }
 
     @Test
     public void getPossibleMoves() {
