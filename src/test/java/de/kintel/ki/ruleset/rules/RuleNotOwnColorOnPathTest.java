@@ -41,7 +41,7 @@ public class RuleNotOwnColorOnPathTest {
         srcField.addStein(new Stein(Player.WEISS));
         fields[1][1].addStein(new Stein(Player.WEISS));
 
-        final Move move = new Move(board, srcField, targetField, Player.WEISS);
+        final Move move = new UMLMove(board, srcField, targetField, Player.WEISS);
 
         final boolean isValidMoveActual = ruleNotOwnColorOnPath.isValidMove(move);
 

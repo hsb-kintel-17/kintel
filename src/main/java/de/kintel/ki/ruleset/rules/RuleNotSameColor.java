@@ -7,7 +7,8 @@ public class RuleNotSameColor implements IRule {
 
     @Override
     public boolean isValidMove(Move move) {
-        return !move.from.getOwner().equals(move.currentPlayer);
+        return !move.getSourceField()
+                    .getOwner().equals(move.getCurrentPlayer());
     }
 
 }

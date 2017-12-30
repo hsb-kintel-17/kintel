@@ -1,12 +1,11 @@
 package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
-import de.kintel.ki.algorithm.PathClassifier;
-import de.kintel.ki.algorithm.PathFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
 
@@ -113,36 +112,7 @@ public class Board {
         return fields;
     }
 
-    public void move(Move move) {
-        final Coordinate2D coordFrom = getCoordinate(move.from);
-        final Coordinate2D coordTo = getCoordinate(move.to);
-        final Field fieldFrom = getField(coordFrom);
-        final Field fieldTo = getField(coordTo);
-
-        logger.debug("Making move from {}({}) to {}({}) for player {}", move.from, coordFrom, move.to, coordTo, move.currentPlayer);
-
-        ArrayDeque<Field> path = PathFinder.find(move);
-        final PathClassifier.MoveType classify = PathClassifier.classify(path);
-
-        if( classify.equals(PathClassifier.MoveType.MOVE)) {
-            fieldTo.getSteine().addAll(getField(coordFrom).getSteine());
-            fieldFrom.getSteine().clear();
-        } else if (classify.equals(PathClassifier.MoveType.CAPTURE)) {
-            final Optional<Field> opponentOpt = path.stream()
-                                                    // find first field of opposite player
-                                                    .filter(field -> field.getOwner()
-                                                                          .isPresent() && !field.getOwner()
-                                                                                                .get()
-                                                                                                .equals(move.currentPlayer))
-                                                    .findFirst();
-            if( !opponentOpt.isPresent() ) {
-                throw new IllegalStateException("No opponent field in path.");
-            }
-
-            final Field fieldOpponent = opponentOpt.get();
-            fieldTo.getSteine().add( fieldOpponent.getSteine().getFirst() );
-            fieldTo.getSteine().addAll(fieldFrom.getSteine());
-            fieldFrom.getSteine().clear();
-        }
+    public void setFields(Field[][] fields) {
+        this.fields = fields;
     }
 }

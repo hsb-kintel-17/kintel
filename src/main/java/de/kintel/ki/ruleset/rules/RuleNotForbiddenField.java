@@ -6,6 +6,7 @@ import de.kintel.ki.ruleset.IRule;
 public class RuleNotForbiddenField implements IRule {
     @Override
     public boolean isValidMove(Move move) {
-        return !move.to.isForbidden();
+        return !move.getTargetField()
+                    .isForbidden();
     }
 }

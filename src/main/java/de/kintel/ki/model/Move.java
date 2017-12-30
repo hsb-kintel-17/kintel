@@ -1,51 +1,20 @@
 package de.kintel.ki.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.kintel.ki.algorithm.PathClassifier;
 
-/**
- * Created by kintel on 19.12.2017.
- */
-public class Move implements fr.pixelprose.minimax4j.Move {
+import java.util.ArrayDeque;
+import java.util.Optional;
 
-    Logger logger = LoggerFactory.getLogger(Move.class);
+public interface Move extends fr.pixelprose.minimax4j.Move {
+    Board getBoard();
+    Field getSourceField();
+    Field getTargetField();
+    Player getCurrentPlayer();
+    boolean isForward();
 
-    public Board board;
-    public Field from;
-    public Field to;
-    public Player currentPlayer;
+    ArrayDeque<Field> getForwardPath();
 
-    public Move(Board board, Field from, Field to, Player currentPlayer) {
-        this.board = board;
-        this.from = from;
-        this.to = to;
-        this.currentPlayer = currentPlayer;
-    }
+    PathClassifier.MoveType getFordwardClassification();
 
-    public boolean isForward() {
-        Coordinate2D cooFrom = board.getCoordinate(from);
-        Coordinate2D cooTo = board.getCoordinate(to);
-
-
-        boolean isForward = currentPlayer.equals(Player.SCHWARZ) ? cooFrom.getX() < cooTo.getX() : cooFrom.getX() > cooTo.getX();
-
-        return isForward;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Move{");
-        sb.append(from)
-          .append("(")
-        .append(board.getCoordinate(from))
-        .append(")")
-        .append(" to ")
-        .append(to)
-          .append("(")
-          .append(board.getCoordinate(to))
-          .append(")")
-          .append(" for player ")
-          .append(currentPlayer);
-        return sb.toString();
-    }
+    Optional<Field> getOpponentOpt();
 }

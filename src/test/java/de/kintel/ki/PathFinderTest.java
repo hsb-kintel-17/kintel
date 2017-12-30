@@ -34,7 +34,7 @@ public class PathFinderTest {
 
         srcField.addStein(new Stein(Player.SCHWARZ));
 
-        final Move move = new Move(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
 
         final ArrayDeque<Field> actualPath = PathFinder.find(move);
 
@@ -65,7 +65,7 @@ public class PathFinderTest {
 
         srcField.addStein(new Stein(Player.SCHWARZ));
 
-        final Move move = new Move(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
 
         final Deque<Field> actualPath = PathFinder.find(move);
 
@@ -84,7 +84,7 @@ public class PathFinderTest {
 
         assertThat( srcField.getOwner().get(), is(Player.WEISS));
 
-        final Move move = new Move(board, srcField, targetField, Player.WEISS);
+        final Move move = new UMLMove(board, srcField, targetField, Player.WEISS);
 
         final Deque<Field> actualPath = PathFinder.find(move);
 
@@ -103,7 +103,7 @@ public class PathFinderTest {
 
         assertThat( srcField.getOwner().get(), is(Player.SCHWARZ));
 
-        final Move move = new Move(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
 
         final Deque<Field> actualPath = PathFinder.find(move);
 

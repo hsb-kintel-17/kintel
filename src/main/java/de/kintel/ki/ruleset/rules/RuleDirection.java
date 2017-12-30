@@ -11,7 +11,8 @@ public class RuleDirection implements IRule {
 
     @Override
     public boolean isValidMove(Move move) {
-        final Optional<Stein> steinOpt = move.from.peekHead();
+        final Optional<Stein> steinOpt = move.getSourceField()
+                                             .peekHead();
         if( steinOpt.isPresent() ) {
             Rank rank = steinOpt.get().getRank();
             //TODO: distinguish rank

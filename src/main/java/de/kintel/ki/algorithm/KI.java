@@ -1,9 +1,6 @@
 package de.kintel.ki.algorithm;
 
-import de.kintel.ki.model.Board;
-import de.kintel.ki.model.Field;
-import de.kintel.ki.model.Move;
-import de.kintel.ki.model.Player;
+import de.kintel.ki.model.*;
 import de.kintel.ki.ruleset.RulesChecker;
 import fr.pixelprose.minimax4j.Difficulty;
 import fr.pixelprose.minimax4j.IA;
@@ -27,6 +24,7 @@ public class KI extends IA<Move> {
     Logger logger = LoggerFactory.getLogger(KI.class);
 
     private final RulesChecker rulesChecker;
+    private final MoveMaker moveMaker;
     private Weighting weighting;
     private Board board;
     private Player currentPlayer;
@@ -38,8 +36,9 @@ public class KI extends IA<Move> {
      * {@link Algorithm#NEGASCOUT} performs slowly on several tests at the moment...
      */
     @Autowired
-    public KI(RulesChecker rulesChecker, Weighting weighting) {
+    public KI(RulesChecker rulesChecker, MoveMaker moveMaker, Weighting weighting) {
         this.rulesChecker = rulesChecker;
+        this.moveMaker = moveMaker;
         this.weighting = weighting;
         this.board = new Board(7, 9);
         this.currentPlayer = Player.SCHWARZ;
@@ -77,8 +76,7 @@ public class KI extends IA<Move> {
     @Override
     public void makeMove(Move move) {
         logger.debug("TODO: implement makeMove " + move);
-        history.push(board);
-        board.move(move);
+        moveMaker.makeMove(move);
         next();
     }
 
@@ -93,7 +91,7 @@ public class KI extends IA<Move> {
     @Override
     public void unmakeMove(Move move) {
         logger.debug("TODO: implement unmakeMove " + move);
-        board = history.pop();
+        moveMaker.undoMove(move);
         previous();
     }
 
@@ -116,7 +114,7 @@ public class KI extends IA<Move> {
             for (int i = 0; i < board.getHeight(); i++) {
                 for (int j = 0; j < board.getWidth(); j++) {
                     Field fieldTo = board.getField(i, j);
-                    Move move = new Move(board, fieldFrom, fieldTo, currentPlayer);
+                    Move move = new UMLMove(board, fieldFrom, fieldTo, currentPlayer);
                     if( rulesChecker.isValidMove( move )) {
                         possibleMoves.add( move );
                     }
@@ -186,4 +184,7 @@ public class KI extends IA<Move> {
         return board.toString();
     }
 
+    public Board getBoard() {
+        return board;
+    }
 }

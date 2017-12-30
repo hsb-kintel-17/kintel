@@ -17,7 +17,7 @@ public class PathFinder {
     static Logger logger = LoggerFactory.getLogger(PathFinder.class);
 
     public static ArrayDeque<Field> find(Move move) {
-        return calcPath(move.board, move.from, move.to, new ArrayDeque<>());
+        return calcPath(move.getBoard(), move.getSourceField(), move.getTargetField(), new ArrayDeque<>());
     }
 
     public static ArrayDeque<Field> calcPath(Board board, Field from, Field to, ArrayDeque<Field> path) {

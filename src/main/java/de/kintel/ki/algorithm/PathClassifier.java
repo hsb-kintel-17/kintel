@@ -12,13 +12,14 @@ public class PathClassifier {
 
     public static MoveType classify(final ArrayDeque<Field> pathOriginal) {
         ArrayDeque<Field> path = pathOriginal.clone();
-        // Remove src and target field because they are irrelevant
-        path.removeFirst();
-        path.removeLast();
+        if( path.size() >= 2 ) {
+            // Remove src and target field because they are irrelevant
+            path.removeFirst();
+            path.removeLast();
+        }
 
         // Look at head of each field. If all fields are empty on the path then it must be a simple move
-        final boolean isSimpleMove = path.stream()
-                                         .allMatch(Field::isEmpty);
+        final boolean isSimpleMove = path.stream().allMatch(Field::isEmpty);
 
         return isSimpleMove ? MoveType.MOVE : MoveType.CAPTURE;
     }

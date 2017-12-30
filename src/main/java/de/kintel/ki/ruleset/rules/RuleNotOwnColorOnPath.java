@@ -23,6 +23,6 @@ public class RuleNotOwnColorOnPath implements IRule {
                    .map(Field::getOwner)
                    .filter(Optional::isPresent)
                    .map(Optional::get)
-                   .noneMatch(p -> p.equals(move.currentPlayer));
+                   .noneMatch(p -> p.equals(move.getCurrentPlayer()));
     }
 }
