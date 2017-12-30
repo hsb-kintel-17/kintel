@@ -1,10 +1,10 @@
 package de.kintel.ki.ruleset.rules;
 
-import de.kintel.ki.algorithm.Pathfinder;
+import de.kintel.ki.algorithm.PathFinder;
 import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Move;
-import de.kintel.ki.model.Stein;
 import de.kintel.ki.ruleset.IRule;
+import org.springframework.stereotype.Component;
 
 import java.util.Deque;
 import java.util.Optional;
@@ -12,17 +12,17 @@ import java.util.Optional;
 /**
  * There must be not the own color on the path.
  */
+@Component
 public class RuleNotOwnColorOnPath implements IRule {
     @Override
     public boolean isValidMove(Move move) {
-        Deque<Field> path = Pathfinder.find(move);
+        Deque<Field> path = PathFinder.find(move);
         path.removeFirst();
         path.removeLast();
         return path.stream()
-                   .map(Field::peekHead)
+                   .map(Field::getOwner)
                    .filter(Optional::isPresent)
                    .map(Optional::get)
-                   .map(Stein::getOwner)
-                   .noneMatch(f -> f.equals(move.currentPlayer));
+                   .noneMatch(p -> p.equals(move.currentPlayer));
     }
 }

@@ -52,6 +52,18 @@ public class Field {
         }
     }
 
+    public Deque<Stein> getSteine() {
+        return steine;
+    }
+
+    public void setSteine(Deque<Stein> steine) {
+        this.steine = steine;
+    }
+
+    public boolean isEmpty() {
+        return steine.isEmpty();
+    }
+
     public boolean isForbidden() {
         return isForbidden;
     }

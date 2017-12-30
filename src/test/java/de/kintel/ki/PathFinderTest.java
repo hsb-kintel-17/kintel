@@ -1,17 +1,17 @@
 package de.kintel.ki;
 
-import com.google.common.collect.Lists;
-import de.kintel.ki.algorithm.Pathfinder;
+import de.kintel.ki.algorithm.PathFinder;
 import de.kintel.ki.model.*;
 import org.junit.Test;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class PathfinderTest {
+public class PathFinderTest {
 
     @Test
     public void findSimple() {
@@ -36,10 +36,9 @@ public class PathfinderTest {
 
         final Move move = new Move(board, srcField, targetField, Player.SCHWARZ);
 
-        final Deque<Field> actualPath = Pathfinder.find(move);
-        final List<Field> expectedPath = Lists.newArrayList( srcField, fields[1][1], targetField);
+        final ArrayDeque<Field> actualPath = PathFinder.find(move);
 
-        assertThat(actualPath, is(expectedPath));
+        assertThat(actualPath, hasItems(srcField, fields[1][1], targetField));
 
     }
 
@@ -68,10 +67,9 @@ public class PathfinderTest {
 
         final Move move = new Move(board, srcField, targetField, Player.SCHWARZ);
 
-        final Deque<Field> actualPath = Pathfinder.find(move);
-        final List<Field> expectedPath = Lists.newArrayList( srcField, fields[2][2], targetField);
+        final Deque<Field> actualPath = PathFinder.find(move);
 
-        assertThat(actualPath, is(expectedPath));
+        assertThat(actualPath, hasItems(srcField, fields[2][2], targetField));
     }
 
     @Test
@@ -88,10 +86,9 @@ public class PathfinderTest {
 
         final Move move = new Move(board, srcField, targetField, Player.WEISS);
 
-        final Deque<Field> actualPath = Pathfinder.find(move);
-        final List<Field> expectedPath = Lists.newArrayList( srcField, targetField);
+        final Deque<Field> actualPath = PathFinder.find(move);
 
-        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, is(expectedPath));
+        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, hasItems(srcField, targetField));
     }
 
     @Test
@@ -108,9 +105,8 @@ public class PathfinderTest {
 
         final Move move = new Move(board, srcField, targetField, Player.SCHWARZ);
 
-        final Deque<Field> actualPath = Pathfinder.find(move);
-        final List<Field> expectedPath = Lists.newArrayList( srcField, targetField);
+        final Deque<Field> actualPath = PathFinder.find(move);
 
-        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, is(expectedPath));
+        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, hasItems(srcField, targetField));
     }
 }

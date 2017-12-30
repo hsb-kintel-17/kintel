@@ -1,13 +1,12 @@
 package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
-import de.kintel.ki.algorithm.Pathfinder;
+import de.kintel.ki.algorithm.PathClassifier;
+import de.kintel.ki.algorithm.PathFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class Board {
 
@@ -19,10 +18,7 @@ public class Board {
     private Field[][] fields;
 
     public Board(int height, int width) {
-        this.height = height;
-        this.width = width;
-
-        fields = GridFactory.getLaskaInitGrid();
+        this(height, width, GridFactory.getLaskaInitGrid());
     }
 
     public Board(int height, int width, Field[][] fields) {
@@ -118,11 +114,35 @@ public class Board {
     }
 
     public void move(Move move) {
-        logger.debug("Making move from {}({}) to {}({}) for player {}", move.from, getCoordinate(move.from), move.to, getCoordinate(move.to), move.currentPlayer);
+        final Coordinate2D coordFrom = getCoordinate(move.from);
+        final Coordinate2D coordTo = getCoordinate(move.to);
+        final Field fieldFrom = getField(coordFrom);
+        final Field fieldTo = getField(coordTo);
 
-        Deque<Field> path = Pathfinder.find(move);
-        // Remove src and target field because they are irrelevant
-        path.remove(move.from);
-        path.remove(move.to);
+        logger.debug("Making move from {}({}) to {}({}) for player {}", move.from, coordFrom, move.to, coordTo, move.currentPlayer);
+
+        ArrayDeque<Field> path = PathFinder.find(move);
+        final PathClassifier.MoveType classify = PathClassifier.classify(path);
+
+        if( classify.equals(PathClassifier.MoveType.MOVE)) {
+            fieldTo.getSteine().addAll(getField(coordFrom).getSteine());
+            fieldFrom.getSteine().clear();
+        } else if (classify.equals(PathClassifier.MoveType.CAPTURE)) {
+            final Optional<Field> opponentOpt = path.stream()
+                                                    // find first field of opposite player
+                                                    .filter(field -> field.getOwner()
+                                                                          .isPresent() && !field.getOwner()
+                                                                                                .get()
+                                                                                                .equals(move.currentPlayer))
+                                                    .findFirst();
+            if( !opponentOpt.isPresent() ) {
+                throw new IllegalStateException("No opponent field in path.");
+            }
+
+            final Field fieldOpponent = opponentOpt.get();
+            fieldTo.getSteine().add( fieldOpponent.getSteine().getFirst() );
+            fieldTo.getSteine().addAll(fieldFrom.getSteine());
+            fieldFrom.getSteine().clear();
+        }
     }
 }

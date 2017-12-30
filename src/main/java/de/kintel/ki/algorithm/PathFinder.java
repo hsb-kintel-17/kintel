@@ -7,23 +7,20 @@ import de.kintel.ki.model.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Finds path on grid.
  */
-public class Pathfinder {
+public class PathFinder {
 
-    static Logger logger = LoggerFactory.getLogger(Pathfinder.class);
+    static Logger logger = LoggerFactory.getLogger(PathFinder.class);
 
-    public static Deque<Field> find(Move move) {
-        return calcPath(move.board, move.from, move.to, new LinkedList<>());
+    public static ArrayDeque<Field> find(Move move) {
+        return calcPath(move.board, move.from, move.to, new ArrayDeque<>());
     }
 
-    public static Deque<Field> calcPath(Board board, Field from, Field to, Deque<Field> path) {
+    public static ArrayDeque<Field> calcPath(Board board, Field from, Field to, ArrayDeque<Field> path) {
         logger.debug("Try to find path from {}({}) to {}({})", from, board.getCoordinate(from), board.getCoordinate(to));
 
         if(path.isEmpty()) {

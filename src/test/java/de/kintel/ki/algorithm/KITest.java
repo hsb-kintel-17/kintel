@@ -1,8 +1,6 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Move;
-import de.kintel.ki.ruleset.RulesChecker;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

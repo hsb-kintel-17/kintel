@@ -30,4 +30,11 @@ public class FieldTest {
         field.addStein( new Stein(Player.WEISS));
         assertThat( field.getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
     }
+
+    @Test
+    public void isEmpty() {
+        assertThat( field.isEmpty(), is(true));
+        field.addStein( new Stein(Player.WEISS));
+        assertThat( field.isEmpty(), is(false));
+    }
 }
