@@ -88,24 +88,24 @@ public class Board {
         for (int i = 0 ; i <= fields.length ; i++){
             for (int j = 0 ; j <= fields[0].length ; j++){
                 if (i == 0) {
-                    System.out.print(letters2[j]);
+                    sb.append(letters2[j]);
                 } else if (j == 0){
-                    System.out.print(letters[i]);
+                    sb.append(letters[i]);
                 } else {
                     int i_offset = i-1;
                     int j_offset = j-1;
                     if( fields[i_offset][j_offset] != null && width >= 1) {
                         final Field field = fields[i_offset][j_offset];
                         if (field != null) {
-                            System.out.print(field);
+                            sb.append(field);
                         }
                     }
                 }
-                System.out.print(" \t");
+                sb.append(" \t");
             }
-            System.out.println();
+            sb.append("\n");
         }
-
+        System.out.println(sb.toString());
         return sb.toString();
     }
 
