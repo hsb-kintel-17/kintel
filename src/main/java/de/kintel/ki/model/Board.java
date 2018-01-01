@@ -85,7 +85,7 @@ public class Board {
         String[] letters = {" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
         String[] letters2 = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
         for (int i = 0 ; i <= fields.length ; i++){
-            for (int j = 0 ; j <= fields[0].length ; j++){
+            for (int j = 0 ; j <= fields[0].length ; j++) {
                 if (i == 0) {
                     sb.append(letters2[j]);
                 } else if (j == 0){
@@ -104,7 +104,6 @@ public class Board {
             }
             sb.append("\n");
         }
-        System.out.println(sb.toString());
         return sb.toString();
     }
 

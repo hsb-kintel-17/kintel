@@ -35,19 +35,23 @@ public class KiApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		if (args.length > 0 && args[0].equals("run")) {
-			logger.debug(ki.toString());
-			Scanner s = new Scanner(System.in);
-			while( true ) {
-				final Move bestMove = ki.getBestMove();
-				if(null == bestMove ) {
-					logger.debug(ki.toString());
-					throw new IllegalStateException("No best move found");
-				}
-				logger.debug("Found best move to execute now: {}", bestMove);
-				ki.makeMove(bestMove);
-				logger.debug(ki.toString());
-				s.nextLine();
-			}
+            logger.debug(ki.toString());
+            Scanner s = new Scanner(System.in);
+            String line = null;
+            while( true ) {
+                if(line != null) {
+                    logger.debug("Input: {}", line);
+                }
+                final Move bestMove = ki.getBestMove();
+                if(null == bestMove ) {
+                    logger.debug(ki.toString());
+                    throw new IllegalStateException("No best move found");
+                }
+                logger.debug("Found best move to execute now: {}", bestMove);
+                ki.makeMove(bestMove);
+                logger.debug(ki.toString());
+                line = s.next();
+            }
 		}
 	}
 }

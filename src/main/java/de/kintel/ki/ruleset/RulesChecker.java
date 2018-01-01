@@ -21,7 +21,8 @@ public class RulesChecker implements IRulesChecker {
         rules.add( new RuleNotForbiddenField() );
         rules.add( new RuleDirection() );
         rules.add( new RuleDiagonal() );
-        rules.add( new RuleDestinationNotOccupied() );
+        rules.add( new RuleDestinationIsEmpty() );
+        rules.add( new RuleNotMultiplePiecesOnPath() );
         rules.add( new RuleNotOwnColorOnPath() );
     }
 

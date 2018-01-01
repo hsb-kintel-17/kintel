@@ -39,7 +39,7 @@ public class Field {
         if( isForbidden ) {
             sb.append( String.valueOf('\u25A8'));
         } else {
-            steine.forEach( s -> sb.append(s) );
+            steine.forEach(sb::append);
         }
         return sb.toString();
     }

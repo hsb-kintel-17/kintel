@@ -4,4 +4,5 @@
     <logger name="de.kintel" level="DEBUG"/>
     <logger name="de.kintel.ki.ruleset.rules" level="INFO"/>
     <logger name="de.kintel.ki.algorithm" level="ERROR"/>
+    <logger name="de.kintel.ki.algorithm.MoveMakerImpl" level="DEBUG"/>
 </configuration>

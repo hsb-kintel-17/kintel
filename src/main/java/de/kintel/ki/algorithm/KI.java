@@ -52,7 +52,7 @@ public class KI extends IA<Move> {
     @Override
     public Difficulty getDifficulty() {
         // This is the level minimax will evaluate all moves.
-        return () -> 2;
+        return () -> 3;
     }
 
     /**
@@ -75,7 +75,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public void makeMove(Move move) {
-        logger.debug("TODO: implement makeMove " + move);
+        logger.debug("make move " + move);
         moveMaker.makeMove(move);
         next();
     }
@@ -90,7 +90,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public void unmakeMove(Move move) {
-        logger.debug("TODO: implement unmakeMove " + move);
+        logger.debug("unmake move " + move);
         moveMaker.undoMove(move);
         previous();
     }
@@ -179,12 +179,12 @@ public class KI extends IA<Move> {
         currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     @Override
     public String toString() {
         return board.toString();
-    }
-
-    public Board getBoard() {
-        return board;
     }
 }

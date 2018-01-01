@@ -32,6 +32,8 @@ public class MoveMakerImpl implements MoveMaker {
         logger.debug("Making move from {}({}) to {}({}) for player {}", move.getSourceField(), coordFrom, move.getTargetField(), coordTo,
                      move.getCurrentPlayer());
 
+        logger.debug("Before move (undo:{}): {}", undo, board.toString() );
+
         if( move.getFordwardClassification().equals(PathClassifier.MoveType.MOVE) ) {
 
             if(!undo) {
@@ -71,5 +73,7 @@ public class MoveMakerImpl implements MoveMaker {
                 }
             }
         }
+
+        logger.debug("After move (undo:{}): {}", undo, board.toString() );
     }
 }
