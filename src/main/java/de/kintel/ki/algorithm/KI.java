@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class KI extends IA<Move> {
     private Weighting weighting;
     private Board board;
     private Player currentPlayer;
-
-    ArrayDeque<Board> history = new ArrayDeque<>();
 
     /**
      * Creates a new IA using the {@link Algorithm#NEGAMAX} algorithm<br/>

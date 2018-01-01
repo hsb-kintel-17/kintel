@@ -5,12 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 @Component
 public class MoveMakerImpl implements MoveMaker {
 
     Logger logger = LoggerFactory.getLogger(MoveMakerImpl.class);
+
+    private HashMap<Move, String> guard = new HashMap<>();
 
     @Override
     public void makeMove(Move move) {
@@ -33,6 +36,10 @@ public class MoveMakerImpl implements MoveMaker {
                      move.getCurrentPlayer());
 
         logger.debug("Before move (undo:{}): {}", undo, board.toString() );
+
+        if( !undo ) {
+            guard.put(move, move.getBoard().toString());
+        }
 
         if( move.getFordwardClassification().equals(PathClassifier.MoveType.MOVE) ) {
 
@@ -58,19 +65,27 @@ public class MoveMakerImpl implements MoveMaker {
             final Field fieldOpponent = move.getOpponentOpt().get();
 
             if(!undo) {
-                fieldTo.getSteine().add( fieldOpponent.getSteine().pollFirst() );
+                fieldTo.getSteine().push( fieldOpponent.getSteine().pollFirst() );
                 final Iterator<Stein> it = fieldFrom.getSteine().descendingIterator();
                 while(it.hasNext()) {
                     fieldTo.getSteine().push(it.next());
                     it.remove();
                 }
             } else {
-                fieldOpponent.getSteine().add( fieldTo.getSteine().pollLast() );
+                fieldOpponent.getSteine().push( fieldTo.getSteine().pollLast() );
                 final Iterator<Stein> it = fieldTo.getSteine().descendingIterator();
                 while(it.hasNext()) {
                     fieldFrom.getSteine().push(it.next());
                     it.remove();
                 }
+            }
+        }
+
+        if( undo ) {
+            final String expected = guard.get(move);
+            if( ! expected.equals(board.toString() ) ) {
+                String message = "Malicious redo! The field after the redo is not the same as before the do - but it should of course. move: " + move.getBoard().toString();
+                throw new IllegalStateException(message);
             }
         }
 
