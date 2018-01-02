@@ -19,7 +19,7 @@ public class KiApplication implements CommandLineRunner {
 	@Autowired
 	private KI ki;
 
-	Logger logger = LoggerFactory.getLogger(KiApplication.class);
+	private final Logger logger = LoggerFactory.getLogger(KiApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(KiApplication.class, args);

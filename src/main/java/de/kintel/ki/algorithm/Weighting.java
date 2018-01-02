@@ -2,6 +2,8 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
 
+import javax.annotation.Nonnull;
+
 public interface Weighting {
     /**
      * Evaluate the state of the game <strong>for the current player</strong> after a move.
@@ -9,9 +11,9 @@ public interface Weighting {
      * @return
      *         The evaluation of the position for the current player
      * @see #maxEvaluateValue()
-     * @param board
+     * @param board the board
      */
-    double evaluate(final Board board);
+    double evaluate(@Nonnull final Board board);
 
     /**
      * The absolute maximal value for the evaluate function.

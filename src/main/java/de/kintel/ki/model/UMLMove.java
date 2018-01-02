@@ -5,26 +5,28 @@ import de.kintel.ki.algorithm.PathFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayDeque;
+import javax.annotation.Nonnull;
+import java.util.Deque;
 import java.util.Optional;
 
 /**
+ * Storage
  * Created by kintel on 19.12.2017.
  */
 public class UMLMove implements Move {
 
     Logger logger = LoggerFactory.getLogger(UMLMove.class);
 
-    private Board board;
-    private Field from;
-    private Field to;
-    private Player currentPlayer;
+    private final Board board;
+    private final Field from;
+    private final Field to;
+    private final Player currentPlayer;
     // The following fields must be evaluated for the board before the move is taken to be available to undo a move.
-    private ArrayDeque<Field> forwardPath;
+    private final Deque<Field> forwardPath;
     private final PathClassifier.MoveType fordwardClassification;
     private final Optional<Field> opponentOpt;
 
-    public UMLMove(Board board, Field from, Field to, Player currentPlayer) {
+    public UMLMove(@Nonnull Board board, @Nonnull Field from, @Nonnull Field to, @Nonnull Player currentPlayer) {
         this.board = board;
         this.from = from;
         this.to = to;
@@ -88,18 +90,18 @@ public class UMLMove implements Move {
     }
 
     @Override
-    public ArrayDeque<Field> getForwardPath() {
+    public Deque<Field> getForwardPath() {
         return forwardPath;
     }
 
     @Override
-    public PathClassifier.MoveType getFordwardClassification() {
+    public PathClassifier.MoveType getForwardClassification() {
         return fordwardClassification;
     }
 
     /**
-     * Find first field of opposite player
-     * @return
+     * Find first field of opposite player.
+     * @return an optional opponent field
      */
     @Override
     public Optional<Field> getOpponentOpt() {

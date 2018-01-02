@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +21,12 @@ import java.util.List;
 @Scope("singleton")
 public class KI extends IA<Move> {
 
-    Logger logger = LoggerFactory.getLogger(KI.class);
+    private final Logger logger = LoggerFactory.getLogger(KI.class);
 
     private final RulesChecker rulesChecker;
     private final MoveMaker moveMaker;
-    private Weighting weighting;
-    private Board board;
+    private final Weighting weighting;
+    private final Board board;
     private Player currentPlayer;
 
     /**
@@ -33,7 +34,7 @@ public class KI extends IA<Move> {
      * {@link Algorithm#NEGASCOUT} performs slowly on several tests at the moment...
      */
     @Autowired
-    public KI(RulesChecker rulesChecker, MoveMaker moveMaker, Weighting weighting) {
+    public KI(@Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting) {
         this.rulesChecker = rulesChecker;
         this.moveMaker = moveMaker;
         this.weighting = weighting;
@@ -71,7 +72,7 @@ public class KI extends IA<Move> {
      * @see #next()
      */
     @Override
-    public void makeMove(Move move) {
+    public void makeMove(@Nonnull Move move) {
         logger.debug("make move " + move);
         moveMaker.makeMove(move);
         next();
@@ -86,7 +87,7 @@ public class KI extends IA<Move> {
      * @see #previous()
      */
     @Override
-    public void unmakeMove(Move move) {
+    public void unmakeMove(@Nonnull Move move) {
         logger.debug("unmake move " + move);
         moveMaker.undoMove(move);
         previous();

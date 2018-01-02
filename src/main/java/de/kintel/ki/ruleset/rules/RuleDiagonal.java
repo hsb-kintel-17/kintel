@@ -6,12 +6,14 @@ import de.kintel.ki.ruleset.IRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+
 public class RuleDiagonal implements IRule {
 
-    Logger logger = LoggerFactory.getLogger(RuleDiagonal.class);
+    private final Logger logger = LoggerFactory.getLogger(RuleDiagonal.class);
 
     @Override
-    public boolean isValidMove(Move move) {
+    public boolean isValidMove(@Nonnull final Move move) {
         final Coordinate2D coordFrom = move.getBoard()
                                            .getCoordinate(move.getSourceField());
         final Coordinate2D coordTo = move.getBoard()

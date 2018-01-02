@@ -1,14 +1,16 @@
 package de.kintel.ki.model;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by kintel on 19.12.2017.
  */
 public class Stein {
 
-    private Player owner;
+    private final Player owner;
     private Rank rank;
 
-    public Stein(Player owner) {
+    public Stein(@Nonnull final Player owner) {
         this.owner = owner;
         this.rank = Rank.normal;
     }

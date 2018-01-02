@@ -4,29 +4,30 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
 
-    Logger logger = LoggerFactory.getLogger(Board.class);
+    private final Logger logger = LoggerFactory.getLogger(Board.class);
 
-    private int height;
-    private int width;
+    private final int height;
+    private final int width;
 
     private Field[][] fields;
 
-    public Board(int height, int width) {
+    public Board(final int height, final int width) {
         this(height, width, GridFactory.getLaskaInitGrid());
     }
 
-    public Board(int height, int width, Field[][] fields) {
+    public Board(final int height, final int width, @Nonnull final Field[][] fields) {
         this.height = height;
         this.width = width;
         this.fields = fields;
     }
 
-    public List<Field> getFieldsOccupiedBy(Player player) {
+    public List<Field> getFieldsOccupiedBy(@Nonnull final Player player) {
         final List<Field> fieldsCollector = new ArrayList<>();
 
         for (int x = 0; x < height; x++) {
@@ -40,7 +41,7 @@ public class Board {
         return fieldsCollector;
     }
 
-    public Coordinate2D getCoordinate(Field searchField) {
+    public Coordinate2D getCoordinate(@Nonnull final Field searchField) {
         for (int i = 0 ; i < height; i++){
             for (int j = 0 ; j < width; j++){
                 Field current = fields[i][j];
@@ -66,7 +67,7 @@ public class Board {
         return field;
     }
 
-    public Field getField(Coordinate2D coordinate2D) {
+    public Field getField(@Nonnull final Coordinate2D coordinate2D) {
         return getField(coordinate2D.getX(), coordinate2D.getY());
     }
 
@@ -111,7 +112,7 @@ public class Board {
         return fields;
     }
 
-    public void setFields(Field[][] fields) {
+    public void setFields(@Nonnull final Field[][] fields) {
         this.fields = fields;
     }
 }

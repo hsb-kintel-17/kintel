@@ -5,12 +5,13 @@ import de.kintel.ki.model.Rank;
 import de.kintel.ki.model.Stein;
 import de.kintel.ki.ruleset.IRule;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class RuleDirection implements IRule {
 
     @Override
-    public boolean isValidMove(Move move) {
+    public boolean isValidMove(@Nonnull final Move move) {
         final Optional<Stein> steinOpt = move.getSourceField()
                                              .peekHead();
         if( steinOpt.isPresent() ) {

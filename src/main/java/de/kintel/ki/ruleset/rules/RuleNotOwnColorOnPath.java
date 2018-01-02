@@ -6,6 +6,7 @@ import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.IRule;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.util.Deque;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
 @Component
 public class RuleNotOwnColorOnPath implements IRule {
     @Override
-    public boolean isValidMove(Move move) {
+    public boolean isValidMove(@Nonnull final Move move) {
         Deque<Field> path = PathFinder.find(move);
         path.removeFirst();
         path.removeLast();

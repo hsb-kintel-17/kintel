@@ -4,12 +4,12 @@ import de.kintel.ki.algorithm.PathFinder;
 import de.kintel.ki.model.*;
 import org.junit.Test;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PathFinderTest {
 
@@ -36,7 +36,7 @@ public class PathFinderTest {
 
         final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
 
-        final ArrayDeque<Field> actualPath = PathFinder.find(move);
+        final Deque<Field> actualPath = PathFinder.find(move);
 
         assertThat(actualPath, hasItems(srcField, fields[1][1], targetField));
 
@@ -82,6 +82,7 @@ public class PathFinderTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
+        assertTrue( srcField.getOwner().isPresent() );
         assertThat( srcField.getOwner().get(), is(Player.WEISS));
 
         final Move move = new UMLMove(board, srcField, targetField, Player.WEISS);
@@ -101,6 +102,7 @@ public class PathFinderTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
+        assertTrue( srcField.getOwner().isPresent() );
         assertThat( srcField.getOwner().get(), is(Player.SCHWARZ));
 
         final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);

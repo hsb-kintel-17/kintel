@@ -5,6 +5,7 @@ import de.kintel.ki.ruleset.rules.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,11 +14,11 @@ import java.util.stream.Collectors;
 @Scope("singleton")
 public class RulesChecker implements IRulesChecker {
 
-    private ArrayList<IRule> rules;
+    private final ArrayList<IRule> rules;
 
     public RulesChecker() {
         this.rules = new ArrayList<>();
-        rules.add( new RuleNotSameColor() );
+        rules.add( new RuleMoveByPlayerOfSameColor() );
         rules.add( new RuleNotForbiddenField() );
         rules.add( new RuleDirection() );
         rules.add( new RuleDiagonal() );
@@ -27,7 +28,7 @@ public class RulesChecker implements IRulesChecker {
     }
 
     @Override
-    public boolean isValidMove(Move move) {
+    public boolean isValidMove(@Nonnull final Move move) {
         for (IRule rule : rules ) {
             if( !rule.isValidMove(move) ) {
                 return false;
@@ -37,7 +38,7 @@ public class RulesChecker implements IRulesChecker {
     }
 
     @Override
-    public List<Move> stripValidMoves(List<Move> moves) {
+    public List<Move> stripValidMoves(@Nonnull final List<Move> moves) {
         return moves.stream().filter(this::isValidMove).collect(Collectors.toList());
     }
 }

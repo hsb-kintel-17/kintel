@@ -35,35 +35,35 @@ public class KITest {
     }
 
     private void checkBoardHasDefaultSetting(Board board) {
-        assertThat(board.getField(0, 0).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(0, 2).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(0, 4).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(0, 6).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(0, 8).getOwner().get(), is(Player.SCHWARZ));
+        assertThat(board.getField(0, 0).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(0, 2).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(0, 4).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(0, 6).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(0, 8).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
 
-        assertThat(board.getField(1, 1).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(1, 3).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(1, 5).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(1, 7).getOwner().get(), is(Player.SCHWARZ));
+        assertThat(board.getField(1, 1).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(1, 3).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(1, 5).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(1, 7).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
 
-        assertThat(board.getField(2, 2).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(2, 4).getOwner().get(), is(Player.SCHWARZ));
-        assertThat(board.getField(2, 6).getOwner().get(), is(Player.SCHWARZ));
+        assertThat(board.getField(2, 2).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(2, 4).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
+        assertThat(board.getField(2, 6).getOwner().orElseThrow(IllegalStateException::new), is(Player.SCHWARZ));
 
-        assertThat(board.getField(6, 0).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(6, 2).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(6, 4).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(6, 6).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(6, 8).getOwner().get(), is(Player.WEISS));
+        assertThat(board.getField(6, 0).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(6, 2).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(6, 4).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(6, 6).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(6, 8).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
 
-        assertThat(board.getField(5, 1).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(5, 3).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(5, 5).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(5, 7).getOwner().get(), is(Player.WEISS));
+        assertThat(board.getField(5, 1).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(5, 3).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(5, 5).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(5, 7).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
 
-        assertThat(board.getField(4, 2).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(4, 4).getOwner().get(), is(Player.WEISS));
-        assertThat(board.getField(4, 6).getOwner().get(), is(Player.WEISS));
+        assertThat(board.getField(4, 2).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(4, 4).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
+        assertThat(board.getField(4, 6).getOwner().orElseThrow(IllegalStateException::new), is(Player.WEISS));
     }
 
     @Test

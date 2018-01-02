@@ -2,7 +2,7 @@ package de.kintel.ki.model;
 
 import de.kintel.ki.algorithm.PathClassifier;
 
-import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Optional;
 
 public interface Move extends fr.pixelprose.minimax4j.Move {
@@ -12,9 +12,9 @@ public interface Move extends fr.pixelprose.minimax4j.Move {
     Player getCurrentPlayer();
     boolean isForward();
 
-    ArrayDeque<Field> getForwardPath();
+    Deque<Field> getForwardPath();
 
-    PathClassifier.MoveType getFordwardClassification();
+    PathClassifier.MoveType getForwardClassification();
 
     Optional<Field> getOpponentOpt();
 }

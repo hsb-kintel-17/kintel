@@ -1,19 +1,20 @@
 package de.kintel.ki.model;
 
+import javax.annotation.Nonnull;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Optional;
 
 public class Field {
 
-    private boolean isForbidden;
-    private Deque<Stein> steine = new LinkedList<>();
+    private final boolean isForbidden;
+    private final Deque<Stein> steine = new LinkedList<>();
 
     public Field(boolean isForbidden) {
         this.isForbidden = isForbidden;
     }
 
-    public void addStein(Stein s) {
+    public void addStein(@Nonnull final Stein s) {
         steine.push(s);
     }
 
@@ -54,10 +55,6 @@ public class Field {
 
     public Deque<Stein> getSteine() {
         return steine;
-    }
-
-    public void setSteine(Deque<Stein> steine) {
-        this.steine = steine;
     }
 
     public boolean isEmpty() {

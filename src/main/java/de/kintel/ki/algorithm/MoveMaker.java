@@ -2,7 +2,18 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Move;
 
+import javax.annotation.Nonnull;
+
 public interface MoveMaker {
-    void makeMove(Move move);
-    void undoMove(Move move);
+    /**
+     * Make a move.
+     * @param move the move
+     */
+    void makeMove(@Nonnull Move move);
+
+    /**
+     * Undo a move.
+     * @param move the move
+     */
+    void undoMove(@Nonnull Move move);
 }

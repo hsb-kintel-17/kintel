@@ -5,6 +5,7 @@ import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.IRule;
 
+import javax.annotation.Nonnull;
 import java.util.Deque;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 public class RuleNotMultiplePiecesOnPath implements IRule {
     @Override
-    public boolean isValidMove(Move move) {
+    public boolean isValidMove(@Nonnull final Move move) {
         Deque<Field> path = PathFinder.find(move);
         path.removeFirst();
         path.removeLast();

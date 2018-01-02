@@ -1,29 +1,16 @@
 package de.kintel.ki.model;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
 
 public class Coordinate2D {
 
-    /**
-     * Returns the square of the Euclidean distance between this point and that point.
-     * @param that the other point
-     * @return the square of the Euclidean distance between this point and that point
-     */
-    public int distanceSquaredTo(Coordinate2D that) {
-        int dx = this.x - that.x;
-        int dy = this.y - that.y;
-        return dx*dx + dy*dy;
-    }
-
-
-    public class DistanceToOrder implements Comparator<Coordinate2D> {
+    class DistanceToOrder implements Comparator<Coordinate2D> {
         @Override
-        public int compare(Coordinate2D e1, Coordinate2D e2) {
+        public int compare(@Nonnull final Coordinate2D e1, @Nonnull final Coordinate2D e2) {
             int dist1 = distanceSquaredTo(e1);
             int dist2 = distanceSquaredTo(e2);
-            if      (dist1 < dist2) return -1;
-            else if (dist1 > dist2) return +1;
-            else                    return  0;
+            return Integer.compare(dist1, dist2);
         }
     }
 
@@ -42,6 +29,17 @@ public class Coordinate2D {
     public Coordinate2D(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * Returns the square of the Euclidean distance between this point and that point.
+     * @param that the other point
+     * @return the square of the Euclidean distance between this point and that point
+     */
+    public int distanceSquaredTo(@Nonnull final Coordinate2D that) {
+        int dx = this.x - that.x;
+        int dy = this.y - that.y;
+        return dx*dx + dy*dy;
     }
 
     public int getX() {

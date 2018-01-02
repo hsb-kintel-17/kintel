@@ -3,6 +3,7 @@ package de.kintel.ki.algorithm;
 import de.kintel.ki.model.Board;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -21,10 +22,10 @@ public class WeightingDummyImpl implements Weighting {
      *
      * @return The evaluation of the position for the current player
      * @see #maxEvaluateValue()
-     * @param board
+     * @param board the board
      */
     @Override
-    public double evaluate(final Board board) {
+    public double evaluate(@Nonnull final  Board board) {
         // Create random in interval [MIN,MAX]
         int eval = ThreadLocalRandom.current().nextInt(MIN, MAX + 1);
         return eval;

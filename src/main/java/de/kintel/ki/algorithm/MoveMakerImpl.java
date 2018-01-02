@@ -5,23 +5,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Iterator;
 
 @Component
 public class MoveMakerImpl implements MoveMaker {
 
-    Logger logger = LoggerFactory.getLogger(MoveMakerImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(MoveMakerImpl.class);
 
-    private HashMap<Move, String> guard = new HashMap<>();
+    /**
+     Debugging mechanism that stores board contents before the move for comparision after undo move. If the states differ then the undo was incorrect.
+     */
+    private final HashMap<Move, String> guard = new HashMap<>();
 
+
+    /**
+     * Make a move.
+     *
+     * @param move the move
+     */
     @Override
-    public void makeMove(Move move) {
+    public void makeMove(@Nonnull final Move move) {
         doMove(move, false);
     }
 
+    /**
+     * Undo a move.
+     *
+     * @param move the move
+     */
     @Override
-    public void undoMove(Move move) {
+    public void undoMove(@Nonnull final Move move) {
         doMove(move, true);
     }
 
@@ -41,7 +56,7 @@ public class MoveMakerImpl implements MoveMaker {
             guard.put(move, move.getBoard().toString());
         }
 
-        if( move.getFordwardClassification().equals(PathClassifier.MoveType.MOVE) ) {
+        if( move.getForwardClassification().equals(PathClassifier.MoveType.MOVE) ) {
 
             if(!undo) {
                 final Iterator<Stein> it = fieldFrom.getSteine().descendingIterator();
@@ -56,7 +71,7 @@ public class MoveMakerImpl implements MoveMaker {
                     it.remove();
                 }
             }
-        } else if (move.getFordwardClassification().equals(PathClassifier.MoveType.CAPTURE)) {
+        } else if (move.getForwardClassification().equals(PathClassifier.MoveType.CAPTURE)) {
 
             if( !move.getOpponentOpt().isPresent() ) {
                 throw new IllegalStateException("No opponent field in path.");
@@ -84,7 +99,7 @@ public class MoveMakerImpl implements MoveMaker {
         if( undo ) {
             final String expected = guard.get(move);
             if( ! expected.equals(board.toString() ) ) {
-                String message = "Malicious redo! The field after the redo is not the same as before the do - but it should of course. move: " + move.getBoard().toString();
+                String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + move.getBoard().toString();
                 throw new IllegalStateException(message);
             }
         }
