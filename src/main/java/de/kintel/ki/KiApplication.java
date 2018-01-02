@@ -1,7 +1,10 @@
 package de.kintel.ki;
 
 import de.kintel.ki.algorithm.KI;
+import de.kintel.ki.gui.GUIActions;
+import de.kintel.ki.gui.KiFxApplication;
 import de.kintel.ki.model.Move;
+import javafx.application.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +23,18 @@ public class KiApplication implements CommandLineRunner {
 	private KI ki;
 
 	private final Logger logger = LoggerFactory.getLogger(KiApplication.class);
+    private static KiApplication instance;
+    private GUIActions guiActor;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 		SpringApplication.run(KiApplication.class, args);
 	}
 
-	/**
+    public static KiApplication getInstance() {
+        return instance;
+    }
+
+    /**
 	 * Callback used to run the bean.
 	 *
 	 * @param args incoming main method arguments
@@ -33,7 +42,8 @@ public class KiApplication implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-
+	    instance = this;
+        new Thread(() ->  Application.launch(KiFxApplication.class, args)).start();
 		if (args.length > 0 && args[0].equals("run")) {
             logger.debug(ki.toString());
             Scanner s = new Scanner(System.in);
@@ -50,8 +60,18 @@ public class KiApplication implements CommandLineRunner {
                 logger.debug("Found best move to execute now: {}", bestMove);
                 ki.makeMove(bestMove);
                 logger.debug(ki.toString());
+                while ( guiActor == null) {}
+                guiActor.refresh();
                 line = s.next();
             }
 		}
 	}
+
+    public KI getKi() {
+        return ki;
+    }
+
+    public void setGUIActor(GUIActions guiActor) {
+        this.guiActor = guiActor;
+    }
 }
