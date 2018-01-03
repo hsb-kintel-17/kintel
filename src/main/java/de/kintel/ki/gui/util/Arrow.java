@@ -1,8 +1,9 @@
-package de.kintel.ki.gui;
+package de.kintel.ki.gui.util;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.Line;
 
@@ -125,8 +126,9 @@ public class Arrow extends Group {
 
     /**
      * Draws the arrow for its current size and position values.
+     * @param color
      */
-    public void draw() {
+    public void draw(Paint color) {
 
         final double deltaX = endX - startX;
         final double deltaY = endY - startY;
@@ -140,9 +142,11 @@ public class Arrow extends Group {
         line.setStartY(GeometryUtils.moveOffPixel(startY));
         line.setEndX(GeometryUtils.moveOffPixel(headX));
         line.setEndY(GeometryUtils.moveOffPixel(headY));
+        line.setStroke(color);
 
         head.setCenter(headX, headY);
         head.setAngle(Math.toDegrees(-angle));
+        head.setStroke(color);
         head.draw();
     }
 }
