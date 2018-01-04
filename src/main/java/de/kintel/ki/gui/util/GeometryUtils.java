@@ -1,4 +1,4 @@
-package de.kintel.ki.gui;
+package de.kintel.ki.gui.util;
 
 
 /**

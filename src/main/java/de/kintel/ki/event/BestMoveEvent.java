@@ -1,4 +1,4 @@
-package de.kintel.ki;
+package de.kintel.ki.event;
 
 import de.kintel.ki.model.Move;
 
