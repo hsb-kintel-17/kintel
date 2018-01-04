@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 public class RuleDestinationIsEmpty implements IRule {
     @Override
     public boolean isValidMove(@Nonnull final Move move) {
-        return !move.getTargetField()
-                    .peekHead().isPresent();
+        return !move.getTargetField().peekHead().isPresent();
     }
 }

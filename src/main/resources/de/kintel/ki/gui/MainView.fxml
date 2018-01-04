@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import eu.lestard.grid.GridView?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import java.net.URL?>
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.kintel.ki.gui.MainView">
+    <stylesheets>
+        <URL value="@MainView.css"/>
+    </stylesheets>
+
+    <children>
+        <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0">
+            <children>
+                <GridView fx:id="gridView"/>
+            </children>
+        </StackPane>
+        <Group fx:id="groupPossibleMoves"/>
+        <Group fx:id="groupBestMove"/>
+    </children>
+</AnchorPane>

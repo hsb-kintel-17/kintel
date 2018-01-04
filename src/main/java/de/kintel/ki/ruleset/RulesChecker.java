@@ -25,16 +25,12 @@ public class RulesChecker implements IRulesChecker {
         rules.add( new RuleDestinationIsEmpty() );
         rules.add( new RuleNotMultiplePiecesOnPath() );
         rules.add( new RuleNotOwnColorOnPath() );
+        rules.add( new RuleMoveEndsAfterOpponent() );
     }
 
     @Override
     public boolean isValidMove(@Nonnull final Move move) {
-        for (IRule rule : rules ) {
-            if( !rule.isValidMove(move) ) {
-                return false;
-            }
-        }
-        return true;
+        return rules.stream().allMatch( r -> r.isValidMove(move));
     }
 
     @Override
