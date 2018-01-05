@@ -1,6 +1,7 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Player;
 
 import javax.annotation.Nonnull;
 
@@ -13,14 +14,14 @@ public interface Weighting {
      * @see #maxEvaluateValue()
      * @param board the board
      */
-    double evaluate(@Nonnull final Board board);
+    double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer);
 
     /**
      * The absolute maximal value for the evaluate function.
      * This value must not be equal to a possible return value of the evaluation function.
      * @return
      *         The <strong>non inclusive</strong> maximal value
-     * @see #evaluate(Board)
+     * @see #evaluate(Board, Player)
      */
     double maxEvaluateValue();
 }

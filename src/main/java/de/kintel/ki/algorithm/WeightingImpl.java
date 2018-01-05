@@ -1,33 +1,33 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Player;
+import de.kintel.ki.model.Weight;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
 
-/**
- * Dummy Implementation with weighting.
- * TODO: Implement proper function
- */
-public class WeightingDummyImpl implements Weighting {
-
-    private final int MIN = 1;
-    private final int MAX = 3;
+@Component
+public class WeightingImpl implements Weighting {
 
     /**
      * Evaluate the state of the game <strong>for the current player</strong> after a move.
      * The greatest the value is, the better the position of the current player is.
      *
+     * @param board the board
      * @return The evaluation of the position for the current player
      * @see #maxEvaluateValue()
-     * @param board the board
      */
     @Override
-    public double evaluate(@Nonnull final Board board, @Nonnull final Player currentPlayer) {
-        // Create random in interval [MIN,MAX]
-        int eval = ThreadLocalRandom.current().nextInt(MIN, MAX + 1);
-        return eval;
+    public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
+        final List<Field> fieldsOccupiedBy = board.getFieldsOccupiedBy(currentPlayer);
+        double heights = fieldsOccupiedBy.stream()
+                        .mapToDouble(f -> f.getSteine()
+                        .size())
+                        .map(d -> d * Weight.WIN.getValue()).sum();
+        return heights;
     }
 
     /**
@@ -39,6 +39,6 @@ public class WeightingDummyImpl implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return MAX;
+        return 0;
     }
 }
