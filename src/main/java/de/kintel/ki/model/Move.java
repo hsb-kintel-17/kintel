@@ -5,16 +5,13 @@ import de.kintel.ki.algorithm.PathClassifier;
 import java.util.Deque;
 import java.util.Optional;
 
-public interface Move extends fr.pixelprose.minimax4j.Move {
-    Board getBoard();
-    Field getSourceField();
-    Field getTargetField();
-    Player getCurrentPlayer();
-    boolean isForward();
-
-    Deque<Field> getForwardPath();
-
-    PathClassifier.MoveType getForwardClassification();
-
-    Optional<Field> getOpponentOpt();
+public abstract class Move extends fr.avianey.minimax4j.Move {
+    public abstract Board getBoard();
+    public abstract Field getSourceField();
+    public abstract Field getTargetField();
+    public abstract Player getCurrentPlayer();
+    public abstract boolean isForward();
+    public abstract Deque<Field> getForwardPath();
+    public abstract PathClassifier.MoveType getForwardClassification();
+    public abstract Optional<Field> getOpponentOpt();
 }

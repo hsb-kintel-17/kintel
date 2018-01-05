@@ -14,7 +14,7 @@ import java.util.Optional;
  * Storage
  * Created by kintel on 19.12.2017.
  */
-public class UMLMove implements Move {
+public class UMLMove extends Move {
 
     Logger logger = LoggerFactory.getLogger(UMLMove.class);
 

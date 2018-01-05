@@ -2,8 +2,7 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
 import de.kintel.ki.ruleset.RulesChecker;
-import fr.pixelprose.minimax4j.Difficulty;
-import fr.pixelprose.minimax4j.IA;
+import fr.avianey.minimax4j.impl.Negamax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 @Component
 @Scope("singleton")
-public class KI extends IA<Move> {
+public class KI extends Negamax<Move> {
 
     private final Logger logger = LoggerFactory.getLogger(KI.class);
 
@@ -29,10 +28,6 @@ public class KI extends IA<Move> {
     private final Board board;
     private Player currentPlayer;
 
-    /**
-     * Creates a new IA using the {@link Algorithm#NEGAMAX} algorithm<br/>
-     * {@link Algorithm#NEGASCOUT} performs slowly on several tests at the moment...
-     */
     @Autowired
     public KI(@Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting) {
         this.rulesChecker = rulesChecker;
@@ -40,17 +35,6 @@ public class KI extends IA<Move> {
         this.weighting = weighting;
         this.board = new Board(7, 9);
         this.currentPlayer = Player.SCHWARZ;
-    }
-
-    /**
-     * Get the IA difficulty level for the current player
-     *
-     * @return The difficulty
-     */
-    @Override
-    public Difficulty getDifficulty() {
-        // This is the level minimax will evaluate all moves.
-        return () -> 3;
     }
 
     /**
@@ -105,20 +89,32 @@ public class KI extends IA<Move> {
     @Override
     public List<Move> getPossibleMoves() {
 
-        final List<Move> possibleMoves = new ArrayList<>();
+        final List<Move> possibleMoves;
+        // Moves the user must do
+        final List<Move> zugzwaenge = new ArrayList<>();
+        // Ordinary Moves
+        final List<Move> moves = new ArrayList<>();
         final List<Field> fieldsOccupiedBy = board.getFieldsOccupiedBy(currentPlayer);
 
         for( Field fieldFrom : fieldsOccupiedBy ) {
+
             for (int i = 0; i < board.getHeight(); i++) {
                 for (int j = 0; j < board.getWidth(); j++) {
                     Field fieldTo = board.getField(i, j);
                     Move move = new UMLMove(board, fieldFrom, fieldTo, currentPlayer);
-                    if( rulesChecker.isValidMove( move )) {
-                        possibleMoves.add( move );
+                    if( rulesChecker.isValidMove( move ) ) {
+                        if ( move.getOpponentOpt().isPresent() ) {
+                            zugzwaenge.add( move );
+                        } else {
+                            moves.add( move );
+                        }
                     }
                 }
             }
         }
+
+        // If there are zugwang moves then these moves are the only possible moves
+        possibleMoves = zugzwaenge.isEmpty() ? moves : zugzwaenge;
 
         logger.info("{} possible moves for player {}", possibleMoves.size(), currentPlayer);
         logger.info("possible moves: {}", possibleMoves);
@@ -134,7 +130,7 @@ public class KI extends IA<Move> {
      */
     @Override
     public double evaluate() {
-        return weighting.evaluate(board);
+        return weighting.evaluate(board, currentPlayer);
     }
 
     /**
@@ -185,4 +181,9 @@ public class KI extends IA<Move> {
     public String toString() {
         return board.toString();
     }
+
+    public Move getBestMove(int depth) {
+        return getBestMoves(depth).get(0);
+    }
+
 }
