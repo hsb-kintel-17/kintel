@@ -34,7 +34,6 @@ public class MoveMakerImpl implements MoveMaker {
     @Override
     public void makeMove(@Nonnull final Move move) {
         doMove(move, false);
-        this.rankMaker.processRankChange(move, false);
     }
 
     /**
@@ -45,7 +44,7 @@ public class MoveMakerImpl implements MoveMaker {
     @Override
     public void undoMove(@Nonnull final Move move) {
         doMove(move, true);
-        this.rankMaker.processRankChange(move, true);
+
     }
 
     private void doMove(Move move, boolean undo) {
@@ -108,6 +107,8 @@ public class MoveMakerImpl implements MoveMaker {
             }
         }
 
+        this.rankMaker.processRankChange(move, undo);
+
         if( undo ) {
             final String expected = guard.get(move);
             if( ! expected.equals(board.toString() ) ) {
@@ -115,6 +116,7 @@ public class MoveMakerImpl implements MoveMaker {
                 throw new IllegalStateException(message);
             }
         }
+
 
         logger.debug("After move (undo:{}): {}", undo, board.toString() );
     }

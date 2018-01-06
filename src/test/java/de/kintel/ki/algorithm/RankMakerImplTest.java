@@ -176,4 +176,55 @@ public class RankMakerImplTest {
         assertThat( fieldTo.isEmpty(), is(true) );
     }
 
+    @Test
+    public void move2_undo2() throws Exception {
+
+        //       0   1   2
+        //  0  | sw |    |   |
+        //  1  |    | w  |   |
+        //  2  |    |    |   |
+
+        Field[][] fields = GridFactory.getRectGrid(3, 3);
+        final Field fieldFrom = fields[0][0];
+        final Field fieldOpponent = fields[1][1];
+        final Field fieldTo = fields[2][2];
+
+        final Board board = new Board(fields.length, fields[0].length, fields);
+
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
+        final Piece weisserStein = new Piece(Player.WEISS);
+
+        final Piece weisserStein2 = new Piece(Player.WEISS);
+        weisserStein2.setRank(Rank.gelb);
+
+        fieldFrom.addStein( weisserStein );
+        fieldFrom.addStein( schwarzerStein );
+
+        fieldOpponent.addStein( weisserStein2 );
+
+        final Move move = new UMLMove(board, fieldFrom, fieldTo, Player.SCHWARZ);
+
+        assertThat( fieldFrom.isEmpty(), is(false) );
+        assertThat( fieldFrom.getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
+        assertThat( fieldFrom.getSteine().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( weisserStein2.getRank(), is(Rank.gelb) );
+
+        moveMaker.makeMove(move);
+
+        assertThat( fieldFrom.isEmpty(), is(true) );
+        assertThat( fieldTo.getSteine(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
+        // schwarzer Stein wurde befördert
+        assertThat( fieldTo.getSteine().peekFirst().getRank(), is(Rank.magenta) );
+        // weißer stein2 wurde degradiert
+        assertThat( weisserStein2.getRank(), is(Rank.normal) );
+
+        moveMaker.undoMove(move);
+
+        assertThat( fieldFrom.isEmpty(), is(false) );
+        assertThat( fieldFrom.getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
+        assertThat( fieldFrom.getSteine().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( fieldOpponent.getSteine(), Matchers.contains( weisserStein2 ) );
+        assertThat( fieldTo.isEmpty(), is(true) );
+    }
+
 }

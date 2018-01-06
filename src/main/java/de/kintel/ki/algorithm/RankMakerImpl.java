@@ -30,8 +30,12 @@ public class RankMakerImpl implements RankMaker {
                 if( move.getForwarFromRankOpt().isPresent() ) {
                     fieldFrom.peekHead().ifPresent(h -> h.setRank(move.getForwarFromRankOpt().get()));
                 }
-                if( move.getForwarOpponentRankOpt().isPresent() ) {
-                    move.getOpponentOpt().ifPresent(h -> h.peekHead().ifPresent( f -> f.setRank(move.getForwarOpponentRankOpt().get())));
+                if( move.getForwardClassification().equals(PathClassifier.MoveType.CAPTURE)) {
+                    if( move.getForwarOpponentRankOpt().isPresent() ) {
+                        move.getOpponentOpt().ifPresent(h -> h.peekHead().ifPresent( f -> f.setRank(move.getForwarOpponentRankOpt().get())));
+                    } else {
+                        throw new IllegalStateException("The should be the opponent Rank stored for redo but isn't." + move);
+                    }
                 }
             }
         }
