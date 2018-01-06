@@ -5,9 +5,9 @@ public enum Weight {
     DRAW(0),
     WIN(1);
 
-    private final int id;
-    Weight(int id) {this.id = id;}
-    public int getValue() {return id;}
+    private final int value;
+    Weight(int value) {this.value = value;}
+    public int getValue() {return value;}
 
     public static Weight fromValue(int id) {
         for (Weight aip: values()) {

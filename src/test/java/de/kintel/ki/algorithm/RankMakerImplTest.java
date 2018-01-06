@@ -177,7 +177,7 @@ public class RankMakerImplTest {
     }
 
     @Test
-    public void move2_undo2() throws Exception {
+    public void move3_undo() throws Exception {
 
         //       0   1   2
         //  0  | sw |    |   |

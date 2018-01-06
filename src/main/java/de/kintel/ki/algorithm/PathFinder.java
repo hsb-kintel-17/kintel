@@ -1,9 +1,6 @@
 package de.kintel.ki.algorithm;
 
-import de.kintel.ki.model.Board;
-import de.kintel.ki.model.Coordinate2D;
-import de.kintel.ki.model.Field;
-import de.kintel.ki.model.Move;
+import de.kintel.ki.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +40,7 @@ public class PathFinder {
         final Coordinate2D coordFrom = board.getCoordinate(from);
         final Coordinate2D coordTo = board.getCoordinate(to);
 
-        final List<Field> surroundings = getDiagonalSurroundings(board, coordFrom);
+        final List<Field> surroundings = BoardUtils.getDiagonalSurroundings(board, coordFrom, 1);
 
         // Map Fields to surroundingsCoords for comparision
         List<Coordinate2D> surroundingsCoords = new LinkedList<>();
@@ -73,31 +70,4 @@ public class PathFinder {
         return calcPath(board, closestField, to, path);
     }
 
-
-    /**
-     * Get surrounding fields on the diagonals.
-     *
-     * @param board the board
-     * @param coordFrom coord to find surroundings of
-     * @return the surrounding fields in diagonal
-     */
-    private static List<Field> getDiagonalSurroundings(@Nonnull final Board board, @Nonnull final Coordinate2D coordFrom) {
-        int[][] directions = new int[][]{{-1, -1}, {-1, 1}, {1, 1}, {1, -1}};
-        int x = coordFrom.getX();
-        int y = coordFrom.getY();
-        List<Field> res = new ArrayList<>();
-        for (int[] direction : directions) {
-            int cx = x + direction[0];
-            int cy = y + direction[1];
-            if (cx >= 0 && cx < board.getHeight()) {
-                if (cy >= 0 && cy < board.getWidth()) {
-                    final Field field = board.getField(cx, cy);
-                    if (!field.isForbidden()) {
-                        res.add(field);
-                    }
-                }
-            }
-        }
-        return res;
-    }
 }

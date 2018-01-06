@@ -1,6 +1,7 @@
-package de.kintel.ki.ruleset;
+package de.kintel.ki.ruleset.rules;
 
 import de.kintel.ki.model.Move;
+import de.kintel.ki.ruleset.IRule;
 
 import javax.annotation.Nonnull;
 

@@ -1,5 +1,7 @@
 package de.kintel.ki.model;
 
+import com.google.common.base.Objects;
+
 import javax.annotation.Nonnull;
 import java.util.Comparator;
 
@@ -59,5 +61,18 @@ public class Coordinate2D {
           .append(y);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate2D that = (Coordinate2D) o;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(x, y);
     }
 }

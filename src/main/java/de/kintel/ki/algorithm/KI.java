@@ -97,17 +97,16 @@ public class KI extends Negamax<Move> {
         final List<Field> fieldsOccupiedBy = board.getFieldsOccupiedBy(currentPlayer);
 
         for( Field fieldFrom : fieldsOccupiedBy ) {
+            Coordinate2D coordFrom = board.getCoordinate(fieldFrom);
+            final List<Field> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordFrom, 2);
 
-            for (int i = 0; i < board.getHeight(); i++) {
-                for (int j = 0; j < board.getWidth(); j++) {
-                    Field fieldTo = board.getField(i, j);
-                    Move move = new UMLMove(board, fieldFrom, fieldTo, currentPlayer);
-                    if( rulesChecker.isValidMove( move ) ) {
-                        if ( move.getOpponentOpt().isPresent() ) {
-                            zugzwaenge.add( move );
-                        } else {
-                            moves.add( move );
-                        }
+            for( Field surrounding : diagonalSurroundings ) {
+                Move move = new UMLMove(board, fieldFrom, surrounding, currentPlayer);
+                if( rulesChecker.isValidMove( move ) ) {
+                    if ( move.getOpponentOpt().isPresent() ) {
+                        zugzwaenge.add( move );
+                    } else {
+                        moves.add( move );
                     }
                 }
             }

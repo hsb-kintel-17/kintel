@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface IRulesChecker {
     boolean isValidMove(@Nonnull final Move move);
-    List<Move> stripValidMoves(@Nonnull final List<Move> moves);
 }
