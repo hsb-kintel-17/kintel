@@ -9,6 +9,7 @@ import de.kintel.ki.gui.util.Arrow;
 import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Player;
 import de.saxsys.mvvmfx.FxmlView;
 import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
@@ -44,6 +45,8 @@ public class MainView implements FxmlView<MainViewModel> {
     private Group groupPossibleMoves;
     @FXML
     private Group groupBestMove;
+    @FXML
+    private Label winLabel;
 
     private GridModel<String> gridModel;
 
@@ -52,6 +55,7 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @Autowired
     private KI ki;
+    private Player lastPlayer;
 
     @PostConstruct
     public void init(){
@@ -100,8 +104,15 @@ public class MainView implements FxmlView<MainViewModel> {
     public void newBestMove(BestMoveEvent e) {
         final Move bestMove = e.getBestMove();
         Platform.runLater(() -> {
-            groupBestMove.getChildren().clear();
-            drawArrow(groupBestMove, Color.RED, bestMove.getSourceField(), bestMove.getTargetField());
+            if( bestMove == null ) {
+                winLabel.setId("winLabel");
+                winLabel.setVisible(true);
+                winLabel.setText("Winner is " + lastPlayer);
+            } else {
+                lastPlayer = bestMove.getCurrentPlayer();
+                groupBestMove.getChildren().clear();
+                drawArrow(groupBestMove, Color.RED, bestMove.getSourceField(), bestMove.getTargetField());
+            }
         });
 
     }

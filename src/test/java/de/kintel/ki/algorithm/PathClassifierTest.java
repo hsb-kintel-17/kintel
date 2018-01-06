@@ -2,7 +2,7 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Player;
-import de.kintel.ki.model.Stein;
+import de.kintel.ki.model.Piece;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class PathClassifierTest {
         Field a = new Field(false);
         Field b = new Field(false);
 
-        a.addStein( new Stein(Player.SCHWARZ));
+        a.addStein( new Piece(Player.SCHWARZ));
 
         path.add(a);
         path.add(b);
@@ -39,7 +39,7 @@ public class PathClassifierTest {
         Field b = new Field(false);
         Field c = new Field(false);
 
-        a.addStein( new Stein(Player.SCHWARZ));
+        a.addStein( new Piece(Player.SCHWARZ));
 
         path.add(a);
         path.add(b);
@@ -54,8 +54,8 @@ public class PathClassifierTest {
         Field b = new Field(false);
         Field c = new Field(false);
 
-        a.addStein( new Stein(Player.SCHWARZ));
-        b.addStein( new Stein(Player.WEISS));
+        a.addStein( new Piece(Player.SCHWARZ));
+        b.addStein( new Piece(Player.WEISS));
 
         path.add(a);
         path.add(b);

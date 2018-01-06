@@ -39,6 +39,6 @@ public class WeightingImpl implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return 0;
+        return 12*4.0;
     }
 }

@@ -30,7 +30,7 @@ public class KITest {
         final Board board = ki.getBoard();
 
         checkBoardHasDefaultSetting(board);
-        ki.getBestMove();
+        ki.getBestMove(3);
         checkBoardHasDefaultSetting(board);
     }
 

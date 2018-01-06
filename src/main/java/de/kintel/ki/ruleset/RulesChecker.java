@@ -20,6 +20,7 @@ public class RulesChecker implements IRulesChecker {
         this.rules = new ArrayList<>();
         rules.add( new RuleMoveByPlayerOfSameColor() );
         rules.add( new RuleNotForbiddenField() );
+        rules.add( new RuleDistance() );
         rules.add( new RuleDirection() );
         rules.add( new RuleDiagonal() );
         rules.add( new RuleDestinationIsEmpty() );

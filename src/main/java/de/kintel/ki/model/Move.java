@@ -14,4 +14,6 @@ public abstract class Move extends fr.avianey.minimax4j.Move {
     public abstract Deque<Field> getForwardPath();
     public abstract PathClassifier.MoveType getForwardClassification();
     public abstract Optional<Field> getOpponentOpt();
+    public abstract Optional<Rank> getForwarOpponentRankOpt();
+    public abstract Optional<Rank> getForwarFromRankOpt();
 }

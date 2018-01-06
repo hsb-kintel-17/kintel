@@ -72,16 +72,16 @@ public class KiApplication implements CommandLineRunner {
                     logger.debug("Input: {}", line);
                 }
                 eventBus.post(new PossibleMovesEvent( ki.getPossibleMoves() ));
-                final Move bestMove = ki.getBestMove(3);
+                final Move bestMove = ki.getBestMove(5);
+                eventBus.post( new BestMoveEvent(bestMove ));
                 if(null == bestMove ) {
                     logger.debug(ki.toString());
                     throw new IllegalStateException("No best move found");
                 }
                 logger.debug("Found best move to execute now: {}", bestMove);
-                eventBus.post( new BestMoveEvent(bestMove ));
                 ki.makeMove(bestMove);
                 logger.debug(ki.toString());
-                line = s.next();
+                //line = s.next();
             }
 		}}).start();
 	}

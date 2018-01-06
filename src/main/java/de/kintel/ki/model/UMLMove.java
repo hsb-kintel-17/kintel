@@ -26,6 +26,8 @@ public class UMLMove extends Move {
     private final Deque<Field> forwardPath;
     private final PathClassifier.MoveType fordwardClassification;
     private final Optional<Field> opponentOpt;
+    private final Optional<Rank> frowardOpponentRank;
+    private final Optional<Rank> forwardFromRank;
 
     public UMLMove(@Nonnull Board board, @Nonnull Field from, @Nonnull Field to, @Nonnull Player currentPlayer) {
         this.board = board;
@@ -42,6 +44,8 @@ public class UMLMove extends Move {
                                                                                             .equals(getCurrentPlayer()))
                                                             .findFirst();
 
+        this.frowardOpponentRank = Optional.ofNullable(opponentOpt.isPresent() && opponentOpt.get().peekHead().isPresent() ? opponentOpt.get().peekHead().get().getRank() : null);
+        this.forwardFromRank = Optional.ofNullable(from.peekHead().isPresent() ? from.peekHead().get().getRank() : null);
     }
 
     public boolean isForward() {
@@ -107,6 +111,16 @@ public class UMLMove extends Move {
     @Override
     public Optional<Field> getOpponentOpt() {
         return opponentOpt;
+    }
+
+    @Override
+    public Optional<Rank> getForwarOpponentRankOpt() {
+        return frowardOpponentRank;
+    }
+
+    @Override
+    public Optional<Rank> getForwarFromRankOpt() {
+        return forwardFromRank;
     }
 
 }

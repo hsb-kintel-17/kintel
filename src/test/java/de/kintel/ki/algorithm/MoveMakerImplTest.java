@@ -38,7 +38,7 @@ public class MoveMakerImplTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        final Stein schwarzerStein = new Stein(Player.SCHWARZ);
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
 
         fieldFrom.addStein( schwarzerStein );
 
@@ -72,7 +72,7 @@ public class MoveMakerImplTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        final Stein schwarzerStein = new Stein(Player.SCHWARZ);
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
 
         fieldFrom.addStein( schwarzerStein );
 
@@ -112,8 +112,8 @@ public class MoveMakerImplTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        final Stein schwarzerStein = new Stein(Player.SCHWARZ);
-        final Stein weisserStein = new Stein(Player.WEISS);
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
+        final Piece weisserStein = new Piece(Player.WEISS);
 
         fieldFrom.addStein(schwarzerStein);
         fieldBetween.addStein(weisserStein);
@@ -151,8 +151,8 @@ public class MoveMakerImplTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        final Stein schwarzerStein = new Stein(Player.SCHWARZ);
-        final Stein weisserStein = new Stein(Player.WEISS);
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
+        final Piece weisserStein = new Piece(Player.WEISS);
 
         fieldFrom.addStein(schwarzerStein);
         fieldBetween.addStein(weisserStein);
@@ -214,9 +214,9 @@ public class MoveMakerImplTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        final Stein schwarzerStein = new Stein(Player.SCHWARZ);
-        final Stein weisserStein = new Stein(Player.WEISS);
-        final Stein schwarzerStein2 = new Stein(Player.SCHWARZ);
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
+        final Piece weisserStein = new Piece(Player.WEISS);
+        final Piece schwarzerStein2 = new Piece(Player.SCHWARZ);
 
         fieldFrom.addStein(schwarzerStein);
         fieldBetween.addStein(schwarzerStein2);

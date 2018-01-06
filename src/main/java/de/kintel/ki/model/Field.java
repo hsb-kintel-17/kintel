@@ -8,17 +8,17 @@ import java.util.Optional;
 public class Field {
 
     private final boolean isForbidden;
-    private final Deque<Stein> steine = new LinkedList<>();
+    private final Deque<Piece> steine = new LinkedList<>();
 
     public Field(boolean isForbidden) {
         this.isForbidden = isForbidden;
     }
 
-    public void addStein(@Nonnull final Stein s) {
+    public void addStein(@Nonnull final Piece s) {
         steine.push(s);
     }
 
-    public Optional<Stein> peekHead() {
+    public Optional<Piece> peekHead() {
         if (steine.isEmpty()) {
             return Optional.empty();
         } else {
@@ -26,7 +26,7 @@ public class Field {
         }
     }
 
-    public Optional<Stein> pollHead() {
+    public Optional<Piece> pollHead() {
         if (steine.isEmpty()) {
             return Optional.empty();
         } else {
@@ -40,7 +40,8 @@ public class Field {
         if( isForbidden ) {
             sb.append( String.valueOf('\u25A8'));
         } else {
-            steine.forEach(sb::append);
+            steine.stream().limit(1).map( s -> s.toString() + "<" + s.getRank().name().charAt(0) + ">").forEach(sb::append);
+            steine.stream().skip(1).forEach(sb::append);
         }
         return sb.toString();
     }
@@ -53,7 +54,7 @@ public class Field {
         }
     }
 
-    public Deque<Stein> getSteine() {
+    public Deque<Piece> getSteine() {
         return steine;
     }
 

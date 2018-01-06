@@ -3,6 +3,7 @@ package de.kintel.ki.algorithm;
 import de.kintel.ki.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -18,7 +19,12 @@ public class MoveMakerImpl implements MoveMaker {
      Debugging mechanism that stores board contents before the move for comparision after undo move. If the states differ then the undo was incorrect.
      */
     private final HashMap<Move, String> guard = new HashMap<>();
+    private final RankMakerImpl rankMaker;
 
+    @Autowired
+    public MoveMakerImpl(RankMakerImpl rankMaker) {
+        this.rankMaker = rankMaker;
+    }
 
     /**
      * Make a move.
@@ -28,6 +34,7 @@ public class MoveMakerImpl implements MoveMaker {
     @Override
     public void makeMove(@Nonnull final Move move) {
         doMove(move, false);
+        this.rankMaker.processRankChange(move, false);
     }
 
     /**
@@ -38,6 +45,7 @@ public class MoveMakerImpl implements MoveMaker {
     @Override
     public void undoMove(@Nonnull final Move move) {
         doMove(move, true);
+        this.rankMaker.processRankChange(move, true);
     }
 
     private void doMove(Move move, boolean undo) {
@@ -59,13 +67,13 @@ public class MoveMakerImpl implements MoveMaker {
         if( move.getForwardClassification().equals(PathClassifier.MoveType.MOVE) ) {
 
             if(!undo) {
-                final Iterator<Stein> it = fieldFrom.getSteine().descendingIterator();
+                final Iterator<Piece> it = fieldFrom.getSteine().descendingIterator();
                 while(it.hasNext()) {
                     fieldTo.getSteine().push(it.next());
                     it.remove();
                 }
             } else {
-                final Iterator<Stein> it = fieldTo.getSteine().descendingIterator();
+                final Iterator<Piece> it = fieldTo.getSteine().descendingIterator();
                 while(it.hasNext()) {
                     fieldFrom.getSteine().push(it.next());
                     it.remove();
@@ -80,18 +88,22 @@ public class MoveMakerImpl implements MoveMaker {
             final Field fieldOpponent = move.getOpponentOpt().get();
 
             if(!undo) {
+                fieldOpponent.peekHead().get().degrade();
                 fieldTo.getSteine().push( fieldOpponent.getSteine().pollFirst() );
-                final Iterator<Stein> it = fieldFrom.getSteine().descendingIterator();
+                final Iterator<Piece> it = fieldFrom.getSteine().descendingIterator();
                 while(it.hasNext()) {
                     fieldTo.getSteine().push(it.next());
                     it.remove();
                 }
             } else {
                 fieldOpponent.getSteine().push( fieldTo.getSteine().pollLast() );
-                final Iterator<Stein> it = fieldTo.getSteine().descendingIterator();
+                final Iterator<Piece> it = fieldTo.getSteine().descendingIterator();
                 while(it.hasNext()) {
                     fieldFrom.getSteine().push(it.next());
                     it.remove();
+                }
+                if( move.getForwarOpponentRankOpt().isPresent() ) { //should be present on CAPTURE
+                    fieldOpponent.peekHead().get().setRank( move.getForwarOpponentRankOpt().get() );
                 }
             }
         }
@@ -106,4 +118,5 @@ public class MoveMakerImpl implements MoveMaker {
 
         logger.debug("After move (undo:{}): {}", undo, board.toString() );
     }
+
 }

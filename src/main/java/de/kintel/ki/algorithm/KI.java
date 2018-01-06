@@ -183,7 +183,11 @@ public class KI extends Negamax<Move> {
     }
 
     public Move getBestMove(int depth) {
-        return getBestMoves(depth).get(0);
+        if (getBestMoves(depth).size() >= 1) {
+            return getBestMoves(depth).get(0);
+        } else {
+            return null;
+        }
     }
 
 }

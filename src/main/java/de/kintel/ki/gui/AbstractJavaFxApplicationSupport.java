@@ -32,7 +32,6 @@ public abstract class AbstractJavaFxApplicationSupport extends Application imple
         Application.launch(appClass, args);
     }
 
-
     @Override
     public final void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;

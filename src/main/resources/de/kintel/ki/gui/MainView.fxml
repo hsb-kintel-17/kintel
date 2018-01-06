@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import eu.lestard.grid.GridView?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -17,6 +18,7 @@
                 <GridView fx:id="gridView"/>
             </children>
         </StackPane>
+        <Label fx:id="winLabel" visible="false"/>
         <Group fx:id="groupPossibleMoves"/>
         <Group fx:id="groupBestMove"/>
     </children>

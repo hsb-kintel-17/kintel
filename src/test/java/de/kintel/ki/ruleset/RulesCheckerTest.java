@@ -35,9 +35,9 @@ public class RulesCheckerTest {
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        srcField.addStein(new Stein(Player.SCHWARZ));
-        fields[1][1].addStein(new Stein(Player.WEISS));
-        fields[1][1].addStein(new Stein(Player.SCHWARZ));
+        srcField.addStein(new Piece(Player.SCHWARZ));
+        fields[1][1].addStein(new Piece(Player.WEISS));
+        fields[1][1].addStein(new Piece(Player.SCHWARZ));
 
         final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
 
