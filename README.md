@@ -2,11 +2,14 @@
 ## TODO
 
 - [ ] reale Bewertungsfunktion implementieren
-- [ ] Promotion implementieren
+- [x] Promotion implementieren
+- [ ] Promotion testen
+- [ ] use multithreading
+- [ ] calculate first n moves to avoid computation time on these 
 - [ ] Eingabe von UML Koordinaten (bspw. e3d4) zu internen Koordinaten umwandeln (bspw. 5344)
 
 ## Problems
-# Can't create copy of board
+### Create copy of board
 Since the board contains the fields which are not of primitive or boxable types it's not easy to create a copy for restoration later.
 `Object#clone()` on the board creates a shallow copy but a deep copy is required in order to copy the whole state the board.
 There are multiple ways to fix this:
