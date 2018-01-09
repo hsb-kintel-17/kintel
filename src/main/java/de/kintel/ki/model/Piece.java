@@ -3,13 +3,16 @@ package de.kintel.ki.model;
 import de.kintel.ki.algorithm.PathClassifier;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Created by kintel on 19.12.2017.
  */
-public class Piece {
+public class Piece implements Serializable {
 
-    private final Player owner;
+    private static final long serialVersionUID = 7793539268451904415L;
+    private Player owner;
     private Rank rank;
 
     public Piece(@Nonnull final Player owner) {
@@ -69,5 +72,15 @@ public class Piece {
         }
 
         this.rank = rank;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        stream.writeObject(owner);
+        stream.writeObject(rank);
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        owner = (Player) stream.readObject();
+        rank = (Rank) stream.readObject();
     }
 }

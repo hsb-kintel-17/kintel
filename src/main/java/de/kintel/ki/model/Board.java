@@ -1,19 +1,24 @@
 package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public class Board implements Serializable {
 
-    private final Logger logger = LoggerFactory.getLogger(Board.class);
+    private static final long serialVersionUID = -3717253852145631360L;
 
-    private final int height;
-    private final int width;
+    private static final Logger logger = LoggerFactory.getLogger(Board.class);
+
+    private int height;
+    private int width;
 
     private Field[][] fields;
 
@@ -114,5 +119,21 @@ public class Board {
 
     public void setFields(@Nonnull final Field[][] fields) {
         this.fields = fields;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        stream.writeInt(height);
+        stream.writeInt(width);
+        stream.writeObject(fields);
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        width = stream.readInt();
+        height = stream.readInt();
+        fields = (Field[][]) stream.readObject();
+    }
+
+    public Board deepCopy() {
+        return SerializationUtils.roundtrip(this);
     }
 }
