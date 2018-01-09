@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class RankMakerImpl implements RankMaker {
 
     @Override
-    public void processRankChange(Move move, boolean undo) {
+    public void processRankChange(Move move) {
         final Board board = move.getBoard();
         final Coordinate2D coordFrom = board.getCoordinate(move.getSourceField());
         final Coordinate2D coordTo = board.getCoordinate(move.getTargetField());
@@ -20,23 +20,12 @@ public class RankMakerImpl implements RankMaker {
         boolean basementHit = move.getCurrentPlayer().equals(Player.WEISS) ? coordTo.getX() == 0 : coordTo.getX() == board.getHeight() - 1;
 
         if(basementHit) {
-            if(!undo) {
-                fieldTo.peekHead().ifPresent(h -> h.promote(move.getForwardClassification()));
-                final ArrayList<Piece> pieces = Lists.newArrayList(fieldTo.getSteine());
-                if (pieces.size() >= 2) {
-                    pieces.get(1).degrade();
-                }
-            } else {
-                if( move.getForwarFromRankOpt().isPresent() ) {
-                    fieldFrom.peekHead().ifPresent(h -> h.setRank(move.getForwarFromRankOpt().get()));
-                }
-                if( move.getForwardClassification().equals(PathClassifier.MoveType.CAPTURE)) {
-                    if( move.getForwarOpponentRankOpt().isPresent() ) {
-                        move.getOpponentOpt().ifPresent(h -> h.peekHead().ifPresent( f -> f.setRank(move.getForwarOpponentRankOpt().get())));
-                    } else {
-                        throw new IllegalStateException("The should be the opponent Rank stored for redo but isn't." + move);
-                    }
-                }
+            if ( fieldTo.peekHead().isPresent() ) {
+                fieldTo.peekHead().get().promote(move.getForwardClassification());
+            }
+            final ArrayList<Piece> pieces = Lists.newArrayList(fieldTo.getSteine());
+            if (pieces.size() >= 2) {
+                pieces.get(1).degrade();
             }
         }
     }

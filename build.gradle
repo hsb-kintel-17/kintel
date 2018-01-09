@@ -35,6 +35,5 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.github.avianey:minimax4j:e0d67d7f41'
     compile('org.springframework.boot:spring-boot-starter')
-    runtime('org.springframework.boot:spring-boot-devtools')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

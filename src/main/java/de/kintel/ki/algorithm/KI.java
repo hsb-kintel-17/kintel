@@ -2,14 +2,18 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
 import de.kintel.ki.ruleset.RulesChecker;
-import fr.avianey.minimax4j.impl.Negamax;
+import fr.avianey.minimax4j.impl.ParallelNegamax;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,22 +21,24 @@ import java.util.List;
  * Created by kintel on 19.12.2017.
  */
 @Component
-@Scope("singleton")
-public class KI extends Negamax<Move> {
+@Scope("prototype")
+public class KI extends ParallelNegamax<Move> implements Serializable {
 
-    private final Logger logger = LoggerFactory.getLogger(KI.class);
+    private static final Logger logger = LoggerFactory.getLogger(KI.class);
 
-    private final RulesChecker rulesChecker;
-    private final MoveMaker moveMaker;
-    private final Weighting weighting;
-    private final Board board;
+    private RulesChecker rulesChecker;
+    private MoveMaker moveMaker;
+    private Weighting weighting;
+    private final transient ApplicationContext applicationContext;
+    private Board board;
     private Player currentPlayer;
 
     @Autowired
-    public KI(@Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting) {
+    public KI(@Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, ApplicationContext applicationContext) {
         this.rulesChecker = rulesChecker;
         this.moveMaker = moveMaker;
         this.weighting = weighting;
+        this.applicationContext = applicationContext;
         this.board = new Board(7, 9);
         this.currentPlayer = Player.SCHWARZ;
     }
@@ -58,7 +64,7 @@ public class KI extends Negamax<Move> {
     @Override
     public void makeMove(@Nonnull Move move) {
         logger.debug("make move " + move);
-        moveMaker.makeMove(move);
+        board = moveMaker.makeMove(move);
         next();
     }
 
@@ -73,7 +79,7 @@ public class KI extends Negamax<Move> {
     @Override
     public void unmakeMove(@Nonnull Move move) {
         logger.debug("unmake move " + move);
-        moveMaker.undoMove(move);
+        board = moveMaker.undoMove(move);
         previous();
     }
 
@@ -181,12 +187,31 @@ public class KI extends Negamax<Move> {
         return board.toString();
     }
 
-    public Move getBestMove(int depth) {
-        if (getBestMoves(depth).size() >= 1) {
+    public synchronized Move getBestMove(int depth) {
+        if (!getBestMoves(depth).isEmpty()) {
             return getBestMoves(depth).get(0);
         } else {
             return null;
         }
     }
 
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+         stream.writeObject(board);
+         stream.writeObject(currentPlayer);
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        board = (Board) stream.readObject();
+        currentPlayer = (Player) stream.readObject();
+    }
+
+    public KI deepCopy() {
+        return SerializationUtils.roundtrip(this);
+    }
+
+    @Override
+    public ParallelNegamax<Move> clone() {
+        final KI copy = applicationContext.getAutowireCapableBeanFactory().getBean(KI.class); //this.deepCopy();
+        return copy;
+    }
 }

@@ -55,7 +55,7 @@ public class Board implements Serializable {
                 }
             }
         }
-        throw new IllegalArgumentException(String.format("Searched field %s is not on board.", searchField));
+        throw new IllegalArgumentException(String.format("Searched field %s is not on board.", searchField.toString()));
     }
 
     public Field getField(int x, int y) {
@@ -128,8 +128,8 @@ public class Board implements Serializable {
     }
 
     private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        width = stream.readInt();
         height = stream.readInt();
+        width = stream.readInt();
         fields = (Field[][]) stream.readObject();
     }
 

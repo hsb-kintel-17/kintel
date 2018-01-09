@@ -1,6 +1,5 @@
 package de.kintel.ki.ruleset.rules;
 
-import de.kintel.ki.algorithm.PathFinder;
 import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.IRule;
