@@ -6,10 +6,7 @@ import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.util.Arrow;
-import de.kintel.ki.model.Coordinate2D;
-import de.kintel.ki.model.Field;
-import de.kintel.ki.model.Move;
-import de.kintel.ki.model.Player;
+import de.kintel.ki.model.*;
 import de.saxsys.mvvmfx.FxmlView;
 import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
@@ -25,6 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +53,12 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @Autowired
     private KI ki;
+    @Value("${board.width}")
+    private int width;
+    @Value("${board.height}")
+    private int height;
     private Player lastPlayer;
+    private Board board;
 
     @PostConstruct
     public void init(){
@@ -66,8 +69,8 @@ public class MainView implements FxmlView<MainViewModel> {
         gridModel = new GridModel<>();
 
         gridModel.setDefaultState("");
-        gridModel.setNumberOfColumns(ki.getBoard().getWidth());
-        gridModel.setNumberOfRows(ki.getBoard().getHeight());
+        gridModel.setNumberOfColumns(width);
+        gridModel.setNumberOfRows(height);
 
         gridView.setGridModel(gridModel);
         gridView.setNodeFactory(cell -> "".equals(cell.getState()) ? null : new Label(cell.getState()));
@@ -79,7 +82,7 @@ public class MainView implements FxmlView<MainViewModel> {
     }
 
     private Point2D locate(Field field) {
-        final Coordinate2D coordinateFrom = ki.getBoard().getCoordinate(field);
+        final Coordinate2D coordinateFrom = board.getCoordinate(field);
         final Stage stage = (Stage) root.getScene().getWindow();
 
         final Pane cellPane = gridView.getCellPane(gridModel.getCell(coordinateFrom.getY(), coordinateFrom.getX()));
@@ -90,10 +93,11 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @Subscribe
     public void newPossibleMoves(PossibleMovesEvent e) {
+        board = e.getBoard();
         final List<Move> possibleMoves = e.getPossibleMoves();
         Platform.runLater(() -> {
             groupPossibleMoves.getChildren().clear();
-            gridModel.getCells().forEach(c -> c.changeState(ki.getBoard().getField(c.getRow(), c.getColumn()).toString()));
+            gridModel.getCells().forEach(c -> c.changeState(board.getField(c.getRow(), c.getColumn()).toString()));
             possibleMoves.forEach( move -> {
                 drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceField(), move.getTargetField());
             });

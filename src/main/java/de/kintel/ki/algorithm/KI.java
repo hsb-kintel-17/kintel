@@ -211,7 +211,9 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
 
     @Override
     public ParallelNegamax<Move> clone() {
-        final KI copy = applicationContext.getAutowireCapableBeanFactory().getBean(KI.class); //this.deepCopy();
+        final Board boardCopy = getBoard().deepCopy();
+        final KI copy = new KI(rulesChecker, new MoveMakerImpl(new RankMakerImpl()), weighting, applicationContext);
+        board = boardCopy;
         return copy;
     }
 }
