@@ -34,13 +34,13 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     private Player currentPlayer;
 
     @Autowired
-    public KI(@Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, ApplicationContext applicationContext) {
+    public KI(@Nonnull Player currPlayer, @Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board, ApplicationContext applicationContext) {
         this.rulesChecker = rulesChecker;
         this.moveMaker = moveMaker;
         this.weighting = weighting;
         this.applicationContext = applicationContext;
-        this.board = new Board(7, 9);
-        this.currentPlayer = Player.SCHWARZ;
+        this.board = board;
+        this.currentPlayer = currPlayer;
     }
 
     /**
@@ -212,8 +212,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public ParallelNegamax<Move> clone() {
         final Board boardCopy = getBoard().deepCopy();
-        final KI copy = new KI(rulesChecker, new MoveMakerImpl(new RankMakerImpl()), weighting, applicationContext);
-        board = boardCopy;
+        final KI copy = new KI(currentPlayer, rulesChecker, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
         return copy;
     }
 }

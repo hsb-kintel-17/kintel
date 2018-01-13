@@ -4,13 +4,17 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
+@Scope("singleton")
 public class Board implements Serializable {
 
     private static final long serialVersionUID = -3717253852145631360L;
@@ -18,6 +22,7 @@ public class Board implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
 
     private int height;
+
     private int width;
 
     private Field[][] fields;
