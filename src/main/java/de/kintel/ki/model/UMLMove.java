@@ -24,11 +24,11 @@ public class UMLMove extends Move implements Serializable {
     public static Logger logger = LoggerFactory.getLogger(UMLMove.class);
 
     private Board board;
-    private Field from;
-    private Field to;
+    private Coordinate2D from;
+    private Coordinate2D to;
     private Player currentPlayer;
 
-    public UMLMove(@Nonnull Board board, @Nonnull Field from, @Nonnull Field to, @Nonnull Player currentPlayer) {
+    public UMLMove(@Nonnull Board board, @Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
         this.board = board;
         this.from = from;
         this.to = to;
@@ -36,10 +36,8 @@ public class UMLMove extends Move implements Serializable {
     }
 
     public boolean isForward() {
-        Coordinate2D cooFrom = getBoard().getCoordinate(getSourceField());
-        Coordinate2D cooTo = getBoard().getCoordinate(getTargetField());
 
-        boolean isForward = getCurrentPlayer().equals(Player.SCHWARZ) ? cooFrom.getX() < cooTo.getX() : cooFrom.getX() > cooTo.getX();
+        boolean isForward = getCurrentPlayer().equals(Player.SCHWARZ) ? getSourceCoordinate().getX() < getTargetCoordinate().getX() : getSourceCoordinate().getX() > getTargetCoordinate().getX();
 
         return isForward;
     }
@@ -47,14 +45,14 @@ public class UMLMove extends Move implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Move{");
-        sb.append(getSourceField())
+        sb.append(getSourceCoordinate())
           .append("(")
-        .append(getBoard().getCoordinate(getSourceField()))
+        .append(getBoard().getField(getSourceCoordinate()))
         .append(")")
         .append(" to ")
-        .append(getTargetField())
+        .append(getTargetCoordinate())
           .append("(")
-          .append(getBoard().getCoordinate(getTargetField()))
+          .append(getBoard().getField(getTargetCoordinate()))
           .append(")")
           .append(" for player ")
           .append(getCurrentPlayer());
@@ -72,12 +70,12 @@ public class UMLMove extends Move implements Serializable {
     }
 
     @Override
-    public Field getSourceField() {
+    public Coordinate2D getSourceCoordinate() {
         return from;
     }
 
     @Override
-    public Field getTargetField() {
+    public Coordinate2D getTargetCoordinate() {
         return to;
     }
 
@@ -96,8 +94,8 @@ public class UMLMove extends Move implements Serializable {
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         this.board = (Board) stream.readObject();
-        this.from = (Field) stream.readObject();
-        this.to = (Field) stream.readObject();
+        this.from = (Coordinate2D) stream.readObject();
+        this.to = (Coordinate2D) stream.readObject();
         this.currentPlayer = (Player) stream.readObject();
 
     }
@@ -110,6 +108,8 @@ public class UMLMove extends Move implements Serializable {
     @Override
     public Optional<Field> getOpponentOpt() {
         return PathFinder.find(this).stream()
+                                //map coordinate to field
+                               .map(coordinate -> board.getField(coordinate))
                                // find first field of opposite player
                                .filter(field -> field.getOwner()
                                                      .isPresent() && !field.getOwner()
@@ -120,11 +120,11 @@ public class UMLMove extends Move implements Serializable {
 
     @Override
     public PathClassifier.MoveType getForwardClassification() {
-        return PathClassifier.classify(PathFinder.find(this));
+        return PathClassifier.classify(PathFinder.find(this), board);
     }
 
     @Override
-    public Deque<Field> getForwardPath() {
+    public Deque<Coordinate2D> getForwardPath() {
         return PathFinder.find(this);
     }
 

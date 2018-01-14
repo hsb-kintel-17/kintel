@@ -17,7 +17,7 @@ public class RuleDirection implements IRule {
     public boolean isValidMove(@Nonnull final Move move) {
         final boolean isForward = move.isForward();
         final PathClassifier.MoveType moveType = move.getForwardClassification();
-        final Optional<Piece> steinOpt = move.getSourceField().peekHead();
+        final Optional<Piece> steinOpt = move.getBoard().getField(move.getSourceCoordinate()).peekHead();
         if( steinOpt.isPresent() ) {
             Rank rank = steinOpt.get().getRank();
             switch ( rank ) {

@@ -27,18 +27,18 @@ public class PathFinderTest {
             {new Field(false), new Field(false), new Field(false)},
         };
 
-        final Field srcField = fields[0][0];
-        final Field targetField = fields[2][2];
+        final Coordinate2D coordinateFrom = new Coordinate2D(0, 0);
+        final Coordinate2D coordinateTarget = new Coordinate2D(2, 2);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        srcField.addStein(new Piece(Player.SCHWARZ));
+        board.getField(coordinateFrom).addStein(new Piece(Player.SCHWARZ));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTarget, Player.SCHWARZ);
 
-        final Deque<Field> actualPath = PathFinder.find(move);
+        final Deque<Coordinate2D> actualPath = PathFinder.find(move);
 
-        assertThat(actualPath, hasItems(srcField, fields[1][1], targetField));
+        assertThat(actualPath, hasItems(coordinateFrom, new Coordinate2D(1, 1), coordinateTarget));
 
     }
 
@@ -58,18 +58,18 @@ public class PathFinderTest {
             {new Field(false), new Field(false), new Field(false)},
         };
 
-        final Field srcField = fields[1][1];
-        final Field targetField = fields[3][1];
+        final Coordinate2D coordinateFrom = new Coordinate2D(1, 1);
+        final Coordinate2D coordinateTarget = new Coordinate2D(3, 1);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        srcField.addStein(new Piece(Player.SCHWARZ));
+        board.getField(coordinateFrom).addStein(new Piece(Player.SCHWARZ));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTarget, Player.SCHWARZ);
 
-        final Deque<Field> actualPath = PathFinder.find(move);
+        final Deque<Coordinate2D> actualPath = PathFinder.find(move);
 
-        assertThat(actualPath, hasItems(srcField, fields[2][2], targetField));
+        assertThat(actualPath, hasItems(coordinateFrom, new Coordinate2D(2, 2), coordinateTarget));
     }
 
     @Test
@@ -77,19 +77,19 @@ public class PathFinderTest {
 
         final Field[][] fields = GridFactory.getLaskaInitGrid();
 
-        final Field srcField = fields[4][2];
-        final Field targetField = fields[3][3];
+        final Coordinate2D coordinateFrom = new Coordinate2D(4, 2);
+        final Coordinate2D coordinateTarget = new Coordinate2D(3, 3);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        assertTrue( srcField.getOwner().isPresent() );
-        assertThat( srcField.getOwner().get(), is(Player.WEISS));
+        assertTrue( board.getField(coordinateFrom).getOwner().isPresent() );
+        assertThat( board.getField(coordinateFrom).getOwner().get(), is(Player.WEISS));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.WEISS);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTarget, Player.WEISS);
 
-        final Deque<Field> actualPath = PathFinder.find(move);
+        final Deque<Coordinate2D> actualPath = PathFinder.find(move);
 
-        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, hasItems(srcField, targetField));
+        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, hasItems(coordinateFrom, coordinateTarget));
     }
 
     @Test
@@ -97,18 +97,18 @@ public class PathFinderTest {
         //Move{S(Coordinate2D{x=2, y=6}) to (Coordinate2D{x=3, y=7}) for player SCHWARZ
         final Field[][] fields = GridFactory.getLaskaInitGrid();
 
-        final Field srcField = fields[2][6];
-        final Field targetField = fields[3][7];
+        final Coordinate2D coordinateFrom = new Coordinate2D(2, 6);
+        final Coordinate2D coordinateTarget = new Coordinate2D(3, 7);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        assertTrue( srcField.getOwner().isPresent() );
-        assertThat( srcField.getOwner().get(), is(Player.SCHWARZ));
+        assertTrue( board.getField(coordinateFrom).getOwner().isPresent() );
+        assertThat( board.getField(coordinateFrom).getOwner().get(), is(Player.SCHWARZ));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTarget, Player.SCHWARZ);
 
-        final Deque<Field> actualPath = PathFinder.find(move);
+        final Deque<Coordinate2D> actualPath = PathFinder.find(move);
 
-        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, hasItems(srcField, targetField));
+        assertThat("Expect a straight movement from src to dest because fields are direct neighbours", actualPath, hasItems(coordinateFrom, coordinateTarget));
     }
 }

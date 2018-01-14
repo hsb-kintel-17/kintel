@@ -21,18 +21,18 @@ public class RuleDirectionTest {
     public void direction_move() throws Exception {
         final Field[][] fields = GridFactory.getRectGrid(3, 3);
 
-        final Field fieldFrom = fields[1][1];
-        final Field fieldForward = fields[2][2];
-        final Field fieldBackward = fields[0][0];
+        final Coordinate2D coordinateFrom = new Coordinate2D(1, 1);
+        final Coordinate2D coordinateForward = new Coordinate2D(2, 2);
+        final Coordinate2D coordinateBackward = new Coordinate2D(0, 0);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
         final Piece schwarzerStein = new Piece(Player.SCHWARZ);
 
-        final Move moveForward = new UMLMove(board, fieldFrom, fieldForward, Player.SCHWARZ);
-        final Move moveBackward = new UMLMove(board, fieldFrom, fieldBackward, Player.SCHWARZ);
+        final Move moveForward = new UMLMove(board, coordinateFrom, coordinateForward, Player.SCHWARZ);
+        final Move moveBackward = new UMLMove(board, coordinateFrom, coordinateBackward, Player.SCHWARZ);
 
-        fieldFrom.addStein( schwarzerStein );
+        board.getField(coordinateFrom).addStein( schwarzerStein );
 
         schwarzerStein.setRank(Rank.normal);
         assertThat(ruleDirection.isValidMove(moveForward), is(true));
@@ -47,24 +47,24 @@ public class RuleDirectionTest {
     public void direction_capture() throws Exception {
         final Field[][] fields = GridFactory.getRectGrid(5, 5);
 
-        final Field fieldFrom = fields[2][2];
-        final Field fieldMoveForward = fields[3][1];
-        final Field fieldMoveBackward = fields[1][3];
-        final Field fieldCaptureForward = fields[4][4];
-        final Field fieldCaptureBackward = fields[0][0];
+        final Coordinate2D coordinateFrom = new Coordinate2D(2, 2);
+        final Coordinate2D coordinateMoveForward = new Coordinate2D(3, 1);
+        final Coordinate2D coordinateMoveBackward = new Coordinate2D(1, 3);
+        final Coordinate2D coordinateCaptureForward = new Coordinate2D(4, 4);
+        final Coordinate2D coordinateCaptureBackward = new Coordinate2D(0, 0);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
         final Piece schwarzerStein = new Piece(Player.SCHWARZ);
 
-        fieldFrom.addStein( schwarzerStein );
+        board.getField(coordinateFrom).addStein( schwarzerStein );
         fields[1][1].addStein(new Piece(Player.WEISS));
         fields[3][3].addStein(new Piece(Player.WEISS));
 
-        Move moveForward = new UMLMove(board, fieldFrom, fieldMoveForward, Player.SCHWARZ);
-        Move moveBackward = new UMLMove(board, fieldFrom, fieldMoveBackward, Player.SCHWARZ);
-        Move captureForward = new UMLMove(board, fieldFrom, fieldCaptureForward, Player.SCHWARZ);
-        Move captureBackward = new UMLMove(board, fieldFrom, fieldCaptureBackward, Player.SCHWARZ);
+        Move moveForward = new UMLMove(board, coordinateFrom, coordinateMoveForward, Player.SCHWARZ);
+        Move moveBackward = new UMLMove(board, coordinateFrom, coordinateMoveBackward, Player.SCHWARZ);
+        Move captureForward = new UMLMove(board, coordinateFrom, coordinateCaptureForward, Player.SCHWARZ);
+        Move captureBackward = new UMLMove(board, coordinateFrom, coordinateCaptureBackward, Player.SCHWARZ);
 
         schwarzerStein.setRank(Rank.normal);
         assertThat(ruleDirection.isValidMove(moveForward), is(true));

@@ -5,6 +5,7 @@ import de.kintel.ki.algorithm.PathClassifier;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created by kintel on 19.12.2017.
@@ -82,5 +83,20 @@ public class Piece implements Serializable {
     private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         owner = (Player) stream.readObject();
         rank = (Rank) stream.readObject();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Piece piece = (Piece) o;
+        return owner == piece.owner &&
+                rank == piece.rank;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(owner, rank);
     }
 }

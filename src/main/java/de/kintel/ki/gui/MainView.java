@@ -81,11 +81,8 @@ public class MainView implements FxmlView<MainViewModel> {
         AnchorPane.setRightAnchor(stackPane,0.0);
     }
 
-    private Point2D locate(Field field) {
-        final Coordinate2D coordinateFrom = board.getCoordinate(field);
-        final Stage stage = (Stage) root.getScene().getWindow();
-
-        final Pane cellPane = gridView.getCellPane(gridModel.getCell(coordinateFrom.getY(), coordinateFrom.getX()));
+    private Point2D locate(Coordinate2D coordinate) {
+        final Pane cellPane = gridView.getCellPane(gridModel.getCell(coordinate.getY(), coordinate.getX()));
         final Bounds boundsInParent = cellPane.localToScene(cellPane.getLayoutBounds());
         final Point2D point2D = new Point2D(boundsInParent.getMaxX(), boundsInParent.getMaxY()).midpoint(boundsInParent.getMinX(), boundsInParent.getMinY());
         return point2D;
@@ -99,7 +96,7 @@ public class MainView implements FxmlView<MainViewModel> {
             groupPossibleMoves.getChildren().clear();
             gridModel.getCells().forEach(c -> c.changeState(board.getField(c.getRow(), c.getColumn()).toString()));
             possibleMoves.forEach( move -> {
-                drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceField(), move.getTargetField());
+                drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
             });
         });
     }
@@ -115,13 +112,13 @@ public class MainView implements FxmlView<MainViewModel> {
             } else {
                 lastPlayer = bestMove.getCurrentPlayer();
                 groupBestMove.getChildren().clear();
-                drawArrow(groupBestMove, Color.RED, bestMove.getSourceField(), bestMove.getTargetField());
+                drawArrow(groupBestMove, Color.RED, bestMove.getSourceCoordinate(), bestMove.getTargetCoordinate());
             }
         });
 
     }
 
-    private void drawArrow(Group group, Color color, Field from, Field to) {
+    private void drawArrow(Group group, Color color, Coordinate2D from, Coordinate2D to) {
         int width_offset = 25;
         final Arrow arrow = new Arrow();
 

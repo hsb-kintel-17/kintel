@@ -37,30 +37,18 @@ public class Board implements Serializable {
         this.fields = fields;
     }
 
-    public List<Field> getFieldsOccupiedBy(@Nonnull final Player player) {
-        final List<Field> fieldsCollector = new ArrayList<>();
+    public List<Coordinate2D> getCoordinatesOccupiedBy(@Nonnull final Player player) {
+        final List<Coordinate2D> fieldsCollector = new ArrayList<>();
 
         for (int x = 0; x < height; x++) {
             for (int y = 0; y < width; y++) {
                 final Field field = getField(x, y);
                 if(field.getOwner().isPresent() && field.getOwner().get().equals( player ) ) {
-                    fieldsCollector.add(field);
+                    fieldsCollector.add(new Coordinate2D(x,y));
                 }
             }
         }
         return fieldsCollector;
-    }
-
-    public Coordinate2D getCoordinate(@Nonnull final Field searchField) {
-        for (int i = 0 ; i < height; i++){
-            for (int j = 0 ; j < width; j++){
-                Field current = fields[i][j];
-                if( current.equals(searchField) ) {
-                    return new Coordinate2D(i,j);
-                }
-            }
-        }
-        throw new IllegalArgumentException(String.format("Searched field %s is not on board.", searchField.toString()));
     }
 
     public Field getField(int x, int y) {

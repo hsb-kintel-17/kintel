@@ -100,14 +100,13 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
         final List<Move> zugzwaenge = new ArrayList<>();
         // Ordinary Moves
         final List<Move> moves = new ArrayList<>();
-        final List<Field> fieldsOccupiedBy = board.getFieldsOccupiedBy(currentPlayer);
+        final List<Coordinate2D> coordinatesOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
 
-        for( Field fieldFrom : fieldsOccupiedBy ) {
-            Coordinate2D coordFrom = board.getCoordinate(fieldFrom);
-            final List<Field> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordFrom, 2);
+        for( Coordinate2D coordinateFrom : coordinatesOccupiedBy ) {
+            final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordinateFrom, 2);
 
-            for( Field surrounding : diagonalSurroundings ) {
-                Move move = new UMLMove(board, fieldFrom, surrounding, currentPlayer);
+            for( Coordinate2D surrounding : diagonalSurroundings ) {
+                Move move = new UMLMove(board, coordinateFrom, surrounding, currentPlayer);
                 if( rulesChecker.isValidMove( move ) ) {
                     if ( move.getOpponentOpt().isPresent() ) {
                         zugzwaenge.add( move );
@@ -214,5 +213,9 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
         final Board boardCopy = getBoard().deepCopy();
         final KI copy = new KI(currentPlayer, rulesChecker, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
         return copy;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }

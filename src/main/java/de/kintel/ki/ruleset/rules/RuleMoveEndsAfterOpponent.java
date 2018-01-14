@@ -1,5 +1,6 @@
 package de.kintel.ki.ruleset.rules;
 
+import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.IRule;
@@ -22,16 +23,17 @@ public class RuleMoveEndsAfterOpponent implements IRule {
            return true;
         }
 
-        Deque<Field> path = move.getForwardPath();
+        Deque<Coordinate2D> path = move.getForwardPath();
         path.removeFirst();
         path.removeLast();
 
         final Field opponentField = opponentOpt.get();
-        final Iterator<Field> iterator = path.iterator();
+        final Iterator<Coordinate2D> iterator = path.iterator();
         while(iterator.hasNext()) {
-            final Field next = iterator.next();
+            final Coordinate2D next = iterator.next();
+            final Field nextField = move.getBoard().getField(next);
             // remove all fields until opponent field
-            if(next.equals(opponentField)) {
+            if(nextField.equals(opponentField)) {
                 iterator.remove();
                 // Cut after opponent field
                 break;

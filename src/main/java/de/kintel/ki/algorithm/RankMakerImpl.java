@@ -12,8 +12,8 @@ public class RankMakerImpl implements RankMaker {
     @Override
     public void processRankChange(Move move) {
         final Board board = move.getBoard();
-        final Coordinate2D coordFrom = board.getCoordinate(move.getSourceField());
-        final Coordinate2D coordTo = board.getCoordinate(move.getTargetField());
+        final Coordinate2D coordFrom = move.getSourceCoordinate();
+        final Coordinate2D coordTo = move.getTargetCoordinate();
         final Field fieldFrom = board.getField(coordFrom);
         final Field fieldTo = board.getField(coordTo);
 

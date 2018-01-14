@@ -19,10 +19,10 @@ public class RulesChecker implements IRulesChecker {
         this.rules = Lists.newArrayList(
             new RuleMoveByPlayerOfSameColor(),
             new RuleNotForbiddenField(),
+            new RuleDestinationIsEmpty(),
             new RuleDistance(),
             new RuleDirection(),
             new RuleDiagonal(),
-            new RuleDestinationIsEmpty(),
             new RuleNotMultiplePiecesOnPath(),
             new RuleNotOwnColorOnPath(),
             new RuleMoveEndsAfterOpponent()

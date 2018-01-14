@@ -30,16 +30,16 @@ public class RulesCheckerTest {
                 {new Field(false), new Field(false), new Field(false)},
         };
 
-        final Field srcField = fields[0][0];
-        final Field targetField = fields[2][2];
+        final Coordinate2D coordinateFrom = new Coordinate2D(0, 0);
+        final Coordinate2D coordinateTo = new Coordinate2D(2, 2);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        srcField.addStein(new Piece(Player.SCHWARZ));
+        board.getField(coordinateFrom).addStein(new Piece(Player.SCHWARZ));
         fields[1][1].addStein(new Piece(Player.WEISS));
         fields[1][1].addStein(new Piece(Player.SCHWARZ));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         final boolean isValidMoveActual = rulesChecker.isValidMove(move);
 

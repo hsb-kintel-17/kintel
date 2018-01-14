@@ -27,10 +27,12 @@ public class KITest {
 
     @Test
     public void getBestMoveHasNoSideeffects() {
-        final Board board = ki.getBoard();
+        Board board = new Board(7, 9, GridFactory.getLaskaInitGrid());
+        ki.setBoard(board);
 
         checkBoardHasDefaultSetting(board);
-        ki.getBestMove(3);
+        Move bestMove = ki.getBestMove(3);
+        board = bestMove.getBoard();
         checkBoardHasDefaultSetting(board);
     }
 
@@ -70,29 +72,33 @@ public class KITest {
     public void move_and_unmake() {
 
         Board board = ki.getBoard();
-        final Field fieldFrom = board.getField(2, 2);
-        final Field fieldTo = board.getField(3, 3);
+        final Coordinate2D coordinateFrom = new Coordinate2D(2, 2);
+        final Coordinate2D coordinateTo = new Coordinate2D(3, 3);
 
-        final Move move = new UMLMove(board, fieldFrom, fieldTo, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat(board.getField(2, 2).isEmpty(), is(false));
         ki.makeMove(move);
         ki.unmakeMove(move);
+        board = move.getBoard();
         assertThat(board.getField(2, 2).isEmpty(), is(false));
     }
 
     @Test
     public void move_and_unmake2() {
-        final Board board = ki.getBoard();
-        final Field fieldFrom = board.getField(2, 2);
-        final Field fieldTo = board.getField(3, 1);
 
-        final Move move = new UMLMove(board, fieldFrom, fieldTo, Player.SCHWARZ);
+        Board board = new Board(7, 9, GridFactory.getLaskaInitGrid());
+        ki.setBoard(board);
+        final Coordinate2D coordinateFrom = new Coordinate2D(2, 2);
+        final Coordinate2D coordinateTo = new Coordinate2D(3, 1);
+
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat(board.getField(2, 2).isEmpty(), is(false));
         assertThat(board.getField(3, 1).isEmpty(), is(true));
         ki.makeMove(move);
         ki.unmakeMove(move);
+        board = move.getBoard();
         assertThat(board.getField(2, 2).isEmpty(), is(false));
         assertThat(board.getField(3, 1).isEmpty(), is(true));
     }

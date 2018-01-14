@@ -13,11 +13,11 @@ public class BoardUtils {
      * @param radius
      * @return the surrounding fields in diagonal
      */
-    public static List<Field> getDiagonalSurroundings(@Nonnull final Board board, @Nonnull final Coordinate2D coordFrom, int radius) {
+    public static List<Coordinate2D> getDiagonalSurroundings(@Nonnull final Board board, @Nonnull final Coordinate2D coordFrom, int radius) {
         int[][] directions = new int[][]{{-1, -1}, {-1, 1}, {1, 1}, {1, -1}};
         int x = coordFrom.getX();
         int y = coordFrom.getY();
-        List<Field> surroundings = new ArrayList<>();
+        List<Coordinate2D> surroundings = new ArrayList<>();
         for (int[] direction : directions) {
             for (int i = 1; i <= radius; i++) {
 
@@ -27,7 +27,7 @@ public class BoardUtils {
                     cy >= 0 && cy < board.getWidth()) {
                     final Field field = board.getField(cx, cy);
                     if (!field.isForbidden()) {
-                        surroundings.add(field);
+                        surroundings.add(new Coordinate2D(cx,cy));
                     }
                 }
             }

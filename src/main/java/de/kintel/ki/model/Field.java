@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Field implements Serializable {
@@ -77,5 +78,20 @@ public class Field implements Serializable {
     private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         isForbidden = stream.readBoolean();
         steine = (Deque<Piece>) stream.readObject();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Field field = (Field) o;
+        return isForbidden == field.isForbidden &&
+                Objects.equals(steine, field.steine);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(isForbidden, steine);
     }
 }

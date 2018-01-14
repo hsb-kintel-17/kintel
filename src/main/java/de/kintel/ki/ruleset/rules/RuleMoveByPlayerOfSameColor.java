@@ -9,12 +9,11 @@ public class RuleMoveByPlayerOfSameColor implements IRule {
 
     @Override
     public boolean isValidMove(@Nonnull final Move move) {
-        if( !move.getSourceField().getOwner().isPresent() ) {
+        if( !move.getBoard().getField(move.getSourceCoordinate()).getOwner().isPresent() ) {
             throw new IllegalStateException("Source field has no owner.");
         }
 
-        return move.getSourceField()
-                    .getOwner().get().equals(move.getCurrentPlayer());
+        return move.getBoard().getField(move.getSourceCoordinate()).getOwner().get().equals(move.getCurrentPlayer());
     }
 
 }

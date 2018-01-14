@@ -1,9 +1,6 @@
 package de.kintel.ki.algorithm;
 
-import de.kintel.ki.model.Board;
-import de.kintel.ki.model.Field;
-import de.kintel.ki.model.Player;
-import de.kintel.ki.model.Weight;
+import de.kintel.ki.model.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -22,8 +19,9 @@ public class WeightingImpl implements Weighting {
      */
     @Override
     public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
-        final List<Field> fieldsOccupiedBy = board.getFieldsOccupiedBy(currentPlayer);
+        final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
         double heights = fieldsOccupiedBy.stream()
+                        .map(coordinate -> board.getField(coordinate))
                         .mapToDouble(f -> f.getSteine()
                         .size())
                         .map(d -> d * Weight.WIN.getValue()).sum();

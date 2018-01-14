@@ -15,12 +15,9 @@ public class BoardUtilsTest {
         final Field[][] fields = GridFactory.getRectGrid(5, 5);
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        final List<Field> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, new Coordinate2D(2, 2), 2);
-        final List<Coordinate2D> surroundingsCoords = diagonalSurroundings.stream()
-                                                               .map(board::getCoordinate)
-                                                               .collect(Collectors.toList());
+        final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, new Coordinate2D(2, 2), 2);
 
-        assertThat(surroundingsCoords, containsInAnyOrder(
+        assertThat(diagonalSurroundings, containsInAnyOrder(
                 new Coordinate2D(0, 0),
                 new Coordinate2D(0, 4),
                 new Coordinate2D(1, 1),
@@ -38,12 +35,9 @@ public class BoardUtilsTest {
         final Field[][] fields = GridFactory.getRectGrid(5, 5);
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        final List<Field> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, new Coordinate2D(0, 0), 2);
-        final List<Coordinate2D> surroundingsCoords = diagonalSurroundings.stream()
-                                                                          .map(board::getCoordinate)
-                                                                          .collect(Collectors.toList());
+        final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, new Coordinate2D(0, 0), 2);
 
-        assertThat(surroundingsCoords, containsInAnyOrder(
+        assertThat(diagonalSurroundings, containsInAnyOrder(
                 new Coordinate2D(1, 1),
                 new Coordinate2D(2, 2)
         ));

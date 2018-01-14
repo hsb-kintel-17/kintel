@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 public class RuleNotForbiddenField implements IRule {
     @Override
     public boolean isValidMove(@Nonnull final Move move) {
-        return !move.getTargetField()
+        return !move.getBoard().getField(move.getTargetCoordinate())
                     .isForbidden();
     }
 }

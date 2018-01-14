@@ -19,7 +19,7 @@ public class MoveMakerImpl implements MoveMaker {
      */
     private final HashMap<Move, String> guard = new HashMap<>();
     private final RankMakerImpl rankMaker;
-    private Deque<Move> history;
+    private Deque<Board> history;
 
     @Autowired
     public MoveMakerImpl(RankMakerImpl rankMaker) {
@@ -34,11 +34,10 @@ public class MoveMakerImpl implements MoveMaker {
      */
     @Override
     public Board makeMove(@Nonnull final Move move) {
-        guard.put(move, move.toString());
-        history.push(move);
-        Move newMove = move.deepCopy();
-        doMove(newMove);
-        return newMove.getBoard();
+        guard.put(move, move.getBoard().toString());
+        history.push(move.getBoard().deepCopy());
+        doMove(move);
+        return move.getBoard();
     }
 
     /**
@@ -48,36 +47,37 @@ public class MoveMakerImpl implements MoveMaker {
      */
     @Override
     public Board undoMove(@Nonnull final Move move) {
-       Move oldMove = history.pollFirst();
+                Board oldBoard = history.pollFirst();
 
-        //Field newSrc = move.getBoard().getField(move.getBoard().getCoordinate(move.getSourceField()));
-        //Field newTar = move.getBoard().getField(move.getBoard().getCoordinate(move.getTargetField()));
-        //move = new UMLMove(move.getBoard(), newSrc, newTar, move.getCurrentPlayer());
+                //Field newSrc = move.getBoard().getField(move.getBoard().getCoordinate(move.getSourceCoordinate()));
+                //Field newTar = move.getBoard().getField(move.getBoard().getCoordinate(move.getTargetCoordinate()));
+                //move = new UMLMove(move.getBoard(), newSrc, newTar, move.getCurrentPlayer());
 
-        final String expected = guard.get(oldMove);
-        final String actual = oldMove.toString();
-        if( !expected.equals( actual ) ) {
-            String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + oldMove.getBoard().toString();
-            throw new IllegalStateException(message);
+                final String expected = guard.get(move);
+                final String actual = oldBoard.toString();
+                if( !expected.equals( actual ) ) {
+                    String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + oldBoard.toString();
+                    throw new IllegalStateException(message);
         }
-        return oldMove.getBoard();
+        move.setBoard(oldBoard);
+        return oldBoard;
     }
 
     private void doMove(Move move) {
         final Board board = move.getBoard();
-        final Coordinate2D coordFrom = board.getCoordinate(move.getSourceField());
-        final Coordinate2D coordTo = board.getCoordinate(move.getTargetField());
+        final Coordinate2D coordFrom = move.getSourceCoordinate();
+        final Coordinate2D coordTo = move.getTargetCoordinate();
         final Field fieldFrom = board.getField(coordFrom);
         final Field fieldTo = board.getField(coordTo);
 
-        logger.debug("Making move from {}({}) to {}({}) for player {}", move.getSourceField(), coordFrom, move.getTargetField(), coordTo,
+        logger.debug("Making move from {}({}) to {}({}) for player {}", move.getSourceCoordinate(), coordFrom, move.getTargetCoordinate(), coordTo,
                      move.getCurrentPlayer());
 
         logger.debug("Before move: {}", board.toString() );
 
 
-        final Deque<Field> path = PathFinder.find(move);
-        final PathClassifier.MoveType moveType = PathClassifier.classify(path);
+        final Deque<Coordinate2D> path = PathFinder.find(move);
+        final PathClassifier.MoveType moveType = PathClassifier.classify(path,board);
 
         if( moveType.equals(PathClassifier.MoveType.MOVE) ) {
 

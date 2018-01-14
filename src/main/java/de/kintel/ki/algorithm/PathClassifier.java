@@ -1,5 +1,7 @@
 package de.kintel.ki.algorithm;
 
+import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Field;
 
 import javax.annotation.Nonnull;
@@ -30,8 +32,8 @@ public class PathClassifier {
      * @param pathOriginal The path
      * @return The move type
      */
-    public static MoveType classify(@Nonnull final Deque<Field> pathOriginal) {
-        Deque<Field> path = new ArrayDeque<>(pathOriginal);
+    public static MoveType classify(@Nonnull final Deque<Coordinate2D> pathOriginal, Board board) {
+        Deque<Coordinate2D> path = new ArrayDeque<>(pathOriginal);
         if( path.size() >= 2 ) {
             // Remove src and target field because they are irrelevant
             path.removeFirst();
@@ -39,9 +41,9 @@ public class PathClassifier {
         }
 
         // If all fields are empty on the path then it must be a simple move
-        final boolean isSimpleMove = path.stream().allMatch(Field::isEmpty);
-
+        final boolean isSimpleMove = path.stream().map(coordinate -> board.getField(coordinate)).allMatch(Field::isEmpty);
         return isSimpleMove ? MoveType.MOVE : MoveType.CAPTURE;
+
     }
 
 }

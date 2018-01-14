@@ -14,10 +14,8 @@ public class RuleDiagonal implements IRule {
 
     @Override
     public boolean isValidMove(@Nonnull final Move move) {
-        final Coordinate2D coordFrom = move.getBoard()
-                                           .getCoordinate(move.getSourceField());
-        final Coordinate2D coordTo = move.getBoard()
-                                         .getCoordinate(move.getTargetField());
+        final Coordinate2D coordFrom = move.getSourceCoordinate();
+        final Coordinate2D coordTo = move.getTargetCoordinate();
 
         int dx = Math.abs(coordFrom.getX() - coordTo.getX());
         int dy = Math.abs(coordFrom.getY() - coordTo.getY());

@@ -31,15 +31,15 @@ public class RuleMoveEndsAfterOpponentTest {
                 {new Field(false), new Field(false), new Field(false)},
         };
 
-        final Field srcField = fields[0][0];
-        final Field targetField = fields[2][2];
+        final Coordinate2D coordinateFrom = new Coordinate2D(0, 0);
+        final Coordinate2D coordinateTarget = new Coordinate2D(2, 2);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        srcField.addStein(new Piece(Player.SCHWARZ));
+        board.getField(coordinateFrom).addStein(new Piece(Player.SCHWARZ));
         fields[1][1].addStein(new Piece(Player.WEISS));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTarget, Player.SCHWARZ);
 
         final boolean isValidMoveActual = ruleMoveEndsAfterOpponent.isValidMove(move);
 
@@ -62,15 +62,15 @@ public class RuleMoveEndsAfterOpponentTest {
                 {new Field(false), new Field(false), new Field(false), new Field(false)},
         };
 
-        final Field srcField = fields[0][0];
-        final Field targetField = fields[3][3];
+        final Coordinate2D coordinateFrom = new Coordinate2D(0, 0);
+        final Coordinate2D coordinateTarget = new Coordinate2D(3, 3);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        srcField.addStein(new Piece(Player.SCHWARZ));
+        board.getField(coordinateFrom).addStein(new Piece(Player.SCHWARZ));
         fields[1][1].addStein(new Piece(Player.WEISS));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTarget, Player.SCHWARZ);
 
         final boolean isValidMoveActual = ruleMoveEndsAfterOpponent.isValidMove(move);
 
@@ -93,14 +93,14 @@ public class RuleMoveEndsAfterOpponentTest {
                 {new Field(false), new Field(false), new Field(false), new Field(false)},
         };
 
-        final Field srcField = fields[0][0];
-        final Field targetField = fields[3][3];
+        final Coordinate2D coordinateFrom = new Coordinate2D(0, 0);
+        final Coordinate2D coordinateTarget = new Coordinate2D(3, 3);
 
         final Board board = new Board(fields.length, fields[0].length, fields);
 
-        srcField.addStein(new Piece(Player.SCHWARZ));
+        board.getField(coordinateFrom).addStein(new Piece(Player.SCHWARZ));
 
-        final Move move = new UMLMove(board, srcField, targetField, Player.SCHWARZ);
+        final Move move = new UMLMove(board, coordinateFrom, coordinateTarget, Player.SCHWARZ);
 
         final boolean isValidMoveActual = ruleMoveEndsAfterOpponent.isValidMove(move);
 
