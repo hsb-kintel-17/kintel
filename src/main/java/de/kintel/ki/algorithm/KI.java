@@ -64,7 +64,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public void makeMove(@Nonnull Move move) {
         logger.debug("make move " + move);
-        board = moveMaker.makeMove(move);
+        moveMaker.makeMove(move);
         next();
     }
 
@@ -79,7 +79,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public void unmakeMove(@Nonnull Move move) {
         logger.debug("unmake move " + move);
-        board = moveMaker.undoMove(move);
+        moveMaker.undoMove(move);
         previous();
     }
 
@@ -108,7 +108,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
             for( Coordinate2D surrounding : diagonalSurroundings ) {
                 Move move = new UMLMove(board, coordinateFrom, surrounding, currentPlayer);
                 if( rulesChecker.isValidMove( move ) ) {
-                    if ( move.getOpponentOpt().isPresent() ) {
+                    if ( move.getForwardOpponentRank().isPresent() ) {
                         zugzwaenge.add( move );
                     } else {
                         moves.add( move );
@@ -186,7 +186,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
         return board.toString();
     }
 
-    public synchronized Move getBestMove(int depth) {
+    public Move getBestMove(int depth) {
         if (!getBestMoves(depth).isEmpty()) {
             return getBestMoves(depth).get(0);
         } else {

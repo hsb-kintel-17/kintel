@@ -29,10 +29,10 @@ public class RuleDirectionTest {
 
         final Piece schwarzerStein = new Piece(Player.SCHWARZ);
 
+        board.getField(coordinateFrom).addStein( schwarzerStein );
+
         final Move moveForward = new UMLMove(board, coordinateFrom, coordinateForward, Player.SCHWARZ);
         final Move moveBackward = new UMLMove(board, coordinateFrom, coordinateBackward, Player.SCHWARZ);
-
-        board.getField(coordinateFrom).addStein( schwarzerStein );
 
         schwarzerStein.setRank(Rank.normal);
         assertThat(ruleDirection.isValidMove(moveForward), is(true));

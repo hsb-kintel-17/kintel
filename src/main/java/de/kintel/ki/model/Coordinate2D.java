@@ -52,6 +52,12 @@ public class Coordinate2D {
         return y;
     }
 
+    public static Coordinate2D between(Coordinate2D a, Coordinate2D b) {
+        int x = (a.getX() + b.getX()) / 2;
+        int y = (a.getY() + b.getY()) / 2;
+        return new Coordinate2D(x,y);
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Coordinate2D{");

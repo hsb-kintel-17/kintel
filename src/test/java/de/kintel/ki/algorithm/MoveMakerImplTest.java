@@ -140,7 +140,7 @@ public class MoveMakerImplTest {
     public void makeMove_capture_undo_simple() {
 
         //       0   1   2
-        //  0  | o |   |   |
+        //  0  | s |   |   |
         //  1  |   | w |   |
         //  2  |   |   |   |
 
@@ -154,10 +154,10 @@ public class MoveMakerImplTest {
         final Coordinate2D coordinateBetween = new Coordinate2D(1,1);
         final Coordinate2D coordinateTo = new Coordinate2D(2,2);
 
-        Board board = new Board(fields.length, fields[0].length, fields);
+        final Board board = new Board(fields.length, fields[0].length, fields);
 
-        Piece schwarzerStein = new Piece(Player.SCHWARZ);
-        Piece weisserStein = new Piece(Player.WEISS);
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
+        final Piece weisserStein = new Piece(Player.WEISS);
 
         board.getField(coordinateFrom).addStein(schwarzerStein);
         board.getField(coordinateBetween).addStein(weisserStein);
@@ -168,9 +168,6 @@ public class MoveMakerImplTest {
         assertTrue( board.getField(coordinateTo).isEmpty() );
 
         moveMaker.makeMove(move);
-        board = move.getBoard();
-        schwarzerStein = board.getField(coordinateTo).peekHead().get();
-        weisserStein = board.getField(coordinateTo).getSteine().peekLast();
 
         assertTrue( board.getField(coordinateFrom).isEmpty() );
         assertTrue( board.getField(coordinateBetween).isEmpty() );
@@ -178,10 +175,6 @@ public class MoveMakerImplTest {
         assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein, weisserStein) );
 
         moveMaker.undoMove(move);
-        board = move.getBoard();
-        schwarzerStein = board.getField(coordinateFrom).peekHead().get();
-        weisserStein = board.getField(coordinateTo).getSteine().peekLast();
-
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateBetween).getSteine(), contains(weisserStein) );

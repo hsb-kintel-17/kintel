@@ -27,12 +27,21 @@ public class UMLMove extends Move implements Serializable {
     private Coordinate2D from;
     private Coordinate2D to;
     private Player currentPlayer;
+    private PathClassifier.MoveType forwardMoveType;
+    private Deque<Coordinate2D> forwardPath;
+    private Optional<Rank> forwardOpponentRank;
+    private Rank forwardFromRank;
 
     public UMLMove(@Nonnull Board board, @Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
         this.board = board;
         this.from = from;
         this.to = to;
         this.currentPlayer = currentPlayer;
+        this.forwardMoveType = PathClassifier.classify(PathFinder.find(this), board);
+        this.forwardPath = PathFinder.find(this);
+        this.forwardOpponentRank = forwardPath.stream().skip(1).map(c -> board.getField(c).peekHead()).filter(Optional::isPresent)
+                .map(Optional::get).map(Piece::getRank).findFirst();
+        this.forwardFromRank = board.getField(from).getSteine().peekFirst().getRank();
     }
 
     public boolean isForward() {
@@ -106,26 +115,23 @@ public class UMLMove extends Move implements Serializable {
     }
 
     @Override
-    public Optional<Field> getOpponentOpt() {
-        return PathFinder.find(this).stream()
-                                //map coordinate to field
-                               .map(coordinate -> board.getField(coordinate))
-                               // find first field of opposite player
-                               .filter(field -> field.getOwner()
-                                                     .isPresent() && !field.getOwner()
-                                                                           .get()
-                                                                           .equals(getCurrentPlayer()))
-                               .findFirst();
-    }
-
-    @Override
     public PathClassifier.MoveType getForwardClassification() {
-        return PathClassifier.classify(PathFinder.find(this), board);
+        return forwardMoveType;
     }
 
     @Override
     public Deque<Coordinate2D> getForwardPath() {
-        return PathFinder.find(this);
+        return forwardPath;
+    }
+
+    @Override
+    public Optional<Rank> getForwardOpponentRank() {
+        return forwardOpponentRank;
+    }
+
+    @Override
+    public Rank getForwardFromRank() {
+        return forwardFromRank;
     }
 
 }

@@ -20,12 +20,10 @@ public class RulesChecker implements IRulesChecker {
             new RuleMoveByPlayerOfSameColor(),
             new RuleNotForbiddenField(),
             new RuleDestinationIsEmpty(),
-            new RuleDistance(),
             new RuleDirection(),
             new RuleDiagonal(),
             new RuleNotMultiplePiecesOnPath(),
-            new RuleNotOwnColorOnPath(),
-            new RuleMoveEndsAfterOpponent()
+            new RuleNotOwnColorOnPath()
         );
     }
 
