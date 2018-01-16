@@ -32,7 +32,7 @@ public class KITest {
 
         checkBoardHasDefaultSetting(board);
         Move bestMove = ki.getBestMove(3);
-        board = bestMove.getBoard();
+        //board = bestMove.getBoard();
         checkBoardHasDefaultSetting(board);
     }
 
@@ -75,12 +75,12 @@ public class KITest {
         final Coordinate2D coordinateFrom = new Coordinate2D(2, 2);
         final Coordinate2D coordinateTo = new Coordinate2D(3, 3);
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat(board.getField(2, 2).isEmpty(), is(false));
         ki.makeMove(move);
         ki.unmakeMove(move);
-        board = move.getBoard();
+        //board = move.getBoard();
         assertThat(board.getField(2, 2).isEmpty(), is(false));
     }
 
@@ -92,13 +92,13 @@ public class KITest {
         final Coordinate2D coordinateFrom = new Coordinate2D(2, 2);
         final Coordinate2D coordinateTo = new Coordinate2D(3, 1);
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove(coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat(board.getField(2, 2).isEmpty(), is(false));
         assertThat(board.getField(3, 1).isEmpty(), is(true));
         ki.makeMove(move);
         ki.unmakeMove(move);
-        board = move.getBoard();
+        //board = move.getBoard();
         assertThat(board.getField(2, 2).isEmpty(), is(false));
         assertThat(board.getField(3, 1).isEmpty(), is(true));
     }

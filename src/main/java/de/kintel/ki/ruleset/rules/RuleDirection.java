@@ -1,9 +1,7 @@
 package de.kintel.ki.ruleset.rules;
 
-import de.kintel.ki.algorithm.PathClassifier;
-import de.kintel.ki.model.Move;
-import de.kintel.ki.model.Rank;
-import de.kintel.ki.model.Piece;
+import de.kintel.ki.algorithm.MoveClassifier;
+import de.kintel.ki.model.*;
 import de.kintel.ki.ruleset.IRule;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +12,10 @@ import java.util.Optional;
 public class RuleDirection implements IRule {
 
     @Override
-    public boolean isValidMove(@Nonnull final Move move) {
+    public boolean isValidMove(@Nonnull final Move move, Board board) {
         final boolean isForward = move.isForward();
-        final PathClassifier.MoveType moveType = move.getForwardClassification();
-        final Optional<Piece> steinOpt = move.getBoard().getField(move.getSourceCoordinate()).peekHead();
+        final MoveClassifier.MoveType moveType = move.getForwardClassification();
+        final Optional<Piece> steinOpt = board.getField(move.getSourceCoordinate()).peekHead();
         if( steinOpt.isPresent() ) {
             Rank rank = steinOpt.get().getRank();
             switch ( rank ) {
@@ -26,10 +24,10 @@ public class RuleDirection implements IRule {
                 // Gruene und Rote Steine dürfen rückwärts nur ziehen
                 case gruen:
                 case rot:
-                    return !(!isForward && moveType.equals(PathClassifier.MoveType.CAPTURE));
+                    return !(!isForward && moveType == MoveClassifier.MoveType.CAPTURE);
                 case gelb:
                 case magenta:
-                    return !(isForward && moveType.equals(PathClassifier.MoveType.CAPTURE));
+                    return !(isForward && moveType == MoveClassifier.MoveType.CAPTURE);
                 case gold:
                 case purpur:
                     return true;

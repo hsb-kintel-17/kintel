@@ -39,9 +39,9 @@ public class RulesCheckerTest {
         fields[1][1].addStein(new Piece(Player.WEISS));
         fields[1][1].addStein(new Piece(Player.SCHWARZ));
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
-        final boolean isValidMoveActual = rulesChecker.isValidMove(move);
+        final boolean isValidMoveActual = rulesChecker.isValidMove(move,board);
 
         assertFalse(isValidMoveActual);
 

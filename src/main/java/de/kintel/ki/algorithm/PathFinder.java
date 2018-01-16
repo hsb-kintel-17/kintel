@@ -14,8 +14,8 @@ public class PathFinder {
 
     private static Logger logger = LoggerFactory.getLogger(PathFinder.class);
 
-    public static Deque<Coordinate2D> find(@Nonnull final Move move) {
-        return calcPath(move.getBoard(), move.getSourceCoordinate(), move.getTargetCoordinate(), new ArrayDeque<>());
+    public static Deque<Coordinate2D> find(@Nonnull final Move move, Board board) {
+        return calcPath(board, move.getSourceCoordinate(), move.getTargetCoordinate(), new ArrayDeque<>());
     }
 
     /**

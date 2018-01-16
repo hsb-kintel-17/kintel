@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -36,9 +38,10 @@ public class RankMakerImplTest {
 
         board.getField(coordinateFrom).addStein( schwarzerStein );
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
-        moveMaker.makeMove(move);
+        move.setForwardClassification(MoveClassifier.MoveType.MOVE);
+        moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
         assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein) );
@@ -64,19 +67,21 @@ public class RankMakerImplTest {
 
         board.getField(coordinateFrom).addStein( schwarzerStein );
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.MOVE);
+        move.setForwardSourceRank(schwarzerStein.getRank());
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
         assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains(schwarzerStein) );
         assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
         assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).getSteine().peekFirst().getRank(), is(Rank.rot) );
 
-        moveMaker.undoMove(move);
+        moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
         assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains(schwarzerStein) );
@@ -111,9 +116,10 @@ public class RankMakerImplTest {
         board.getField(coordinateOpponent).addStein( schwarzerStein2 );
         board.getField(coordinateOpponent).addStein( weisserStein2 );
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
         assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
@@ -151,14 +157,17 @@ public class RankMakerImplTest {
         board.getField(coordinateOpponent).addStein( schwarzerStein2 );
         board.getField(coordinateOpponent).addStein( weisserStein2 );
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
+        move.setForwardOpponentRank(Optional.of(weisserStein2.getRank()));
+        move.setForwardSourceRank(Rank.normal);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
         assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
         assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
         assertThat( weisserStein2.getRank(), is(Rank.gelb) );
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
         assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
@@ -167,7 +176,7 @@ public class RankMakerImplTest {
         // weißer stein2 wurde degradiert
         assertThat( weisserStein2.getRank(), is(Rank.normal) );
 
-        moveMaker.undoMove(move);
+        moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
         assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
@@ -202,14 +211,17 @@ public class RankMakerImplTest {
 
         board.getField(coordinateOpponent).addStein( weisserStein2 );
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
+        move.setForwardSourceRank(schwarzerStein.getRank());
+        move.setForwardOpponentRank(Optional.of(weisserStein2.getRank()));
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
         assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
         assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
         assertThat( weisserStein2.getRank(), is(Rank.gelb) );
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
         assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
@@ -218,7 +230,7 @@ public class RankMakerImplTest {
         // weißer stein2 wurde degradiert
         assertThat( weisserStein2.getRank(), is(Rank.normal) );
 
-        moveMaker.undoMove(move);
+        moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
         assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );

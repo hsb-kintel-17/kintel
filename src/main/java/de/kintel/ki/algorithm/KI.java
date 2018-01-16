@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by kintel on 19.12.2017.
@@ -25,22 +26,21 @@ import java.util.List;
 public class KI extends ParallelNegamax<Move> implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(KI.class);
-
-    private RulesChecker rulesChecker;
     private MoveMaker moveMaker;
     private Weighting weighting;
     private final transient ApplicationContext applicationContext;
     private Board board;
     private Player currentPlayer;
+    private MoveClassifier moveClassifier;
 
     @Autowired
-    public KI(@Nonnull Player currPlayer, @Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board, ApplicationContext applicationContext) {
-        this.rulesChecker = rulesChecker;
+    public KI(@Nonnull Player currPlayer, @Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board, ApplicationContext applicationContext) {
         this.moveMaker = moveMaker;
         this.weighting = weighting;
         this.applicationContext = applicationContext;
         this.board = board;
         this.currentPlayer = currPlayer;
+        this.moveClassifier = moveClassifier;
     }
 
     /**
@@ -64,7 +64,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public void makeMove(@Nonnull Move move) {
         logger.debug("make move " + move);
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move, board);
         next();
     }
 
@@ -79,7 +79,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public void unmakeMove(@Nonnull Move move) {
         logger.debug("unmake move " + move);
-        moveMaker.undoMove(move);
+        moveMaker.undoMove(move, board);
         previous();
     }
 
@@ -106,9 +106,18 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
             final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordinateFrom, 2);
 
             for( Coordinate2D surrounding : diagonalSurroundings ) {
-                Move move = new UMLMove(board, coordinateFrom, surrounding, currentPlayer);
-                if( rulesChecker.isValidMove( move ) ) {
-                    if ( move.getForwardOpponentRank().isPresent() ) {
+                Move move = new UMLMove(coordinateFrom, surrounding, currentPlayer);
+                moveClassifier.classify(move, board);
+                if(move.getForwardClassification() != MoveClassifier.MoveType.INVALID) {
+                    if( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE ) {
+                        move.setForwardOpponentRank( Optional.of(board.getField(Coordinate2D.between(coordinateFrom, surrounding)).getSteine().getFirst().getRank()));
+                    } else {
+                        move.setForwardOpponentRank(Optional.empty());
+                    }
+
+                    move.setForwardSourceRank(board.getField(coordinateFrom).getSteine().getFirst().getRank());
+
+                    if ( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE) {
                         zugzwaenge.add( move );
                     } else {
                         moves.add( move );
@@ -211,7 +220,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public ParallelNegamax<Move> clone() {
         final Board boardCopy = getBoard().deepCopy();
-        final KI copy = new KI(currentPlayer, rulesChecker, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
+        final KI copy = new KI(currentPlayer, moveClassifier, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
         return copy;
     }
 

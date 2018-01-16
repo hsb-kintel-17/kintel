@@ -32,9 +32,9 @@ public class MoveMakerImpl implements MoveMaker {
      * @param move the move
      */
     @Override
-    public void makeMove(@Nonnull final Move move) {
-        guard.put(move, move.getBoard().toString());
-        doMove(move, false);
+    public void makeMove(@Nonnull final Move move, Board board) {
+        guard.put(move, board.toString());
+        doMove(move, board, false);
     }
 
     /**
@@ -43,42 +43,38 @@ public class MoveMakerImpl implements MoveMaker {
      * @param move the move
      */
     @Override
-    public void undoMove(@Nonnull final Move move) {
-        doMove(move, true);
+    public void undoMove(@Nonnull final Move move, Board board) {
+        doMove(move, board, true);
         final String expected = guard.get(move);
-        final String actual = move.getBoard().toString();
+        final String actual = board.toString();
         if (!expected.equals(actual)) {
-            String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + move.getBoard().toString();
+            String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + board.toString();
             throw new IllegalStateException(message);
         }
     }
 
-    private void doMove(Move move, boolean undo) {
-        final Board board = move.getBoard();
+    private void doMove(Move move, Board board, boolean undo) {
         final Coordinate2D coordFrom = move.getSourceCoordinate();
         final Coordinate2D coordTo = move.getTargetCoordinate();
         final Field fieldFrom = board.getField(coordFrom);
         final Field fieldTo = board.getField(coordTo);
 
-        if(coordFrom.getX() == 4 & coordFrom.getY() == 4){
-            System.out.println("");
-        }
         logger.debug("Making move from {}({}) to {}({}) for player {}", move.getSourceCoordinate(), fieldFrom, move.getTargetCoordinate(), fieldTo,
                 move.getCurrentPlayer());
 
         logger.debug("Before move: {}", board.toString());
 
-        final PathClassifier.MoveType moveType = move.getForwardClassification();
+        final MoveClassifier.MoveType moveType = move.getForwardClassification();
 
-        if (moveType.equals(PathClassifier.MoveType.MOVE)) {
+        if (moveType.equals(MoveClassifier.MoveType.MOVE)) {
             if (!undo) {
                 transportPieces(fieldFrom, fieldTo);
             } else {
                 transportPieces(fieldTo, fieldFrom);
-                fieldFrom.getSteine().peekFirst().setRank(move.getForwardFromRank());
+                fieldFrom.getSteine().peekFirst().setRank(move.getForwardSourceRank());
             }
 
-        } else if (moveType.equals(PathClassifier.MoveType.CAPTURE)) {
+        } else if (moveType.equals(MoveClassifier.MoveType.CAPTURE)) {
 
             Coordinate2D opponentCoord = Coordinate2D.between(coordFrom, coordTo);
             final Field fieldOpponent = board.getField(opponentCoord);
@@ -88,8 +84,7 @@ public class MoveMakerImpl implements MoveMaker {
                 if (!pieceOpt.isPresent()) {
                     throw new IllegalStateException("No piece on the opponent field.");
                 }
-                pieceOpt.get().degrade();
-
+                pieceOpt.get().degrade(); //TODO: Degrate in rankMaker
                 fieldTo.getSteine().push(fieldOpponent.getSteine().pollFirst());
                 transportPieces(fieldFrom, fieldTo);
             } else {
@@ -98,14 +93,14 @@ public class MoveMakerImpl implements MoveMaker {
                 move.getForwardOpponentRank().ifPresent(opponentPiece::setRank);
                 transportPieces(fieldTo, fieldFrom);
                 try {
-                    fieldFrom.getSteine().peekFirst().setRank(move.getForwardFromRank());
+                    fieldFrom.getSteine().peekFirst().setRank(move.getForwardSourceRank());
                 }catch (NullPointerException e){
                     System.out.println("");
                 }
             }
         }
         if (!undo) {
-            this.rankMaker.processRankChange(move);
+            this.rankMaker.processRankChange(move, board); //TODO: Rankmaker for undoing moves
         }
 
         logger.debug("After move: {}", board.toString());

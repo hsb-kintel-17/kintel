@@ -1,8 +1,6 @@
 package de.kintel.ki.model;
 
-import de.kintel.ki.algorithm.PathClassifier;
-import de.kintel.ki.algorithm.PathFinder;
-import org.apache.commons.lang3.SerializationUtils;
+import de.kintel.ki.algorithm.MoveClassifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Deque;
 import java.util.Optional;
 
 
@@ -19,29 +16,21 @@ import java.util.Optional;
  * Storage
  * Created by kintel on 19.12.2017.
  */
-public class UMLMove extends Move implements Serializable {
+public class UMLMove extends Move  implements Serializable {
 
     public static Logger logger = LoggerFactory.getLogger(UMLMove.class);
 
-    private Board board;
     private Coordinate2D from;
     private Coordinate2D to;
     private Player currentPlayer;
-    private PathClassifier.MoveType forwardMoveType;
-    private Deque<Coordinate2D> forwardPath;
+    private MoveClassifier.MoveType forwardClassification;
     private Optional<Rank> forwardOpponentRank;
-    private Rank forwardFromRank;
+    private Rank forwardSourceRank;
 
-    public UMLMove(@Nonnull Board board, @Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
-        this.board = board;
+    public UMLMove(@Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
         this.from = from;
         this.to = to;
         this.currentPlayer = currentPlayer;
-        this.forwardMoveType = PathClassifier.classify(PathFinder.find(this), board);
-        this.forwardPath = PathFinder.find(this);
-        this.forwardOpponentRank = forwardPath.stream().skip(1).map(c -> board.getField(c).peekHead()).filter(Optional::isPresent)
-                .map(Optional::get).map(Piece::getRank).findFirst();
-        this.forwardFromRank = board.getField(from).getSteine().peekFirst().getRank();
     }
 
     public boolean isForward() {
@@ -56,26 +45,16 @@ public class UMLMove extends Move implements Serializable {
         final StringBuilder sb = new StringBuilder("Move{");
         sb.append(getSourceCoordinate())
           .append("(")
-        .append(getBoard().getField(getSourceCoordinate()))
+        .append(getSourceCoordinate())
         .append(")")
         .append(" to ")
         .append(getTargetCoordinate())
           .append("(")
-          .append(getBoard().getField(getTargetCoordinate()))
+          .append(getTargetCoordinate())
           .append(")")
           .append(" for player ")
           .append(getCurrentPlayer());
         return sb.toString();
-    }
-
-    @Override
-    public Board getBoard() {
-        return board;
-    }
-
-    @Override
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     @Override
@@ -95,33 +74,25 @@ public class UMLMove extends Move implements Serializable {
 
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeObject(this.board);
         stream.writeObject(this.from);
         stream.writeObject(this.to);
         stream.writeObject(this.currentPlayer);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        this.board = (Board) stream.readObject();
         this.from = (Coordinate2D) stream.readObject();
         this.to = (Coordinate2D) stream.readObject();
         this.currentPlayer = (Player) stream.readObject();
-
     }
 
     @Override
-    public Move deepCopy() {
-        return SerializationUtils.roundtrip(this);
+    public void setForwardClassification(MoveClassifier.MoveType forwardClassification) {
+        this.forwardClassification = forwardClassification;
     }
 
     @Override
-    public PathClassifier.MoveType getForwardClassification() {
-        return forwardMoveType;
-    }
-
-    @Override
-    public Deque<Coordinate2D> getForwardPath() {
-        return forwardPath;
+    public MoveClassifier.MoveType getForwardClassification() {
+        return this.forwardClassification;
     }
 
     @Override
@@ -130,8 +101,17 @@ public class UMLMove extends Move implements Serializable {
     }
 
     @Override
-    public Rank getForwardFromRank() {
-        return forwardFromRank;
+    public void setForwardOpponentRank(Optional<Rank> forwardOpponentRank) {
+        this.forwardOpponentRank = forwardOpponentRank;
     }
 
+    @Override
+    public Rank getForwardSourceRank() {
+        return forwardSourceRank;
+    }
+
+    @Override
+    public void setForwardSourceRank(Rank forwardSourceRank) {
+        this.forwardSourceRank = forwardSourceRank;
+    }
 }

@@ -1,6 +1,6 @@
 package de.kintel.ki.model;
 
-import de.kintel.ki.algorithm.PathClassifier;
+import de.kintel.ki.algorithm.MoveClassifier;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -36,14 +36,14 @@ public class Piece implements Serializable {
         return sb.toString();
     }
 
-    public void promote(PathClassifier.MoveType moveType) {
-        if( moveType.equals(PathClassifier.MoveType.MOVE) ) {
+    public void promote(MoveClassifier.MoveType moveType) {
+        if( moveType == MoveClassifier.MoveType.MOVE ) {
             switch (rank) {
                 case normal:
                     rank = owner.equals(Player.WEISS) ? Rank.gruen : Rank.rot;
                     break;
             }
-        } else if( moveType.equals(PathClassifier.MoveType.CAPTURE) ) {
+        } else if( moveType == MoveClassifier.MoveType.CAPTURE ) {
             switch (rank) {
                 case normal:
                     rank = owner.equals(Player.WEISS) ? Rank.gelb : Rank.magenta;

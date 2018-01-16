@@ -3,20 +3,23 @@ package de.kintel.ki.algorithm;
 import de.kintel.ki.model.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayDeque;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class PathClassifierTest {
+@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+public class MoveClassifierTest {
 
-    private ArrayDeque<Coordinate2D> path;
+    @Autowired
+    MoveClassifier moveClassifier;
 
-    @Before
-    public void setUp() {
-        path = new ArrayDeque<>();
-    }
 
     @Test
     public void classify2Path_simple() {
@@ -31,10 +34,12 @@ public class PathClassifierTest {
 
         a.addStein( new Piece(Player.SCHWARZ));
 
-        path.add( new Coordinate2D(0,0) );
-        path.add( new Coordinate2D(1,1) );
+        Coordinate2D coordFrom =  new Coordinate2D(0,0) ;
+        Coordinate2D coordTo = new Coordinate2D(1,1) ;
 
-        assertThat(PathClassifier.classify(path, board), is(PathClassifier.MoveType.MOVE));
+        Move umlMove = new UMLMove(coordFrom,coordTo,Player.SCHWARZ);
+        moveClassifier.classify(umlMove, board);
+        assertThat(umlMove.getForwardClassification(), is(MoveClassifier.MoveType.MOVE));
     }
 
     @Test
@@ -49,15 +54,12 @@ public class PathClassifierTest {
                 { new Field(false), e, new Field(false) },
                 { new Field(false), new Field(false), i }};
 
-        Board board = new Board(2, 2, fields);
-
+        Board board = new Board(3, 3, fields);
         a.addStein( new Piece(Player.SCHWARZ));
+        Move umlMove = new UMLMove(new Coordinate2D(0, 0),new Coordinate2D( 2, 2),Player.SCHWARZ);
 
-        path.add( new Coordinate2D(0, 0));
-        path.add( new Coordinate2D( 1, 1));
-        path.add( new Coordinate2D( 2, 2));
-
-        assertThat( PathClassifier.classify(path, board), is(PathClassifier.MoveType.MOVE));
+        moveClassifier.classify(umlMove,board);
+        assertThat(umlMove.getForwardClassification(), is(MoveClassifier.MoveType.INVALID));
     }
 
     @Test
@@ -72,23 +74,19 @@ public class PathClassifierTest {
                 { new Field(false), e, new Field(false) },
                 { new Field(false), new Field(false), i }};
 
-        Board board = new Board(2, 2, fields);
+        Board board = new Board(3, 3, fields);
 
-        a.addStein( new Piece(Player.SCHWARZ));
 
-        path.add( new Coordinate2D(0, 0));
-        path.add( new Coordinate2D( 1, 1));
-        path.add( new Coordinate2D( 2, 2));
+        Move umlMove = new UMLMove(new Coordinate2D(0, 0),new Coordinate2D( 2, 2),Player.SCHWARZ);
 
         a.addStein( new Piece(Player.SCHWARZ));
         e.addStein( new Piece(Player.WEISS));
 
-        path.add( new Coordinate2D(0, 0));
-        path.add( new Coordinate2D( 1, 1));
-        path.add( new Coordinate2D( 2, 2));
+
+        moveClassifier.classify(umlMove,board);
 
 
-        assertThat( PathClassifier.classify(path, board), is(PathClassifier.MoveType.CAPTURE));
+        assertThat( umlMove.getForwardClassification(), is(MoveClassifier.MoveType.CAPTURE));
     }
 
 }

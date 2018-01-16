@@ -1,5 +1,6 @@
 package de.kintel.ki.ruleset.rules;
 
+import de.kintel.ki.algorithm.MoveClassifier;
 import de.kintel.ki.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ public class RuleDirectionTest {
 
     @Autowired
     RuleDirection ruleDirection;
+    private Move moveForward;
 
     @Test
     public void direction_move() throws Exception {
@@ -29,18 +31,18 @@ public class RuleDirectionTest {
 
         final Piece schwarzerStein = new Piece(Player.SCHWARZ);
 
-        board.getField(coordinateFrom).addStein( schwarzerStein );
+        board.getField(coordinateFrom).addStein(schwarzerStein);
 
-        final Move moveForward = new UMLMove(board, coordinateFrom, coordinateForward, Player.SCHWARZ);
-        final Move moveBackward = new UMLMove(board, coordinateFrom, coordinateBackward, Player.SCHWARZ);
+        final Move moveForward = new UMLMove(coordinateFrom, coordinateForward, Player.SCHWARZ);
+        final Move moveBackward = new UMLMove(coordinateFrom, coordinateBackward, Player.SCHWARZ);
 
         schwarzerStein.setRank(Rank.normal);
-        assertThat(ruleDirection.isValidMove(moveForward), is(true));
-        assertThat(ruleDirection.isValidMove(moveBackward), is(false));
+        assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(moveBackward, board), is(false));
 
         schwarzerStein.setRank(Rank.rot);
-        assertThat(ruleDirection.isValidMove(moveForward), is(true));
-        assertThat(ruleDirection.isValidMove(moveBackward), is(true));
+        assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
     }
 
     @Test
@@ -57,38 +59,45 @@ public class RuleDirectionTest {
 
         final Piece schwarzerStein = new Piece(Player.SCHWARZ);
 
-        board.getField(coordinateFrom).addStein( schwarzerStein );
+        board.getField(coordinateFrom).addStein(schwarzerStein);
         fields[1][1].addStein(new Piece(Player.WEISS));
         fields[3][3].addStein(new Piece(Player.WEISS));
 
-        Move moveForward = new UMLMove(board, coordinateFrom, coordinateMoveForward, Player.SCHWARZ);
-        Move moveBackward = new UMLMove(board, coordinateFrom, coordinateMoveBackward, Player.SCHWARZ);
-        Move captureForward = new UMLMove(board, coordinateFrom, coordinateCaptureForward, Player.SCHWARZ);
-        Move captureBackward = new UMLMove(board, coordinateFrom, coordinateCaptureBackward, Player.SCHWARZ);
+        Move moveForward = new UMLMove(coordinateFrom, coordinateMoveForward, Player.SCHWARZ);
+        moveForward.setForwardClassification(MoveClassifier.MoveType.MOVE);
+
+        Move moveBackward = new UMLMove(coordinateFrom, coordinateMoveBackward, Player.SCHWARZ);
+        moveBackward.setForwardClassification(MoveClassifier.MoveType.MOVE);
+
+        Move captureForward = new UMLMove(coordinateFrom, coordinateCaptureForward, Player.SCHWARZ);
+        captureForward.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
+
+        Move captureBackward = new UMLMove(coordinateFrom, coordinateCaptureBackward, Player.SCHWARZ);
+        captureBackward.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
 
         schwarzerStein.setRank(Rank.normal);
-        assertThat(ruleDirection.isValidMove(moveForward), is(true));
-        assertThat(ruleDirection.isValidMove(moveBackward), is(false));
-        assertThat(ruleDirection.isValidMove(captureForward), is(true));
-        assertThat(ruleDirection.isValidMove(captureBackward), is(false));
+        assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(moveBackward, board), is(false));
+        assertThat(ruleDirection.isValidMove(captureForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(captureBackward, board), is(false));
 
         schwarzerStein.setRank(Rank.rot);
-        assertThat(ruleDirection.isValidMove(moveForward), is(true));
-        assertThat(ruleDirection.isValidMove(moveBackward), is(true));
-        assertThat(ruleDirection.isValidMove(captureForward), is(true));
-        assertThat(ruleDirection.isValidMove(captureBackward), is(false));
+        assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
+        assertThat(ruleDirection.isValidMove(captureForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(captureBackward, board), is(false));
 
         schwarzerStein.setRank(Rank.magenta);
-        assertThat(ruleDirection.isValidMove(moveForward), is(true));
-        assertThat(ruleDirection.isValidMove(moveBackward), is(true));
-        assertThat(ruleDirection.isValidMove(captureForward), is(false));
-        assertThat(ruleDirection.isValidMove(captureBackward), is(true));
+        assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
+        assertThat(ruleDirection.isValidMove(captureForward, board), is(false));
+        assertThat(ruleDirection.isValidMove(captureBackward, board), is(true));
 
         schwarzerStein.setRank(Rank.purpur);
-        assertThat(ruleDirection.isValidMove(moveForward), is(true));
-        assertThat(ruleDirection.isValidMove(moveBackward), is(true));
-        assertThat(ruleDirection.isValidMove(captureForward), is(true));
-        assertThat(ruleDirection.isValidMove(captureBackward), is(true));
+        assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
+        assertThat(ruleDirection.isValidMove(captureForward, board), is(true));
+        assertThat(ruleDirection.isValidMove(captureBackward, board), is(true));
 
     }
 

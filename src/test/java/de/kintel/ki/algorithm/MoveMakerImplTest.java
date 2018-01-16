@@ -43,12 +43,12 @@ public class MoveMakerImplTest {
 
         board.getField(coordinateFrom).addStein( schwarzerStein );
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
         assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein) );
@@ -77,20 +77,18 @@ public class MoveMakerImplTest {
 
         board.getField(coordinateFrom).addStein( schwarzerStein );
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
 
-        moveMaker.makeMove(move);
-        board = move.getBoard();
+        moveMaker.makeMove(move,board);
         schwarzerStein = board.getField(coordinateTo).peekHead().get();
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
         assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein) );
 
-        moveMaker.undoMove(move);
-        board = move.getBoard();
+        moveMaker.undoMove(move,board);
         schwarzerStein = board.getField(coordinateFrom).peekHead().get();
 
         assertTrue( board.getField(coordinateFrom).getSteine().contains(schwarzerStein) );
@@ -123,12 +121,12 @@ public class MoveMakerImplTest {
         board.getField(coordinateFrom).addStein(schwarzerStein);
         board.getField(coordinateBetween).addStein(weisserStein);
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat(  board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertTrue(  board.getField(coordinateTo).isEmpty() );
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertTrue(  board.getField(coordinateFrom).isEmpty() );
         assertTrue(  board.getField(coordinateBetween).isEmpty() );
@@ -162,19 +160,19 @@ public class MoveMakerImplTest {
         board.getField(coordinateFrom).addStein(schwarzerStein);
         board.getField(coordinateBetween).addStein(weisserStein);
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertTrue( board.getField(coordinateTo).isEmpty() );
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertTrue( board.getField(coordinateFrom).isEmpty() );
         assertTrue( board.getField(coordinateBetween).isEmpty() );
         assertThat( board.getField(coordinateTo).getSteine().peekFirst(), is(schwarzerStein) );
         assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein, weisserStein) );
 
-        moveMaker.undoMove(move);
+        moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateBetween).getSteine(), contains(weisserStein) );
@@ -227,21 +225,21 @@ public class MoveMakerImplTest {
         board.getField(coordinateBetween).addStein(schwarzerStein2);
         board.getField(coordinateBetween).addStein(weisserStein);
 
-        final Move move = new UMLMove(board, coordinateFrom, coordinateTo, Player.SCHWARZ);
+        final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateBetween).getSteine().peekFirst(), is( weisserStein ) );
         assertThat( board.getField(coordinateBetween).getSteine(), contains( weisserStein, schwarzerStein2 ) );
         assertTrue( board.getField(coordinateTo).isEmpty() );
 
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move,board);
 
         assertTrue( board.getField(coordinateFrom).isEmpty() );
         assertThat( board.getField(coordinateBetween).getSteine().peekFirst(), is( schwarzerStein2 ) );
         assertThat( board.getField(coordinateTo).getSteine().peekFirst(), is(schwarzerStein) );
         assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein, weisserStein) );
 
-        moveMaker.undoMove(move);
+        moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateBetween).getSteine().peekFirst(), is( weisserStein ) );

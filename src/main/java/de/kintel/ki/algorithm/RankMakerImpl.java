@@ -10,21 +10,20 @@ import java.util.ArrayList;
 public class RankMakerImpl implements RankMaker {
 
     @Override
-    public void processRankChange(Move move) {
-        final Board board = move.getBoard();
-        final Coordinate2D coordFrom = move.getSourceCoordinate();
+    public void processRankChange(Move move, Board board) {
         final Coordinate2D coordTo = move.getTargetCoordinate();
-        final Field fieldFrom = board.getField(coordFrom);
         final Field fieldTo = board.getField(coordTo);
 
         boolean basementHit = move.getCurrentPlayer().equals(Player.WEISS) ? coordTo.getX() == 0 : coordTo.getX() == board.getHeight() - 1;
 
         if(basementHit) {
+
             if ( fieldTo.peekHead().isPresent() ) {
                 fieldTo.peekHead().get().promote(move.getForwardClassification());
             }
+            //degrate the captured piece
             final ArrayList<Piece> pieces = Lists.newArrayList(fieldTo.getSteine());
-            if (pieces.size() >= 2) {
+            if (pieces.size() >= 2 && move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE) {
                 pieces.get(1).degrade();
             }
         }

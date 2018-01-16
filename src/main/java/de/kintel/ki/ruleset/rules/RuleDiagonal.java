@@ -1,5 +1,6 @@
 package de.kintel.ki.ruleset.rules;
 
+import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.ruleset.IRule;
@@ -13,7 +14,7 @@ public class RuleDiagonal implements IRule {
     private final Logger logger = LoggerFactory.getLogger(RuleDiagonal.class);
 
     @Override
-    public boolean isValidMove(@Nonnull final Move move) {
+    public boolean isValidMove(@Nonnull final Move move, Board board) {
         final Coordinate2D coordFrom = move.getSourceCoordinate();
         final Coordinate2D coordTo = move.getTargetCoordinate();
 
