@@ -6,6 +6,13 @@ import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.KiFxApplication;
 import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Player;
+import de.kintel.ki.player.HumanPlayer;
+import de.kintel.ki.player.KiPlayer;
+import de.kintel.ki.player.Participant;
+import de.kintel.ki.ruleset.RulesChecker;
+import de.kintel.ki.util.IOUtil;
+import de.kintel.ki.util.UMLCoordToCoord2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +30,12 @@ import java.util.concurrent.CountDownLatch;
 @ComponentScan({"de.kintel"})
 public class KiApplication implements CommandLineRunner {
 
+    private static CountDownLatch latch = new CountDownLatch(1);
     private EventBus eventBus;
 	private final KI ki;
-    private static CountDownLatch latch = new CountDownLatch(1);
+	private Participant currentPlayer;
+    private Participant kiPlayer;
+    private Participant humanPlayer;
 
     @Autowired
     public KiApplication(KI ki, EventBus eventBus) {
@@ -58,30 +68,44 @@ public class KiApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {
+
+            if( new IOUtil().readMainMenu() == 1) {
+                kiPlayer = currentPlayer = new KiPlayer(Player.SCHWARZ, ki);
+                humanPlayer = new HumanPlayer(new UMLCoordToCoord2D(), Player.WEISS, new RulesChecker());
+            } else {
+                kiPlayer = currentPlayer = new KiPlayer(Player.WEISS, ki);
+                humanPlayer = new HumanPlayer(new UMLCoordToCoord2D(), Player.SCHWARZ, new RulesChecker());
+            }
+
+            ki.setCurrentPlayer(currentPlayer.getPlayer());
+
             try {
                 latch.await();
             } catch (InterruptedException e) {
                 logger.info(e.getMessage());
                 Thread.currentThread().interrupt();
             }
+
             logger.debug(ki.toString());
             Scanner s = new Scanner(System.in);
-            String line = null;
             while( true ) {
-                if(line != null) {
-                    logger.debug("Input: {}", line);
-                }
-                eventBus.post(new PossibleMovesEvent(ki.getPossibleMoves(), ki.getBoard()));
-                final Move bestMove = ki.getBestMove(8);
-                eventBus.post( new BestMoveEvent(bestMove));
-                if(null == bestMove ) {
+
+                eventBus.post( new PossibleMovesEvent( ki.getPossibleMoves() ));
+                final Move move = currentPlayer.getNextMove(ki.getBoard(), 3);
+
+                if( null == move ) {
                     logger.debug(ki.toString());
                     throw new IllegalStateException("No best move found");
                 }
-                logger.debug("Found best move to execute now: {}", bestMove);
-                ki.makeMove(bestMove);
+
+                eventBus.post(new BestMoveEvent(move));
+
+                logger.debug("Found best move to execute now: {}", move);
+                ki.makeMove(move);
+
                 logger.debug(ki.toString());
-                //line = s.next();
+
+                currentPlayer = currentPlayer.equals(kiPlayer) ? humanPlayer : kiPlayer;
             }
 		}}).start();
 	}

@@ -186,6 +186,10 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
         currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
     }
 
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
     public Board getBoard() {
         return board;
     }
