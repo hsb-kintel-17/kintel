@@ -54,11 +54,9 @@ public class HumanPlayer extends Participant {
                 System.out.println("Eingabe ist kein valider Zug!");
             }
                
-        }
-
-        
+        }       
          
-         return null;
+         return humanMove;
     }
     
     
