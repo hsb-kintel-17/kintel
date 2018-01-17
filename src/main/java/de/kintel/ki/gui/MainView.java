@@ -16,11 +16,11 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -38,7 +38,7 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML
     private StackPane stackPane;
     @FXML
-    private GridView<String> gridView;
+    private GridView<Field> gridView;
     @FXML
     private Group groupPossibleMoves;
     @FXML
@@ -46,7 +46,7 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML
     private Label winLabel;
 
-    private GridModel<String> gridModel;
+    private GridModel<Field> gridModel;
 
     @Autowired
     private EventBus eventBus;
@@ -58,6 +58,7 @@ public class MainView implements FxmlView<MainViewModel> {
     @Value("${board.height}")
     private int height;
     private Player lastPlayer;
+    @Autowired
     private Board board;
 
     @PostConstruct
@@ -68,12 +69,19 @@ public class MainView implements FxmlView<MainViewModel> {
     public void initialize() {
         gridModel = new GridModel<>();
 
-        gridModel.setDefaultState("");
+        gridModel.setDefaultState( new Field(true) );
         gridModel.setNumberOfColumns(width);
         gridModel.setNumberOfRows(height);
 
         gridView.setGridModel(gridModel);
-        gridView.setNodeFactory(cell -> "".equals(cell.getState()) ? null : new Label(cell.getState()));
+        gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : new Label(cellField.getState().toString()));
+
+        gridModel.getCells().forEach(c -> {
+                Tooltip.install(
+                    gridView.getCellPane(c),
+                    new Tooltip("" + (char)(height-c.getRow()+'a' - 1) + (c.getColumn() + 1 ))
+                );
+        });
 
         AnchorPane.setBottomAnchor(stackPane, 0.0);
         AnchorPane.setTopAnchor(stackPane,0.0);
@@ -90,11 +98,12 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @Subscribe
     public void newPossibleMoves(PossibleMovesEvent e) {
-        board = e.getBoard();
         final List<Move> possibleMoves = e.getPossibleMoves();
         Platform.runLater(() -> {
             groupPossibleMoves.getChildren().clear();
-            gridModel.getCells().forEach(c -> c.changeState(board.getField(c.getRow(), c.getColumn()).toString()));
+            gridModel.getCells().forEach(c -> {
+                c.changeState(board.getField(c.getRow(), c.getColumn()));
+            });
             possibleMoves.forEach( move -> {
                 drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
             });
@@ -115,7 +124,6 @@ public class MainView implements FxmlView<MainViewModel> {
                 drawArrow(groupBestMove, Color.RED, bestMove.getSourceCoordinate(), bestMove.getTargetCoordinate());
             }
         });
-
     }
 
     private void drawArrow(Group group, Color color, Coordinate2D from, Coordinate2D to) {

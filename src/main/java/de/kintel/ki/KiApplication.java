@@ -105,7 +105,7 @@ public class KiApplication implements CommandLineRunner {
 
                 final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, currentPlayer.getPlayer(), moveClassifier);
 
-                eventBus.post( new PossibleMovesEvent(possibleMoves, board ));
+                eventBus.post( new PossibleMovesEvent(possibleMoves));
 
                 Move move = currentPlayer.getNextMove(depth);
                 while( !possibleMoves.contains(move) ) {
@@ -118,14 +118,14 @@ public class KiApplication implements CommandLineRunner {
                     throw new IllegalStateException("No best move found");
                 }
 
-                eventBus.post(new BestMoveEvent(move));
-
                 if( currentPlayer.equals(kiPlayer)) {
                     logger.debug("Found best move to execute now: {}", move);
                     ki.makeMove(move);
                 } else {
                     moveMaker.makeMove(move, board);
                 }
+
+                eventBus.post(new BestMoveEvent(move));
 
                 logger.debug(ki.toString());
 
