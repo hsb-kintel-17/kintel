@@ -1,7 +1,7 @@
 package de.kintel.ki.player;
 
+import de.kintel.ki.algorithm.MoveClassifier;
 import de.kintel.ki.model.*;
-import de.kintel.ki.ruleset.IRulesChecker;
 import de.kintel.ki.util.UMLCoordToCoord2D;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,36 +10,35 @@ import java.util.Scanner;
 public class HumanPlayer extends Participant {
 
     private final UMLCoordToCoord2D converter;
-    private final IRulesChecker rc;
-    private Board board;
+    private final MoveClassifier moveClassifier;
 
     @Autowired
-    public HumanPlayer(UMLCoordToCoord2D converter, Player player, IRulesChecker rc) {
-        super(player);
+    public HumanPlayer(Board board, UMLCoordToCoord2D converter, Player player, MoveClassifier moveClassifier) {
+        super(board, player);
         this.converter = converter;
-        this.rc = rc;
+        this.moveClassifier = moveClassifier;
     }
 
     @Override
-    public Move getNextMove(Board board, int depth) {
-        this.board = board;
+    public Move getNextMove(int depth) {
         Scanner s = new Scanner(System.in);
-        Move humanMove = null;
+        Move move = null;
         boolean inputCorrect = false;
 
         while (!inputCorrect) {
             System.out.println("" + this.getPlayer() + " ist am Zug:");
             String humanInput = s.nextLine();
 
-            humanMove = this.transform(humanInput);
-            if (humanMove != null && rc.isValidMove(humanMove)) {
-                inputCorrect = true;
+            move = this.transform(humanInput);
+            if (move != null) {
+                moveClassifier.classify(move, getBoard());
+                inputCorrect = move.getForwardClassification() != MoveClassifier.MoveType.INVALID;
             } else {
                 System.out.println("Eingabe ist kein valider Zug!");
             }
         }
 
-        return humanMove;
+        return move;
     }
 
     /**
@@ -59,10 +58,7 @@ public class HumanPlayer extends Participant {
         Coordinate2D coordTarget = converter.convertUMLCoord(humanInput.substring(2));
 
         if ( null != coordSource && null != coordTarget  ) {
-            Field startField = board.getField(coordSource);
-            Field targetField = board.getField(coordTarget);
-
-            move = new UMLMove(this.board, startField, targetField, this.getPlayer());
+            move = new UMLMove(coordSource, coordTarget, this.getPlayer());
         }
 
         return move;

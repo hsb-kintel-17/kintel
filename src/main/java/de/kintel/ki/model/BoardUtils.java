@@ -1,10 +1,18 @@
 package de.kintel.ki.model;
 
+import de.kintel.ki.algorithm.MoveClassifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BoardUtils {
+
+    private static Logger logger = LoggerFactory.getLogger(BoardUtils.class);
+
     /**
      * Get surrounding fields on the diagonals.
      *
@@ -33,5 +41,46 @@ public class BoardUtils {
             }
         }
         return surroundings;
+    }
+
+    public static List<Move> getPossibleMoves(Board board, Player currentPlayer, MoveClassifier moveClassifier) {
+        final List<Move> possibleMoves;
+        // Moves the user must do
+        final List<Move> zugzwaenge = new ArrayList<>();
+        // Ordinary Moves
+        final List<Move> moves = new ArrayList<>();
+        final List<Coordinate2D> coordinatesOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
+
+        for( Coordinate2D coordinateFrom : coordinatesOccupiedBy ) {
+            final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordinateFrom, 2);
+
+            for( Coordinate2D surrounding : diagonalSurroundings ) {
+                Move move = new UMLMove(coordinateFrom, surrounding, currentPlayer);
+                moveClassifier.classify(move, board);
+                if(move.getForwardClassification() != MoveClassifier.MoveType.INVALID) {
+                    if( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE ) {
+                        move.setForwardOpponentRank( Optional.of(board.getField(Coordinate2D.between(coordinateFrom, surrounding)).getSteine().getFirst().getRank()));
+                    } else {
+                        move.setForwardOpponentRank(Optional.empty());
+                    }
+
+                    move.setForwardSourceRank(board.getField(coordinateFrom).getSteine().getFirst().getRank());
+
+                    if ( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE) {
+                        zugzwaenge.add( move );
+                    } else {
+                        moves.add( move );
+                    }
+                }
+            }
+        }
+
+        // If there are zugwang moves then these moves are the only possible moves
+        possibleMoves = zugzwaenge.isEmpty() ? moves : zugzwaenge;
+
+        logger.info("{} possible moves for player {}", possibleMoves.size(), currentPlayer);
+        logger.info("possible moves: {}", possibleMoves);
+
+        return possibleMoves;
     }
 }

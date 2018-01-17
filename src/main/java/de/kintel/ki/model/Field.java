@@ -47,8 +47,7 @@ public class Field implements Serializable {
             steine.stream().limit(1).map( s -> s.toString() + "<" + s.getRank().name().charAt(0) + ">").forEach(sb::append);
             steine.stream().skip(1).forEach(sb::append);
         }
-        int lenght = (sb.length() > 6) ? sb.length() : 6;
-        return String.format("%1$"+lenght+"s",sb.toString());
+        return sb.toString();
     }
 
     public Optional<Player> getOwner() {

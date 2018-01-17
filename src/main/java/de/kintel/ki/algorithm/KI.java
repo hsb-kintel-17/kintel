@@ -1,7 +1,6 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
-import de.kintel.ki.ruleset.RulesChecker;
 import fr.avianey.minimax4j.impl.ParallelNegamax;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
@@ -14,9 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by kintel on 19.12.2017.
@@ -34,12 +31,11 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     private MoveClassifier moveClassifier;
 
     @Autowired
-    public KI(@Nonnull Player currPlayer, @Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board, ApplicationContext applicationContext) {
+    public KI(@Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board, ApplicationContext applicationContext) {
         this.moveMaker = moveMaker;
         this.weighting = weighting;
         this.applicationContext = applicationContext;
         this.board = board;
-        this.currentPlayer = currPlayer;
         this.moveClassifier = moveClassifier;
     }
 
@@ -94,44 +90,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
      */
     @Override
     public List<Move> getPossibleMoves() {
-
-        final List<Move> possibleMoves;
-        // Moves the user must do
-        final List<Move> zugzwaenge = new ArrayList<>();
-        // Ordinary Moves
-        final List<Move> moves = new ArrayList<>();
-        final List<Coordinate2D> coordinatesOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
-
-        for( Coordinate2D coordinateFrom : coordinatesOccupiedBy ) {
-            final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordinateFrom, 2);
-
-            for( Coordinate2D surrounding : diagonalSurroundings ) {
-                Move move = new UMLMove(coordinateFrom, surrounding, currentPlayer);
-                moveClassifier.classify(move, board);
-                if(move.getForwardClassification() != MoveClassifier.MoveType.INVALID) {
-                    if( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE ) {
-                        move.setForwardOpponentRank( Optional.of(board.getField(Coordinate2D.between(coordinateFrom, surrounding)).getSteine().getFirst().getRank()));
-                    } else {
-                        move.setForwardOpponentRank(Optional.empty());
-                    }
-
-                    move.setForwardSourceRank(board.getField(coordinateFrom).getSteine().getFirst().getRank());
-
-                    if ( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE) {
-                        zugzwaenge.add( move );
-                    } else {
-                        moves.add( move );
-                    }
-                }
-            }
-        }
-
-        // If there are zugwang moves then these moves are the only possible moves
-        possibleMoves = zugzwaenge.isEmpty() ? moves : zugzwaenge;
-
-        logger.info("{} possible moves for player {}", possibleMoves.size(), currentPlayer);
-        logger.info("possible moves: {}", possibleMoves);
-        return possibleMoves;
+        return BoardUtils.getPossibleMoves(board, currentPlayer, moveClassifier);
     }
 
     /**
@@ -224,7 +183,8 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public ParallelNegamax<Move> clone() {
         final Board boardCopy = getBoard().deepCopy();
-        final KI copy = new KI(currentPlayer, moveClassifier, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
+        final KI copy = new KI(moveClassifier, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
+        copy.setCurrentPlayer(currentPlayer);
         return copy;
     }
 

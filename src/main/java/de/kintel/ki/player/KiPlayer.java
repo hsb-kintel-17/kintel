@@ -9,14 +9,13 @@ public class KiPlayer extends Participant {
     
     private final KI ki;
 
-    @Autowired
-    public KiPlayer(Player player, KI ki) {
-        super( player);
+    public KiPlayer(Board board, Player player, KI ki) {
+        super( board, player );
         this.ki = ki;
     }
     
     @Override
-    public Move getNextMove(Board board, int depth) {
+    public Move getNextMove(int depth) {
         ki.setCurrentPlayer(getPlayer());
         return ki.getBestMove(depth);
     }

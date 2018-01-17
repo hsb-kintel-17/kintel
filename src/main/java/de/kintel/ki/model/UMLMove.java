@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -113,5 +114,18 @@ public class UMLMove extends Move  implements Serializable {
     @Override
     public void setForwardSourceRank(Rank forwardSourceRank) {
         this.forwardSourceRank = forwardSourceRank;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UMLMove umlMove = (UMLMove) o;
+        return Objects.equals(from, umlMove.from) && Objects.equals(to, umlMove.to) && getCurrentPlayer() == umlMove.getCurrentPlayer();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(from, to, getCurrentPlayer());
     }
 }

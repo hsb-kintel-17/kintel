@@ -23,8 +23,4 @@ public class AppConfiguration {
         return new Board(boardHeight, boardWidth);
     }
 
-    @Bean
-    public Player getDefaultPlayer() {
-        return Player.SCHWARZ;
-    }
 }

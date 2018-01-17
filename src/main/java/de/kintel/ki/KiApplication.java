@@ -2,9 +2,13 @@ package de.kintel.ki;
 
 import com.google.common.eventbus.EventBus;
 import de.kintel.ki.algorithm.KI;
+import de.kintel.ki.algorithm.MoveClassifier;
+import de.kintel.ki.algorithm.MoveMaker;
 import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.KiFxApplication;
+import de.kintel.ki.model.Board;
+import de.kintel.ki.model.BoardUtils;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.player.HumanPlayer;
@@ -23,6 +27,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
@@ -32,13 +37,19 @@ public class KiApplication implements CommandLineRunner {
 
     private static CountDownLatch latch = new CountDownLatch(1);
     private EventBus eventBus;
-	private final KI ki;
-	private Participant currentPlayer;
+    private final KI ki;
+    private final Board board;
+    private Participant currentPlayer;
     private Participant kiPlayer;
     private Participant humanPlayer;
+    private final MoveClassifier moveClassifier;
+    private MoveMaker moveMaker;
 
     @Autowired
-    public KiApplication(KI ki, EventBus eventBus) {
+    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, KI ki, EventBus eventBus) {
+        this.board = board;
+        this.moveClassifier = moveClassifier;
+        this.moveMaker = moveMaker;
         this.ki = ki;
         this.eventBus = eventBus;
     }
@@ -66,15 +77,17 @@ public class KiApplication implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
+        final int depth = 3;
+
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {
 
             if( new IOUtil().readMainMenu() == 1) {
-                kiPlayer = currentPlayer = new KiPlayer(Player.SCHWARZ, ki);
-                humanPlayer = new HumanPlayer(new UMLCoordToCoord2D(), Player.WEISS, new RulesChecker());
+                kiPlayer = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki);
+                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, new MoveClassifier(new RulesChecker()));
             } else {
-                kiPlayer = currentPlayer = new KiPlayer(Player.WEISS, ki);
-                humanPlayer = new HumanPlayer(new UMLCoordToCoord2D(), Player.SCHWARZ, new RulesChecker());
+                kiPlayer = currentPlayer = new KiPlayer(board, Player.WEISS, ki);
+                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, new MoveClassifier(new RulesChecker()));
             }
 
             ki.setCurrentPlayer(currentPlayer.getPlayer());
@@ -90,8 +103,15 @@ public class KiApplication implements CommandLineRunner {
             Scanner s = new Scanner(System.in);
             while( true ) {
 
-                eventBus.post( new PossibleMovesEvent( ki.getPossibleMoves() ));
-                final Move move = currentPlayer.getNextMove(ki.getBoard(), 3);
+                final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, currentPlayer.getPlayer(), moveClassifier);
+
+                eventBus.post( new PossibleMovesEvent(possibleMoves, board ));
+
+                Move move = currentPlayer.getNextMove(depth);
+                while( !possibleMoves.contains(move) ) {
+                    logger.error("Zugzwang nicht beachtet");
+                    move = currentPlayer.getNextMove(depth);
+                }
 
                 if( null == move ) {
                     logger.debug(ki.toString());
@@ -100,8 +120,12 @@ public class KiApplication implements CommandLineRunner {
 
                 eventBus.post(new BestMoveEvent(move));
 
-                logger.debug("Found best move to execute now: {}", move);
-                ki.makeMove(move);
+                if( currentPlayer.equals(kiPlayer)) {
+                    logger.debug("Found best move to execute now: {}", move);
+                    ki.makeMove(move);
+                } else {
+                    moveMaker.makeMove(move, board);
+                }
 
                 logger.debug(ki.toString());
 

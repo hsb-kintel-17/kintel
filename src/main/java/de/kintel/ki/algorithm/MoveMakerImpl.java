@@ -19,7 +19,6 @@ public class MoveMakerImpl implements MoveMaker {
      */
     private final HashMap<Move, String> guard = new HashMap<>();
     private final RankMakerImpl rankMaker;
-    private Deque<Board> history;
 
     @Autowired
     public MoveMakerImpl(RankMakerImpl rankMaker) {
@@ -66,9 +65,6 @@ public class MoveMakerImpl implements MoveMaker {
 
         final MoveClassifier.MoveType moveType = move.getForwardClassification();
 
-        if(moveType == null){
-            System.out.println("Hier fehler");
-        }
         if (moveType.equals(MoveClassifier.MoveType.MOVE)) {
             if (!undo) {
                 transportPieces(fieldFrom, fieldTo);

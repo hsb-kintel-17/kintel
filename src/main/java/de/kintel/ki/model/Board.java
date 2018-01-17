@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -80,26 +79,31 @@ public class Board implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("");
-
-        String[] letters = {" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+        sb.append("\n");
+        String[] letters = {" ", "G", "F", "E", "D", "C", "B", "A"};
         String[] letters2 = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
         for (int i = 0 ; i <= fields.length ; i++){
             for (int j = 0 ; j <= fields[0].length ; j++) {
+                String cell = "";
                 if (i == 0) {
-                    sb.append(letters2[j]);
+                    cell += letters2[j];
                 } else if (j == 0){
-                    sb.append(letters[i]);
+                    cell += letters[i];
                 } else {
                     int i_offset = i-1;
                     int j_offset = j-1;
                     if( fields[i_offset][j_offset] != null && width >= 1) {
                         final Field field = fields[i_offset][j_offset];
                         if (field != null) {
-                            sb.append(field);
+                            cell += field;
                         }
                     }
                 }
-                sb.append(" \t");
+
+                int lenght = (cell.length() > 6) ? cell.length() : 6;
+                final String padCell = String.format("%1$" + lenght + "s", cell);
+                sb.append(padCell);
+                sb.append(" | ");
             }
             sb.append("\n");
         }
