@@ -7,25 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Player;
 
-public abstract class Player {
+public abstract class Participant {
     
-    private final PlayerColor player;
+    private final Player player;
 
     @Autowired
-    public Player(Player.PlayerColor player) {
+    public Participant(Player player) {
         this.player = player;
     }
     
     
-    public enum PlayerColor {
-        SCHWARZ, WEISS
 
-    }
     
     abstract Move getNextMove(Board board, int depth);    
     
-    Player.PlayerColor getPlayer(){
+    public Player getPlayer(){
         return this.player;
     }
     
