@@ -34,7 +34,6 @@ public class KI extends Negamax<Move> {
         this.moveMaker = moveMaker;
         this.weighting = weighting;
         this.board = new Board(7, 9);
-        this.currentPlayer = Player.SCHWARZ;
     }
 
     /**
@@ -170,6 +169,10 @@ public class KI extends Negamax<Move> {
 
     private void togglePlayer() {
         currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public Board getBoard() {

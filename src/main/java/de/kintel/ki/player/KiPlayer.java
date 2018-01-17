@@ -1,12 +1,9 @@
 package de.kintel.ki.player;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.google.common.eventbus.EventBus;
-
 import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class KiPlayer extends Participant {
     
@@ -19,10 +16,9 @@ public class KiPlayer extends Participant {
     }
     
     @Override
-    public Move getNextMove(Board board, int depth) {       
-            return ki.getBestMove(depth);
+    public Move getNextMove(Board board, int depth) {
+        ki.setCurrentPlayer(getPlayer());
+        return ki.getBestMove(depth);
     }
-    
-    
 
 }
