@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -44,7 +46,7 @@ public class MoveMakerImplTest {
         board.getField(coordinateFrom).addStein( schwarzerStein );
 
         final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
-
+        move.setForwardClassification(MoveClassifier.MoveType.MOVE);
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
 
@@ -78,6 +80,8 @@ public class MoveMakerImplTest {
         board.getField(coordinateFrom).addStein( schwarzerStein );
 
         final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.MOVE);
+        move.setForwardSourceRank(schwarzerStein.getRank());
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
@@ -122,6 +126,9 @@ public class MoveMakerImplTest {
         board.getField(coordinateBetween).addStein(weisserStein);
 
         final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
+        move.setForwardSourceRank(schwarzerStein.getRank());
+        move.setForwardOpponentRank(Optional.of(weisserStein.getRank()));
 
         assertThat(  board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertTrue(  board.getField(coordinateTo).isEmpty() );
@@ -161,6 +168,9 @@ public class MoveMakerImplTest {
         board.getField(coordinateBetween).addStein(weisserStein);
 
         final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
+        move.setForwardSourceRank(schwarzerStein.getRank());
+        move.setForwardOpponentRank(Optional.of(weisserStein.getRank()));
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertTrue( board.getField(coordinateTo).isEmpty() );
@@ -226,6 +236,9 @@ public class MoveMakerImplTest {
         board.getField(coordinateBetween).addStein(weisserStein);
 
         final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
+        move.setForwardClassification(MoveClassifier.MoveType.CAPTURE);
+        move.setForwardOpponentRank(Optional.of(weisserStein.getRank()));
+        move.setForwardSourceRank(schwarzerStein.getRank());
 
         assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateBetween).getSteine().peekFirst(), is( weisserStein ) );

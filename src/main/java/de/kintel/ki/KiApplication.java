@@ -72,7 +72,7 @@ public class KiApplication implements CommandLineRunner {
                     logger.debug("Input: {}", line);
                 }
                 eventBus.post(new PossibleMovesEvent(ki.getPossibleMoves(), ki.getBoard()));
-                final Move bestMove = ki.getBestMove(5);
+                final Move bestMove = ki.getBestMove(8);
                 eventBus.post( new BestMoveEvent(bestMove));
                 if(null == bestMove ) {
                     logger.debug(ki.toString());
