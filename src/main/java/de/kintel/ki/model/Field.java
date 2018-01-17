@@ -1,14 +1,18 @@
 package de.kintel.ki.model;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Optional;
 
-public class Field {
+public class Field implements Serializable {
 
-    private final boolean isForbidden;
-    private final Deque<Piece> steine = new LinkedList<>();
+    private static final long serialVersionUID = -8508348237650305754L;
+    private boolean isForbidden;
+    private Deque<Piece> steine = new LinkedList<>();
 
     public Field(boolean isForbidden) {
         this.isForbidden = isForbidden;
@@ -43,7 +47,8 @@ public class Field {
             steine.stream().limit(1).map( s -> s.toString() + "<" + s.getRank().name().charAt(0) + ">").forEach(sb::append);
             steine.stream().skip(1).forEach(sb::append);
         }
-        return sb.toString();
+        int lenght = (sb.length() > 6) ? sb.length() : 6;
+        return String.format("%1$"+lenght+"s",sb.toString());
     }
 
     public Optional<Player> getOwner() {
@@ -64,5 +69,30 @@ public class Field {
 
     public boolean isForbidden() {
         return isForbidden;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        stream.writeBoolean(isForbidden);
+        stream.writeObject(steine);
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        isForbidden = stream.readBoolean();
+        steine = (Deque<Piece>) stream.readObject();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Field field = (Field) o;
+        return isForbidden == field.isForbidden &&
+                Objects.equals(steine, field.steine);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(isForbidden, steine);
     }
 }

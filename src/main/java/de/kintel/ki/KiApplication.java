@@ -71,9 +71,9 @@ public class KiApplication implements CommandLineRunner {
                 if(line != null) {
                     logger.debug("Input: {}", line);
                 }
-                eventBus.post(new PossibleMovesEvent( ki.getPossibleMoves() ));
-                final Move bestMove = ki.getBestMove(5);
-                eventBus.post( new BestMoveEvent(bestMove ));
+                eventBus.post(new PossibleMovesEvent(ki.getPossibleMoves(), ki.getBoard()));
+                final Move bestMove = ki.getBestMove(8);
+                eventBus.post( new BestMoveEvent(bestMove));
                 if(null == bestMove ) {
                     logger.debug(ki.toString());
                     throw new IllegalStateException("No best move found");

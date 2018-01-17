@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 @Component
 public class MoveMakerImpl implements MoveMaker {
@@ -16,10 +15,11 @@ public class MoveMakerImpl implements MoveMaker {
     private final Logger logger = LoggerFactory.getLogger(MoveMakerImpl.class);
 
     /**
-     Debugging mechanism that stores board contents before the move for comparision after undo move. If the states differ then the undo was incorrect.
+     * Debugging mechanism that stores board contents before the move for comparision after undo move. If the states differ then the undo was incorrect.
      */
     private final HashMap<Move, String> guard = new HashMap<>();
     private final RankMakerImpl rankMaker;
+    private Deque<Board> history;
 
     @Autowired
     public MoveMakerImpl(RankMakerImpl rankMaker) {
@@ -32,8 +32,9 @@ public class MoveMakerImpl implements MoveMaker {
      * @param move the move
      */
     @Override
-    public void makeMove(@Nonnull final Move move) {
-        doMove(move, false);
+    public void makeMove(@Nonnull final Move move, Board board) {
+        guard.put(move, board.toString());
+        doMove(move, board, false);
     }
 
     /**
@@ -42,83 +43,77 @@ public class MoveMakerImpl implements MoveMaker {
      * @param move the move
      */
     @Override
-    public void undoMove(@Nonnull final Move move) {
-        doMove(move, true);
-
+    public void undoMove(@Nonnull final Move move, Board board) {
+        doMove(move, board, true);
+        final String expected = guard.get(move);
+        final String actual = board.toString();
+        if (!expected.equals(actual)) {
+            String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + board.toString();
+            throw new IllegalStateException(message);
+        }
     }
 
-    private void doMove(Move move, boolean undo) {
-        final Board board = move.getBoard();
-        final Coordinate2D coordFrom = board.getCoordinate(move.getSourceField());
-        final Coordinate2D coordTo = board.getCoordinate(move.getTargetField());
+    private void doMove(Move move, Board board, boolean undo) {
+        final Coordinate2D coordFrom = move.getSourceCoordinate();
+        final Coordinate2D coordTo = move.getTargetCoordinate();
         final Field fieldFrom = board.getField(coordFrom);
         final Field fieldTo = board.getField(coordTo);
 
-        logger.debug("Making move from {}({}) to {}({}) for player {}", move.getSourceField(), coordFrom, move.getTargetField(), coordTo,
-                     move.getCurrentPlayer());
+        logger.debug("Making move from {}({}) to {}({}) for player {}", move.getSourceCoordinate(), fieldFrom, move.getTargetCoordinate(), fieldTo,
+                move.getCurrentPlayer());
 
-        logger.debug("Before move (undo:{}): {}", undo, board.toString() );
+        logger.debug("Before move: {}", board.toString());
 
-        if( !undo ) {
-            guard.put(move, move.getBoard().toString());
+        final MoveClassifier.MoveType moveType = move.getForwardClassification();
+
+        if(moveType == null){
+            System.out.println("Hier fehler");
         }
-
-        if( move.getForwardClassification().equals(PathClassifier.MoveType.MOVE) ) {
-
-            if(!undo) {
-                final Iterator<Piece> it = fieldFrom.getSteine().descendingIterator();
-                while(it.hasNext()) {
-                    fieldTo.getSteine().push(it.next());
-                    it.remove();
-                }
+        if (moveType.equals(MoveClassifier.MoveType.MOVE)) {
+            if (!undo) {
+                transportPieces(fieldFrom, fieldTo);
             } else {
-                final Iterator<Piece> it = fieldTo.getSteine().descendingIterator();
-                while(it.hasNext()) {
-                    fieldFrom.getSteine().push(it.next());
-                    it.remove();
-                }
-            }
-        } else if (move.getForwardClassification().equals(PathClassifier.MoveType.CAPTURE)) {
-
-            if( !move.getOpponentOpt().isPresent() ) {
-                throw new IllegalStateException("No opponent field in path.");
+                transportPieces(fieldTo, fieldFrom);
+                fieldFrom.getSteine().peekFirst().setRank(move.getForwardSourceRank());
             }
 
-            final Field fieldOpponent = move.getOpponentOpt().get();
+        } else if (moveType.equals(MoveClassifier.MoveType.CAPTURE)) {
 
-            if(!undo) {
-                fieldOpponent.peekHead().get().degrade();
-                fieldTo.getSteine().push( fieldOpponent.getSteine().pollFirst() );
-                final Iterator<Piece> it = fieldFrom.getSteine().descendingIterator();
-                while(it.hasNext()) {
-                    fieldTo.getSteine().push(it.next());
-                    it.remove();
+            Coordinate2D opponentCoord = Coordinate2D.between(coordFrom, coordTo);
+            final Field fieldOpponent = board.getField(opponentCoord);
+
+            if (!undo) {
+                final Optional<Piece> pieceOpt = fieldOpponent.peekHead();
+                if (!pieceOpt.isPresent()) {
+                    throw new IllegalStateException("No piece on the opponent field.");
                 }
+                pieceOpt.get().degrade(); //TODO: Degrate in rankMaker
+                fieldTo.getSteine().push(fieldOpponent.getSteine().pollFirst());
+                transportPieces(fieldFrom, fieldTo);
             } else {
-                fieldOpponent.getSteine().push( fieldTo.getSteine().pollLast() );
-                final Iterator<Piece> it = fieldTo.getSteine().descendingIterator();
-                while(it.hasNext()) {
-                    fieldFrom.getSteine().push(it.next());
-                    it.remove();
-                }
-                if( move.getForwarOpponentRankOpt().isPresent() ) { //should be present on CAPTURE
-                    fieldOpponent.peekHead().get().setRank( move.getForwarOpponentRankOpt().get() );
+                Piece opponentPiece = fieldTo.getSteine().pollLast();
+                fieldOpponent.addStein(opponentPiece);
+                move.getForwardOpponentRank().ifPresent(opponentPiece::setRank);
+                transportPieces(fieldTo, fieldFrom);
+                try {
+                    fieldFrom.getSteine().peekFirst().setRank(move.getForwardSourceRank());
+                }catch (NullPointerException e){
+                    System.out.println("");
                 }
             }
         }
-
-        this.rankMaker.processRankChange(move, undo);
-
-        if( undo ) {
-            final String expected = guard.get(move);
-            if( ! expected.equals(board.toString() ) ) {
-                String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + move.getBoard().toString();
-                throw new IllegalStateException(message);
-            }
+        if (!undo) {
+            this.rankMaker.processRankChange(move, board); //TODO: Rankmaker for undoing moves
         }
 
-
-        logger.debug("After move (undo:{}): {}", undo, board.toString() );
+        logger.debug("After move: {}", board.toString());
     }
 
+    private void transportPieces(Field fieldFrom, Field fieldTo) {
+        final Iterator<Piece> it = fieldFrom.getSteine().descendingIterator();
+        while (it.hasNext()) {
+            fieldTo.getSteine().push(it.next());
+            it.remove();
+        }
+    }
 }

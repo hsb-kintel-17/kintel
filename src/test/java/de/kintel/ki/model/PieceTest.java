@@ -1,6 +1,6 @@
 package de.kintel.ki.model;
 
-import de.kintel.ki.algorithm.PathClassifier;
+import de.kintel.ki.algorithm.MoveClassifier;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -21,7 +21,7 @@ public class PieceTest {
     public void testPromote_weiss_move() throws Exception {
         final Piece piece = new Piece(Player.WEISS);
 
-        piece.promote(PathClassifier.MoveType.MOVE);
+        piece.promote(MoveClassifier.MoveType.MOVE);
         assertThat("Aus weißen Steinen werden bei Beförderung bei einem einfachen Bewegen grüne Steine",
                    piece.getRank(), is(Rank.gruen));
     }
@@ -30,7 +30,7 @@ public class PieceTest {
     public void testPromote_weiss_capture() throws Exception {
         final Piece piece = new Piece(Player.WEISS);
 
-        piece.promote(PathClassifier.MoveType.CAPTURE);
+        piece.promote(MoveClassifier.MoveType.CAPTURE);
         assertThat("Aus weißen Steinen werden bei Beförderung bei Schlagen gelbe Steine",
                    piece.getRank(), is(Rank.gelb));
     }
@@ -39,7 +39,7 @@ public class PieceTest {
     public void testPromote_schwarz_move() throws Exception {
         final Piece piece = new Piece(Player.SCHWARZ);
 
-        piece.promote(PathClassifier.MoveType.MOVE);
+        piece.promote(MoveClassifier.MoveType.MOVE);
         assertThat("Aus schwarzen Steinen werden bei Beförderung bei einem einfachen Bewegen rote Steine",
                    piece.getRank(), is(Rank.rot));
     }
@@ -48,7 +48,7 @@ public class PieceTest {
     public void testPromote_schwarz_capture() throws Exception {
         final Piece piece = new Piece(Player.SCHWARZ);
 
-        piece.promote(PathClassifier.MoveType.CAPTURE);
+        piece.promote(MoveClassifier.MoveType.CAPTURE);
         assertThat("Aus weißen Steinen werden bei Beförderung bei Schlagen magenta Steine",
                    piece.getRank(), is(Rank.magenta));
     }
@@ -57,9 +57,9 @@ public class PieceTest {
     public void testPromote_gruen() throws Exception {
         final Piece piece = new Piece(Player.WEISS);
 
-        piece.promote(PathClassifier.MoveType.MOVE);
+        piece.promote(MoveClassifier.MoveType.MOVE);
         assertThat( piece.getRank(), is(Rank.gruen));
-        piece.promote(PathClassifier.MoveType.CAPTURE);
+        piece.promote(MoveClassifier.MoveType.CAPTURE);
         assertThat("Aus grünen Steinen werden bei Beförderung bei Vorwärtsschlagen goldene Steine",
                    piece.getRank(), is(Rank.gold));
     }
@@ -68,9 +68,9 @@ public class PieceTest {
     public void testPromote_rot() throws Exception {
         final Piece piece = new Piece(Player.SCHWARZ);
 
-        piece.promote(PathClassifier.MoveType.MOVE);
+        piece.promote(MoveClassifier.MoveType.MOVE);
         assertThat( piece.getRank(), is(Rank.rot));
-        piece.promote(PathClassifier.MoveType.CAPTURE);
+        piece.promote(MoveClassifier.MoveType.CAPTURE);
         assertThat("Aus roten Steinen (=schwarz) werden bei Beförderung bei Vorwärtsschlagen purpur Steine",
                    piece.getRank(), is(Rank.purpur));
     }

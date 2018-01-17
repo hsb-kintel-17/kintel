@@ -2,39 +2,45 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
 import de.kintel.ki.ruleset.RulesChecker;
-import fr.avianey.minimax4j.impl.Negamax;
+import fr.avianey.minimax4j.impl.ParallelNegamax;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by kintel on 19.12.2017.
  */
 @Component
-@Scope("singleton")
-public class KI extends Negamax<Move> {
+@Scope("prototype")
+public class KI extends ParallelNegamax<Move> implements Serializable {
 
-    private final Logger logger = LoggerFactory.getLogger(KI.class);
-
-    private final RulesChecker rulesChecker;
-    private final MoveMaker moveMaker;
-    private final Weighting weighting;
-    private final Board board;
+    private static final Logger logger = LoggerFactory.getLogger(KI.class);
+    private MoveMaker moveMaker;
+    private Weighting weighting;
+    private final transient ApplicationContext applicationContext;
+    private Board board;
     private Player currentPlayer;
+    private MoveClassifier moveClassifier;
 
     @Autowired
-    public KI(@Nonnull RulesChecker rulesChecker, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting) {
-        this.rulesChecker = rulesChecker;
+    public KI(@Nonnull Player currPlayer, @Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board, ApplicationContext applicationContext) {
         this.moveMaker = moveMaker;
         this.weighting = weighting;
-        this.board = new Board(7, 9);
-        this.currentPlayer = Player.SCHWARZ;
+        this.applicationContext = applicationContext;
+        this.board = board;
+        this.currentPlayer = currPlayer;
+        this.moveClassifier = moveClassifier;
     }
 
     /**
@@ -58,7 +64,7 @@ public class KI extends Negamax<Move> {
     @Override
     public void makeMove(@Nonnull Move move) {
         logger.debug("make move " + move);
-        moveMaker.makeMove(move);
+        moveMaker.makeMove(move, board);
         next();
     }
 
@@ -73,7 +79,7 @@ public class KI extends Negamax<Move> {
     @Override
     public void unmakeMove(@Nonnull Move move) {
         logger.debug("unmake move " + move);
-        moveMaker.undoMove(move);
+        moveMaker.undoMove(move, board);
         previous();
     }
 
@@ -94,16 +100,24 @@ public class KI extends Negamax<Move> {
         final List<Move> zugzwaenge = new ArrayList<>();
         // Ordinary Moves
         final List<Move> moves = new ArrayList<>();
-        final List<Field> fieldsOccupiedBy = board.getFieldsOccupiedBy(currentPlayer);
+        final List<Coordinate2D> coordinatesOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
 
-        for( Field fieldFrom : fieldsOccupiedBy ) {
-            Coordinate2D coordFrom = board.getCoordinate(fieldFrom);
-            final List<Field> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordFrom, 2);
+        for( Coordinate2D coordinateFrom : coordinatesOccupiedBy ) {
+            final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordinateFrom, 2);
 
-            for( Field surrounding : diagonalSurroundings ) {
-                Move move = new UMLMove(board, fieldFrom, surrounding, currentPlayer);
-                if( rulesChecker.isValidMove( move ) ) {
-                    if ( move.getOpponentOpt().isPresent() ) {
+            for( Coordinate2D surrounding : diagonalSurroundings ) {
+                Move move = new UMLMove(coordinateFrom, surrounding, currentPlayer);
+                moveClassifier.classify(move, board);
+                if(move.getForwardClassification() != MoveClassifier.MoveType.INVALID) {
+                    if( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE ) {
+                        move.setForwardOpponentRank( Optional.of(board.getField(Coordinate2D.between(coordinateFrom, surrounding)).getSteine().getFirst().getRank()));
+                    } else {
+                        move.setForwardOpponentRank(Optional.empty());
+                    }
+
+                    move.setForwardSourceRank(board.getField(coordinateFrom).getSteine().getFirst().getRank());
+
+                    if ( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE) {
                         zugzwaenge.add( move );
                     } else {
                         moves.add( move );
@@ -182,11 +196,35 @@ public class KI extends Negamax<Move> {
     }
 
     public Move getBestMove(int depth) {
-        if (getBestMoves(depth).size() >= 1) {
+        if (!getBestMoves(depth).isEmpty()) {
             return getBestMoves(depth).get(0);
         } else {
             return null;
         }
     }
 
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+         stream.writeObject(board);
+         stream.writeObject(currentPlayer);
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        board = (Board) stream.readObject();
+        currentPlayer = (Player) stream.readObject();
+    }
+
+    public KI deepCopy() {
+        return SerializationUtils.roundtrip(this);
+    }
+
+    @Override
+    public ParallelNegamax<Move> clone() {
+        final Board boardCopy = getBoard().deepCopy();
+        final KI copy = new KI(currentPlayer, moveClassifier, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
+        return copy;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 }

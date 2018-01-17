@@ -1,19 +1,27 @@
 package de.kintel.ki.model;
 
-import de.kintel.ki.algorithm.PathClassifier;
+import de.kintel.ki.algorithm.MoveClassifier;
 
-import java.util.Deque;
 import java.util.Optional;
 
 public abstract class Move extends fr.avianey.minimax4j.Move {
-    public abstract Board getBoard();
-    public abstract Field getSourceField();
-    public abstract Field getTargetField();
+    private MoveClassifier.MoveType forwardClassification;
+
+    public abstract Coordinate2D getSourceCoordinate();
+    public abstract Coordinate2D getTargetCoordinate();
     public abstract Player getCurrentPlayer();
     public abstract boolean isForward();
-    public abstract Deque<Field> getForwardPath();
-    public abstract PathClassifier.MoveType getForwardClassification();
-    public abstract Optional<Field> getOpponentOpt();
-    public abstract Optional<Rank> getForwarOpponentRankOpt();
-    public abstract Optional<Rank> getForwarFromRankOpt();
+
+    //public abstract PathClassifier.MoveType getForwardClassification();
+    //public abstract Deque<Coordinate2D> getForwardPath();
+    //    public abstract void setForwardOpponentRank();
+    public abstract Optional<Rank> getForwardOpponentRank();
+    public abstract void setForwardOpponentRank(Optional<Rank> rank);
+
+    public abstract void setForwardSourceRank(Rank rank);
+    public abstract Rank getForwardSourceRank();
+
+    public abstract void setForwardClassification(MoveClassifier.MoveType forwardClassification);
+    public abstract MoveClassifier.MoveType getForwardClassification();
+
 }

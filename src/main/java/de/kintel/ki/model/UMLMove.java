@@ -1,58 +1,41 @@
 package de.kintel.ki.model;
 
-import de.kintel.ki.algorithm.PathClassifier;
-import de.kintel.ki.algorithm.PathFinder;
+import de.kintel.ki.algorithm.MoveClassifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Optional;
+
 
 /**
  * Storage
  * Created by kintel on 19.12.2017.
  */
-public class UMLMove extends Move {
+public class UMLMove extends Move  implements Serializable {
 
-    Logger logger = LoggerFactory.getLogger(UMLMove.class);
+    public static Logger logger = LoggerFactory.getLogger(UMLMove.class);
 
-    private final Board board;
-    private final Field from;
-    private final Field to;
-    private final Player currentPlayer;
-    // The following fields must be evaluated for the board before the move is taken to be available to undo a move.
-    private final Deque<Field> forwardPath;
-    private final PathClassifier.MoveType fordwardClassification;
-    private final Optional<Field> opponentOpt;
-    private final Optional<Rank> frowardOpponentRank;
-    private final Optional<Rank> forwardFromRank;
+    private Coordinate2D from;
+    private Coordinate2D to;
+    private Player currentPlayer;
+    private MoveClassifier.MoveType forwardClassification;
+    private Optional<Rank> forwardOpponentRank;
+    private Rank forwardSourceRank;
 
-    public UMLMove(@Nonnull Board board, @Nonnull Field from, @Nonnull Field to, @Nonnull Player currentPlayer) {
-        this.board = board;
+    public UMLMove(@Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
         this.from = from;
         this.to = to;
         this.currentPlayer = currentPlayer;
-        this.forwardPath = PathFinder.find(this);
-        this.fordwardClassification = PathClassifier.classify(forwardPath);
-        this.opponentOpt = getForwardPath().stream()
-                                                            // find first field of opposite player
-                                                            .filter(field -> field.getOwner()
-                                                                      .isPresent() && !field.getOwner()
-                                                                                            .get()
-                                                                                            .equals(getCurrentPlayer()))
-                                                            .findFirst();
-
-        this.frowardOpponentRank = Optional.ofNullable(opponentOpt.isPresent() && opponentOpt.get().peekHead().isPresent() ? opponentOpt.get().peekHead().get().getRank() : null);
-        this.forwardFromRank = Optional.ofNullable(from.peekHead().isPresent() ? from.peekHead().get().getRank() : null);
     }
 
     public boolean isForward() {
-        Coordinate2D cooFrom = getBoard().getCoordinate(getSourceField());
-        Coordinate2D cooTo = getBoard().getCoordinate(getTargetField());
 
-        boolean isForward = getCurrentPlayer().equals(Player.SCHWARZ) ? cooFrom.getX() < cooTo.getX() : cooFrom.getX() > cooTo.getX();
+        boolean isForward = getCurrentPlayer().equals(Player.SCHWARZ) ? getSourceCoordinate().getX() < getTargetCoordinate().getX() : getSourceCoordinate().getX() > getTargetCoordinate().getX();
 
         return isForward;
     }
@@ -60,14 +43,14 @@ public class UMLMove extends Move {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Move{");
-        sb.append(getSourceField())
+        sb.append(getSourceCoordinate())
           .append("(")
-        .append(getBoard().getCoordinate(getSourceField()))
+        .append(getSourceCoordinate())
         .append(")")
         .append(" to ")
-        .append(getTargetField())
+        .append(getTargetCoordinate())
           .append("(")
-          .append(getBoard().getCoordinate(getTargetField()))
+          .append(getTargetCoordinate())
           .append(")")
           .append(" for player ")
           .append(getCurrentPlayer());
@@ -75,17 +58,12 @@ public class UMLMove extends Move {
     }
 
     @Override
-    public Board getBoard() {
-        return board;
-    }
-
-    @Override
-    public Field getSourceField() {
+    public Coordinate2D getSourceCoordinate() {
         return from;
     }
 
     @Override
-    public Field getTargetField() {
+    public Coordinate2D getTargetCoordinate() {
         return to;
     }
 
@@ -94,33 +72,46 @@ public class UMLMove extends Move {
         return currentPlayer;
     }
 
-    @Override
-    public Deque<Field> getForwardPath() {
-        return new ArrayDeque<>(forwardPath);
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.writeObject(this.from);
+        stream.writeObject(this.to);
+        stream.writeObject(this.currentPlayer);
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        this.from = (Coordinate2D) stream.readObject();
+        this.to = (Coordinate2D) stream.readObject();
+        this.currentPlayer = (Player) stream.readObject();
     }
 
     @Override
-    public PathClassifier.MoveType getForwardClassification() {
-        return fordwardClassification;
-    }
-
-    /**
-     * Find first field of opposite player.
-     * @return an optional opponent field
-     */
-    @Override
-    public Optional<Field> getOpponentOpt() {
-        return opponentOpt;
+    public void setForwardClassification(MoveClassifier.MoveType forwardClassification) {
+        this.forwardClassification = forwardClassification;
     }
 
     @Override
-    public Optional<Rank> getForwarOpponentRankOpt() {
-        return frowardOpponentRank;
+    public MoveClassifier.MoveType getForwardClassification() {
+        return this.forwardClassification;
     }
 
     @Override
-    public Optional<Rank> getForwarFromRankOpt() {
-        return forwardFromRank;
+    public Optional<Rank> getForwardOpponentRank() {
+        return forwardOpponentRank;
     }
 
+    @Override
+    public void setForwardOpponentRank(Optional<Rank> forwardOpponentRank) {
+        this.forwardOpponentRank = forwardOpponentRank;
+    }
+
+    @Override
+    public Rank getForwardSourceRank() {
+        return forwardSourceRank;
+    }
+
+    @Override
+    public void setForwardSourceRank(Rank forwardSourceRank) {
+        this.forwardSourceRank = forwardSourceRank;
+    }
 }

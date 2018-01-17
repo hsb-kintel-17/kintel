@@ -14,43 +14,39 @@ public class PathFinder {
 
     private static Logger logger = LoggerFactory.getLogger(PathFinder.class);
 
-    public static Deque<Field> find(@Nonnull final Move move) {
-        return calcPath(move.getBoard(), move.getSourceField(), move.getTargetField(), new ArrayDeque<>());
+    public static Deque<Coordinate2D> find(@Nonnull final Move move, Board board) {
+        return calcPath(board, move.getSourceCoordinate(), move.getTargetCoordinate(), new ArrayDeque<>());
     }
 
     /**
-     * Recursive algorithm to traverse fields between two points on the board and add them to a path.
+     * Recursive algorithm coordTo traverse fields between two points on the board and add them coordTo a path.
      * The Precondition is that the move is valid {@link de.kintel.ki.ruleset.RulesChecker#isValidMove(Move)}.
      *
-     * @param board The board to refer
-     * @param from The field to start
-     * @param to The target field
-     * @param path The path to add the fields gradually
-     * @return the path to the target field
+     * @param board The board coordTo refer
+     * @param coordFrom The field coordTo start
+     * @param coordTo The target field
+     * @param path The path coordTo add the fields gradually
+     * @return the path coordTo the target field
      */
-    private static Deque<Field> calcPath(@Nonnull final Board board, @Nonnull final Field from, @Nonnull final Field to, @Nonnull final Deque<Field> path) {
-        logger.debug("Try to find path from {}({}) to {}({})", from, board.getCoordinate(from),
-                     board.getCoordinate(to));
+    private static Deque<Coordinate2D> calcPath(@Nonnull final Board board, @Nonnull final Coordinate2D coordFrom, @Nonnull final Coordinate2D coordTo, @Nonnull final Deque<Coordinate2D> path) {
+        logger.debug("Try coordTo find path coordFrom {}({}) coordTo {}({})", board.getField(coordFrom), coordFrom,
+                     board.getField(coordTo),coordTo);
 
         if (path.isEmpty()) {
-            // The path shall contain all fields from src to destination. This is the easiest way to archive
-            path.add(from);
+            // The path shall contain all fields coordFrom src coordTo destination. This is the easiest way coordTo archive
+            path.add(coordFrom);
         }
 
-        final Coordinate2D coordFrom = board.getCoordinate(from);
-        final Coordinate2D coordTo = board.getCoordinate(to);
+        final List<Coordinate2D> surroundings = BoardUtils.getDiagonalSurroundings(board, coordFrom, 1);
 
-        final List<Field> surroundings = BoardUtils.getDiagonalSurroundings(board, coordFrom, 1);
-
-        // Map Fields to surroundingsCoords for comparision
+        // Map Fields coordTo surroundingsCoords for comparision
         List<Coordinate2D> surroundingsCoords = new LinkedList<>();
-        for (Field currentField : surroundings) {
-            if (path.contains(currentField)) {
+        for (Coordinate2D currentCoordinate : surroundings) {
+            if (path.contains(currentCoordinate)) {
                 // Don't move backwards
                 continue;
             }
-            final Coordinate2D currentCoord2D = board.getCoordinate(currentField);
-            surroundingsCoords.add(currentCoord2D);
+            surroundingsCoords.add(currentCoordinate);
         }
 
         // Recursion termination if piece reached target or no surroundings
@@ -62,12 +58,12 @@ public class PathFinder {
         surroundingsCoords.sort(coordTo.distanceToOrder());
 
         // Shortest distance is at index 0
-        Field closestField = board.getField(surroundingsCoords.get(0));
+        Coordinate2D closestCoord = surroundingsCoords.get(0);
 
-        path.add(closestField);
+        path.add(closestCoord);
 
-        // move nearer to target and repeat
-        return calcPath(board, closestField, to, path);
+        // move nearer coordTo target and repeat
+        return calcPath(board, closestCoord, coordTo, path);
     }
 
 }

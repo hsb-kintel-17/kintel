@@ -1,19 +1,29 @@
 package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+@Component
+@Scope("singleton")
+public class Board implements Serializable {
 
-public class Board {
+    private static final long serialVersionUID = -3717253852145631360L;
 
-    private final Logger logger = LoggerFactory.getLogger(Board.class);
+    private static final Logger logger = LoggerFactory.getLogger(Board.class);
 
-    private final int height;
-    private final int width;
+    private int height;
+
+    private int width;
 
     private Field[][] fields;
 
@@ -27,30 +37,18 @@ public class Board {
         this.fields = fields;
     }
 
-    public List<Field> getFieldsOccupiedBy(@Nonnull final Player player) {
-        final List<Field> fieldsCollector = new ArrayList<>();
+    public List<Coordinate2D> getCoordinatesOccupiedBy(@Nonnull final Player player) {
+        final List<Coordinate2D> fieldsCollector = new ArrayList<>();
 
         for (int x = 0; x < height; x++) {
             for (int y = 0; y < width; y++) {
                 final Field field = getField(x, y);
                 if(field.getOwner().isPresent() && field.getOwner().get().equals( player ) ) {
-                    fieldsCollector.add(field);
+                    fieldsCollector.add(new Coordinate2D(x,y));
                 }
             }
         }
         return fieldsCollector;
-    }
-
-    public Coordinate2D getCoordinate(@Nonnull final Field searchField) {
-        for (int i = 0 ; i < height; i++){
-            for (int j = 0 ; j < width; j++){
-                Field current = fields[i][j];
-                if( current.equals(searchField) ) {
-                    return new Coordinate2D(i,j);
-                }
-            }
-        }
-        throw new IllegalArgumentException(String.format("Searched field %s is not on board.", searchField));
     }
 
     public Field getField(int x, int y) {
@@ -114,5 +112,21 @@ public class Board {
 
     public void setFields(@Nonnull final Field[][] fields) {
         this.fields = fields;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        stream.writeInt(height);
+        stream.writeInt(width);
+        stream.writeObject(fields);
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        height = stream.readInt();
+        width = stream.readInt();
+        fields = (Field[][]) stream.readObject();
+    }
+
+    public Board deepCopy() {
+        return SerializationUtils.roundtrip(this);
     }
 }
