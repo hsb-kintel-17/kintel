@@ -24,13 +24,13 @@ public class HumanPlayer extends Participant {
         super(player);
         this.rc = rc; 
         
-        this.mapBoardLetters.put("A", 1);
-        this.mapBoardLetters.put("B", 2);
-        this.mapBoardLetters.put("C", 3);
-        this.mapBoardLetters.put("D", 4);
-        this.mapBoardLetters.put("E", 5);
-        this.mapBoardLetters.put("F", 6);
-        this.mapBoardLetters.put("G", 7);       
+        this.mapBoardLetters.put("a", 1);
+        this.mapBoardLetters.put("b", 2);
+        this.mapBoardLetters.put("c", 3);
+        this.mapBoardLetters.put("d", 4);
+        this.mapBoardLetters.put("e", 5);
+        this.mapBoardLetters.put("f", 6);
+        this.mapBoardLetters.put("g", 7);       
         
     }
     
@@ -41,14 +41,15 @@ public class HumanPlayer extends Participant {
     public Move getNextMove(Board board, int depth) {
         this.board = board;
         Scanner s = new Scanner(System.in);
-        
+        Move humanMove = null;
         boolean inputCorrect = false;
+        
         while(!inputCorrect)
         {
             System.out.println("" + this.getPlayer() + " ist am Zug:");
             String humanInput = s.nextLine();
             //TODO Umwandlung der Eingabe
-            Move humanMove = this.transform(humanInput);
+             humanMove = this.transform(humanInput);
             if(rc.isValidMove(humanMove)){
                 inputCorrect = true;
                 System.out.println("Eingabe ist kein valider Zug!");
@@ -59,7 +60,11 @@ public class HumanPlayer extends Participant {
          return humanMove;
     }
     
-    
+    /**
+     * transforms input by human like e3a5 into a move
+     * @param humanInput string like e3a5
+     * @return move
+     */
     private Move transform(String humanInput)
     {
         //check lenght of input: Must be 4
