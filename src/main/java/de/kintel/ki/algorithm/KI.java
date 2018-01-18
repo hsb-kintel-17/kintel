@@ -6,7 +6,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -25,16 +24,14 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(KI.class);
     private MoveMaker moveMaker;
     private Weighting weighting;
-    private final transient ApplicationContext applicationContext;
     private Board board;
     private Player currentPlayer;
     private MoveClassifier moveClassifier;
 
     @Autowired
-    public KI(@Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board, ApplicationContext applicationContext) {
+    public KI(@Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board) {
         this.moveMaker = moveMaker;
         this.weighting = weighting;
-        this.applicationContext = applicationContext;
         this.board = board;
         this.moveClassifier = moveClassifier;
     }
@@ -183,7 +180,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     @Override
     public ParallelNegamax<Move> clone() {
         final Board boardCopy = getBoard().deepCopy();
-        final KI copy = new KI(moveClassifier, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
+        final KI copy = new KI(moveClassifier, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy);
         copy.setCurrentPlayer(currentPlayer.name());
         return copy;
     }

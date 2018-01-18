@@ -5,8 +5,6 @@ import de.kintel.ki.algorithm.MoveClassifier;
 import java.util.Optional;
 
 public abstract class Move extends fr.avianey.minimax4j.Move {
-    private MoveClassifier.MoveType forwardClassification;
-
     public abstract Coordinate2D getSourceCoordinate();
     public abstract Coordinate2D getTargetCoordinate();
     public abstract Player getCurrentPlayer();

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Optional;
 
 @Component
 public class MoveMakerImpl implements MoveMaker {
@@ -58,7 +60,7 @@ public class MoveMakerImpl implements MoveMaker {
         final Field fieldFrom = board.getField(coordFrom);
         final Field fieldTo = board.getField(coordTo);
 
-        logger.debug("Making move from {}({}) to {}({}) for player {}", move.getSourceCoordinate(), fieldFrom, move.getTargetCoordinate(), fieldTo,
+        logger.debug("Making move (undo:{}) from {}({}) to {}({}) for player {}", undo, move.getSourceCoordinate(), fieldFrom, move.getTargetCoordinate(), fieldTo,
                 move.getCurrentPlayer());
 
         logger.debug("Before move: {}", board.toString());
@@ -83,7 +85,7 @@ public class MoveMakerImpl implements MoveMaker {
                 if (!pieceOpt.isPresent()) {
                     throw new IllegalStateException("No piece on the opponent field.");
                 }
-                pieceOpt.get().degrade(); //TODO: Degrate in rankMaker
+                pieceOpt.get().degrade(); //TODO: Degrade in rankMaker
                 fieldTo.getSteine().push(fieldOpponent.getSteine().pollFirst());
                 transportPieces(fieldFrom, fieldTo);
             } else {
