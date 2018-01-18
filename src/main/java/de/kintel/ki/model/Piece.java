@@ -38,20 +38,11 @@ public class Piece implements Serializable {
 
     public void promote(MoveClassifier.MoveType moveType) {
         if( moveType == MoveClassifier.MoveType.MOVE ) {
-            switch (rank) {
-                case normal:
-                    rank = owner.equals(Player.WEISS) ? Rank.gruen : Rank.rot;
-                    break;
+            if (rank == Rank.normal) {
+                rank = owner.equals(Player.WEISS) ? Rank.gruen : Rank.rot;
             }
         } else if( moveType == MoveClassifier.MoveType.CAPTURE ) {
-            switch (rank) {
-                case normal:
-                    rank = owner.equals(Player.WEISS) ? Rank.gelb : Rank.magenta;
-                    break;
-                case rot:
-                case gruen:
-                    rank = owner.equals(Player.WEISS) ? Rank.gold : Rank.purpur;
-            }
+            rank = owner.equals(Player.WEISS) ? Rank.gelb : Rank.magenta;
         }
     }
 
@@ -62,9 +53,9 @@ public class Piece implements Serializable {
     public void setRank(Rank rank) {
         boolean valid = false;
 
-        if( owner.equals(Player.WEISS) && (rank.equals(Rank.normal) || rank.equals(Rank.gruen) || rank.equals(Rank.gelb) || rank.equals(Rank.gold)) ) {
+        if( owner.equals(Player.WEISS) && (rank.equals(Rank.normal) || rank.equals(Rank.gruen) || rank.equals(Rank.gelb)) ) {
             valid = true;
-        } else if( owner.equals(Player.SCHWARZ) && (rank.equals(Rank.normal) || rank.equals(Rank.rot) || rank.equals(Rank.magenta) || rank.equals(Rank.purpur)) ) {
+        } else if( owner.equals(Player.SCHWARZ) && (rank.equals(Rank.normal) || rank.equals(Rank.rot) || rank.equals(Rank.magenta)) ) {
             valid = true;
         }
 

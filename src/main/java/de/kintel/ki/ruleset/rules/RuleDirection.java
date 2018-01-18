@@ -22,15 +22,16 @@ public class RuleDirection implements IRule {
                 case normal:
                     return isForward;
                 // Gruene und Rote Steine dürfen rückwärts nur ziehen
+
                 case gruen:
                 case rot:
-                    return !(!isForward && moveType == MoveClassifier.MoveType.CAPTURE);
+                    return (!isForward && moveType == MoveClassifier.MoveType.MOVE);
+
+                //gelbe und magenta Steine dürfen in beide Richtungen ziehen und schlagen (also dürfen sie alles)
                 case gelb:
                 case magenta:
-                    return !(isForward && moveType == MoveClassifier.MoveType.CAPTURE);
-                case gold:
-                case purpur:
                     return true;
+
                 default:
                     return false;
             }

@@ -93,7 +93,7 @@ public class RuleDirectionTest {
         assertThat(ruleDirection.isValidMove(captureForward, board), is(false));
         assertThat(ruleDirection.isValidMove(captureBackward, board), is(true));
 
-        schwarzerStein.setRank(Rank.purpur);
+        schwarzerStein.setRank(Rank.magenta);
         assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
         assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
         assertThat(ruleDirection.isValidMove(captureForward, board), is(true));

@@ -61,7 +61,7 @@ public class PieceTest {
         assertThat( piece.getRank(), is(Rank.gruen));
         piece.promote(MoveClassifier.MoveType.CAPTURE);
         assertThat("Aus grünen Steinen werden bei Beförderung bei Vorwärtsschlagen goldene Steine",
-                   piece.getRank(), is(Rank.gold));
+                   piece.getRank(), is(Rank.gelb));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class PieceTest {
         assertThat( piece.getRank(), is(Rank.rot));
         piece.promote(MoveClassifier.MoveType.CAPTURE);
         assertThat("Aus roten Steinen (=schwarz) werden bei Beförderung bei Vorwärtsschlagen purpur Steine",
-                   piece.getRank(), is(Rank.purpur));
+                   piece.getRank(), is(Rank.magenta));
     }
 
 
