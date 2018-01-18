@@ -34,7 +34,9 @@ public class RuleDirectionTest {
         board.getField(coordinateFrom).addStein(schwarzerStein);
 
         final Move moveForward = new UMLMove(coordinateFrom, coordinateForward, Player.SCHWARZ);
+        moveForward.setForwardClassification(MoveClassifier.MoveType.MOVE);
         final Move moveBackward = new UMLMove(coordinateFrom, coordinateBackward, Player.SCHWARZ);
+        moveBackward.setForwardClassification(MoveClassifier.MoveType.MOVE);
 
         schwarzerStein.setRank(Rank.normal);
         assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
@@ -86,12 +88,6 @@ public class RuleDirectionTest {
         assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
         assertThat(ruleDirection.isValidMove(captureForward, board), is(true));
         assertThat(ruleDirection.isValidMove(captureBackward, board), is(false));
-
-        schwarzerStein.setRank(Rank.magenta);
-        assertThat(ruleDirection.isValidMove(moveForward, board), is(true));
-        assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
-        assertThat(ruleDirection.isValidMove(captureForward, board), is(false));
-        assertThat(ruleDirection.isValidMove(captureBackward, board), is(true));
 
         schwarzerStein.setRank(Rank.magenta);
         assertThat(ruleDirection.isValidMove(moveForward, board), is(true));

@@ -1,6 +1,7 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,11 @@ public class KITest {
 
     @Autowired
     private KI ki;
+
+    @Before
+    public void setUp() {
+        ki.setCurrentPlayer(Player.SCHWARZ);
+    }
 
     @Test
     public void getPossibleMoves() {
