@@ -89,7 +89,7 @@ public class KiApplication implements CommandLineRunner {
                 humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, new MoveClassifier(new RulesChecker()));
             }
 
-            ki.setCurrentPlayer(currentPlayer.getPlayer());
+            ki.setCurrentPlayer(currentPlayer.getPlayer().name());
 
             try {
                 latch.await();

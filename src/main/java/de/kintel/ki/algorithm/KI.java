@@ -145,8 +145,8 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
         currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
     }
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = Player.valueOf(currentPlayer);
     }
 
     public Board getBoard() {
@@ -184,7 +184,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     public ParallelNegamax<Move> clone() {
         final Board boardCopy = getBoard().deepCopy();
         final KI copy = new KI(moveClassifier, new MoveMakerImpl(new RankMakerImpl()), weighting, boardCopy, applicationContext);
-        copy.setCurrentPlayer(currentPlayer);
+        copy.setCurrentPlayer(currentPlayer.name());
         return copy;
     }
 
