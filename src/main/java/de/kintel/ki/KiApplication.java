@@ -28,7 +28,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
 @SpringBootApplication
@@ -100,7 +99,7 @@ public class KiApplication implements CommandLineRunner {
             }
 
             logger.debug(ki.toString());
-            Scanner s = new Scanner(System.in);
+
             while( true ) {
 
                 final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, currentPlayer.getPlayer(), moveClassifier);
