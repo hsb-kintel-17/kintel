@@ -49,7 +49,7 @@ public class MoveMakerImpl implements MoveMaker {
         final String expected = guard.get(move);
         final String actual = board.toString();
         if (!expected.equals(actual)) {
-            String message = "Incorrect redo! The field after the redo is not the same as before the do - but it should of course. move: " + board.toString();
+            String message = "Incorrect undo! The field after the undo is not the same as before the do - but it should of course. board: " + board.toString();
             throw new IllegalStateException(message);
         }
     }
