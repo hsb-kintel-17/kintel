@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @SpringBootTest
@@ -38,7 +39,7 @@ public class KITest {
 
         checkBoardHasDefaultSetting(board);
         Move bestMove = ki.getBestMove(3);
-        //board = bestMove.getBoard();
+        assertThat(bestMove, notNullValue());
         checkBoardHasDefaultSetting(board);
     }
 

@@ -8,12 +8,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Dummy Implementation with weighting.
- * TODO: Implement proper function
  */
 public class WeightingDummyImpl implements Weighting {
 
-    private final int MIN = 1;
-    private final int MAX = 3;
+    private static final int MIN = 1;
+    private static final int MAX = 3;
 
     /**
      * Evaluate the state of the game <strong>for the current player</strong> after a move.

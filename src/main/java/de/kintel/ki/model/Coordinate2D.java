@@ -3,9 +3,13 @@ package de.kintel.ki.model;
 import com.google.common.base.Objects;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class Coordinate2D {
+public class Coordinate2D implements Serializable {
+
+    private static final long serialVersionUID = -5775552204030261616L;
 
     class DistanceToOrder implements Comparator<Coordinate2D> {
         @Override
@@ -25,8 +29,8 @@ public class Coordinate2D {
         return new DistanceToOrder();
     }
 
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     public Coordinate2D(int x, int y) {
         this.x = x;
@@ -67,6 +71,16 @@ public class Coordinate2D {
           .append(y);
         sb.append('}');
         return sb.toString();
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+        stream.writeInt(x);
+        stream.writeInt(y);
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        x = stream.readInt();
+        y = stream.readInt();
     }
 
     @Override

@@ -11,9 +11,6 @@ public abstract class Move extends fr.avianey.minimax4j.Move {
     public abstract Player getCurrentPlayer();
     public abstract boolean isForward();
 
-    //public abstract PathClassifier.MoveType getForwardClassification();
-    //public abstract Deque<Coordinate2D> getForwardPath();
-    //    public abstract void setForwardOpponentRank();
     public abstract Optional<Rank> getForwardOpponentRank();
     public abstract void setForwardOpponentRank(Optional<Rank> rank);
 

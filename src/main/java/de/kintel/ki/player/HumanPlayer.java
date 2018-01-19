@@ -21,7 +21,7 @@ public class HumanPlayer extends Participant {
 
     @Override
     public Move getNextMove(int depth) {
-        Scanner s = new Scanner(System.in);
+        Scanner s = new Scanner(System.in, "UTF-8");
         Move move = null;
         boolean inputCorrect = false;
 

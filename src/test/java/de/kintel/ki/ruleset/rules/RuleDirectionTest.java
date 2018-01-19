@@ -17,7 +17,6 @@ public class RuleDirectionTest {
 
     @Autowired
     RuleDirection ruleDirection;
-    private Move moveForward;
 
     @Test
     public void direction_move() throws Exception {
@@ -94,7 +93,6 @@ public class RuleDirectionTest {
         assertThat(ruleDirection.isValidMove(moveBackward, board), is(true));
         assertThat(ruleDirection.isValidMove(captureForward, board), is(true));
         assertThat(ruleDirection.isValidMove(captureBackward, board), is(true));
-
     }
 
 }

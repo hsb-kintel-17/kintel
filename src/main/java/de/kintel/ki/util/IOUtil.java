@@ -1,5 +1,6 @@
 package de.kintel.ki.util;
 
+import com.google.common.base.Charsets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,13 +15,13 @@ import java.io.InputStreamReader;
  * Verändert von:
  */
 public class IOUtil {
-    
-    /** The reader for console inputs  */ 
-    private BufferedReader br = null;
+
+    /** The reader for console inputs  */
+    private BufferedReader br;
     
     /** Initialisierungskonstruktor */
     public IOUtil() {
-        br = new BufferedReader( new InputStreamReader( System.in ) );
+        br = new BufferedReader( new InputStreamReader( System.in, Charsets.UTF_8 ) );
     }
 
     /**
@@ -117,7 +118,7 @@ public class IOUtil {
      * Returns a Bruch.
      * @return true if user wants to abort
      */
-    public boolean eingabe_abbruch() {
+    public boolean eingabeAbbruch() {
         ausgabe("Weiteren Eingaben? [y oder Abbruch mit Return]");
         String input = read();
         return input.isEmpty() || !input.equalsIgnoreCase("y");
@@ -146,5 +147,4 @@ public class IOUtil {
         ausgabe("1) schwarz");
         ausgabe("2) weiß");
     }
-    
 }

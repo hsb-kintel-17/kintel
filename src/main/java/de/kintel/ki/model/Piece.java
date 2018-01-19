@@ -29,13 +29,6 @@ public class Piece implements Serializable {
         return rank;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("");
-        sb.append(owner.toString().charAt(0));
-        return sb.toString();
-    }
-
     public void promote(MoveClassifier.MoveType moveType) {
         if( moveType == MoveClassifier.MoveType.MOVE ) {
             if (rank == Rank.normal) {
@@ -53,7 +46,7 @@ public class Piece implements Serializable {
     public void setRank(Rank rank) {
         boolean valid = false;
 
-        if( owner.equals(Player.WEISS) && (rank.equals(Rank.normal) || rank.equals(Rank.gruen) || rank.equals(Rank.gelb)) ) {
+        if(owner.equals(Player.WEISS) && (rank.equals(Rank.normal) || rank.equals(Rank.gruen) || rank.equals(Rank.gelb)) ) {
             valid = true;
         } else if( owner.equals(Player.SCHWARZ) && (rank.equals(Rank.normal) || rank.equals(Rank.rot) || rank.equals(Rank.magenta)) ) {
             valid = true;
@@ -87,7 +80,14 @@ public class Piece implements Serializable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(owner, rank);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("");
+        sb.append(owner.toString().charAt(0));
+        return sb.toString();
+    }
+
 }
