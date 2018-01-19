@@ -4,9 +4,12 @@ import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
 
+import java.util.concurrent.TimeUnit;
+
 public class KiPlayer extends Participant {
     
     private final KI ki;
+    private long timeConsumed;
 
     public KiPlayer(Board board, Player player, KI ki) {
         super( board, player );
@@ -16,7 +19,14 @@ public class KiPlayer extends Participant {
     @Override
     public Move getNextMove(int depth) {
         ki.setCurrentPlayer(getPlayer().name());
-        return ki.getBestMove(depth);
+        long timeBefore = System.currentTimeMillis();
+        final Move bestMove = ki.getBestMove(depth);
+        timeConsumed += System.currentTimeMillis() - timeBefore;
+        return bestMove;
+    }
+
+    public long getTimeConsumed() {
+        return TimeUnit.MILLISECONDS.toSeconds(timeConsumed);
     }
 
 }

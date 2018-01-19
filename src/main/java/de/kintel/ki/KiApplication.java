@@ -130,8 +130,9 @@ public class KiApplication implements CommandLineRunner {
                     throw new IllegalStateException("No best move found");
                 }
 
-                if( currentPlayer.equals(kiPlayer)) {
+                if( currentPlayer instanceof KiPlayer) {
                     logger.debug("Found best move to execute now: {}", move);
+                    logger.debug("Time consumed: {}s", ((KiPlayer) kiPlayer).getTimeConsumed());
                     ki.makeMove(move);
                 } else {
                     moveMaker.makeMove(move, board);
