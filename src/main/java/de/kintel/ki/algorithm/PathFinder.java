@@ -1,6 +1,7 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
+import de.kintel.ki.util.BoardUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

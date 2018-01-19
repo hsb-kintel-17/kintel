@@ -1,6 +1,7 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
+import de.kintel.ki.util.BoardUtils;
 import fr.avianey.minimax4j.impl.ParallelNegamax;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;

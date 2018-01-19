@@ -1,6 +1,5 @@
-package de.kintel.ki;
+package de.kintel.ki.algorithm;
 
-import de.kintel.ki.algorithm.PathFinder;
 import de.kintel.ki.model.*;
 import org.junit.Test;
 

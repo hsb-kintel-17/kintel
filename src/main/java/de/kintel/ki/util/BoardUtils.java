@@ -1,6 +1,7 @@
-package de.kintel.ki.model;
+package de.kintel.ki.util;
 
 import de.kintel.ki.algorithm.MoveClassifier;
+import de.kintel.ki.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

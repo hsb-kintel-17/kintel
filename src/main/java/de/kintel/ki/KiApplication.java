@@ -8,7 +8,7 @@ import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.KiFxApplication;
 import de.kintel.ki.model.Board;
-import de.kintel.ki.model.BoardUtils;
+import de.kintel.ki.util.BoardUtils;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.player.HumanPlayer;

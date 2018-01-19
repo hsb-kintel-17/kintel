@@ -6,5 +6,5 @@
     <logger name="de.kintel.ki.ruleset.rules" level="ERROR"/>
     <logger name="de.kintel.ki.algorithm" level="ERROR"/>
     <logger name="de.kintel.ki.algorithm.MoveMakerImpl" level="ERROR"/>
-    <logger name="de.kintel.ki.model.BoardUtils" level="ERROR"/>
+    <logger name="de.kintel.ki.util.BoardUtils" level="ERROR"/>
 </configuration>
