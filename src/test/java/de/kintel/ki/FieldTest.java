@@ -25,7 +25,9 @@ public class FieldTest {
     public void peekHead() {
         assertThat( field.peekHead(), is(Optional.empty()));
         field.addStein( new Piece(Player.SCHWARZ));
+        assertThat( field.getSteine().size(), is(1));
         assertThat( field.peekHead().orElseThrow(IllegalStateException::new).getOwner(), is(Player.SCHWARZ));
+        assertThat( field.getSteine().size(), is(1));
     }
 
     @Test
@@ -60,6 +62,7 @@ public class FieldTest {
         field.addStein( piece2 );
         assertThat( field.getSteine().size(), is(2));
         assertThat( field.pollHead().orElseThrow(IllegalStateException::new), is(piece2));
+        assertThat( field.getSteine().size(), is(1));
     }
 
     @Test
