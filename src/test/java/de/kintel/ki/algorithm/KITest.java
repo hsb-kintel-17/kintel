@@ -22,7 +22,7 @@ public class KITest {
 
     @Before
     public void setUp() {
-        ki.setCurrentPlayer(Player.SCHWARZ);
+        ki.setCurrentPlayer(Player.SCHWARZ.name());
     }
 
     @Test
