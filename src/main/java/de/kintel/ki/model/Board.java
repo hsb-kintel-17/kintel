@@ -45,6 +45,10 @@ public class Board implements Serializable {
                 if(field.getOwner().isPresent() && field.getOwner().get().equals( player ) ) {
                     fieldsCollector.add(new Coordinate2D(x,y));
                 }
+                // If the maximum of pieces in the list there can be no other occupied field
+                if( fieldsCollector.size() >= 12) {
+                    break;
+                }
             }
         }
         return fieldsCollector;
