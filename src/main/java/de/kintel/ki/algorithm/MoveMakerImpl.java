@@ -49,7 +49,7 @@ public class MoveMakerImpl implements MoveMaker {
         final String expected = guard.get(move);
         final String actual = board.toString();
         if (!expected.equals(actual)) {
-            String message = "Incorrect undo of move " + move.hashCode() + "! The field after the undo is not the same as before the do - but it should of course. move: " + board.toString();
+            String message = "Incorrect undo of move " + move.getUuid() + "! The field after the undo is not the same as before the do - but it should of course. move: " + board.toString();
             throw new IllegalStateException(message);
         }
     }
@@ -63,7 +63,7 @@ public class MoveMakerImpl implements MoveMaker {
         logger.debug("Making move (undo:{}) from {}({}) to {}({}) for player {}", undo, move.getSourceCoordinate(), fieldFrom, move.getTargetCoordinate(), fieldTo,
                 move.getCurrentPlayer());
 
-        logger.debug("Before {} move {}: {}", ((undo)? "undo":"do"),move.hashCode(), board.toString());
+        logger.debug("Before {} move {}: {}", ((undo)? "undo":"do"),move.getUuid(), board.toString());
 
         final MoveClassifier.MoveType moveType = move.getForwardClassification();
 
@@ -105,7 +105,7 @@ public class MoveMakerImpl implements MoveMaker {
 
         }
 
-        logger.debug("After {} move {}: {}", ((undo)? "undo":"do"),move.hashCode(), board.toString());
+        logger.debug("After {} move {}: {}", ((undo)? "undo":"do"),move.getUuid(), board.toString());
     }
 
     private void transportPieces(Field fieldFrom, Field fieldTo) {

@@ -76,7 +76,7 @@ public class KiApplication implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-        final int depth = 7;
+        final int depth = 12;
 
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {
@@ -107,11 +107,24 @@ public class KiApplication implements CommandLineRunner {
                 eventBus.post( new PossibleMovesEvent(possibleMoves));
 
                 Move move = currentPlayer.getNextMove(depth);
-                while( !possibleMoves.contains(move) ) {
-                    logger.error("Zugzwang nicht beachtet");
-                    move = currentPlayer.getNextMove(depth);
-                }
 
+                if(currentPlayer instanceof HumanPlayer) {
+                    boolean anyMatch;
+
+                    do{
+                        anyMatch = false;
+
+                        for(Move possibleMove : possibleMoves){
+                            anyMatch |= move.getSourceCoordinate().equals(possibleMove.getSourceCoordinate()) && move.getTargetCoordinate().equals(possibleMove.getTargetCoordinate());
+                        }
+
+                        if(!anyMatch) {
+                            logger.error("Zugzwang nicht beachtet");
+                            move = currentPlayer.getNextMove(depth);
+                        }
+
+                    }while (!anyMatch);
+                }
                 if( null == move ) {
                     logger.debug(ki.toString());
                     throw new IllegalStateException("No best move found");

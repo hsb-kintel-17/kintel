@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 
 /**
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class UMLMove extends Move  implements Serializable {
 
     public static Logger logger = LoggerFactory.getLogger(UMLMove.class);
-
+    private UUID uuid;
     private Coordinate2D from;
     private Coordinate2D to;
     private Player currentPlayer;
@@ -29,6 +30,7 @@ public class UMLMove extends Move  implements Serializable {
     private Rank forwardSourceRank;
 
     public UMLMove(@Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
+        uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;
         this.currentPlayer = currentPlayer;
@@ -97,6 +99,11 @@ public class UMLMove extends Move  implements Serializable {
     }
 
     @Override
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    @Override
     public Optional<Rank> getForwardOpponentRank() {
         return forwardOpponentRank;
     }
@@ -121,11 +128,11 @@ public class UMLMove extends Move  implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UMLMove umlMove = (UMLMove) o;
-        return Objects.equals(from, umlMove.from) && Objects.equals(to, umlMove.to) && getCurrentPlayer() == umlMove.getCurrentPlayer();
+        return Objects.equals(from, umlMove.from) && Objects.equals(to, umlMove.to) && getCurrentPlayer() == umlMove.getCurrentPlayer() && Objects.equals(uuid,umlMove.getUuid());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(from, to, getCurrentPlayer());
+        return Objects.hash(from, to, getCurrentPlayer(),uuid);
     }
 }

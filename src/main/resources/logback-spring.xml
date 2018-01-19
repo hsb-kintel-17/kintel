@@ -3,8 +3,8 @@
                xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/nkatsar/logback-XSD/master/src/main/xsd/logback.xsd">
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="de.kintel" level="DEBUG"/>
-    <logger name="de.kintel.ki.ruleset.rules" level="INFO"/>
+    <logger name="de.kintel.ki.ruleset.rules" level="ERROR"/>
     <logger name="de.kintel.ki.algorithm" level="ERROR"/>
-    <logger name="de.kintel.ki.algorithm.MoveMakerImpl" level="DEBUG"/>
+    <logger name="de.kintel.ki.algorithm.MoveMakerImpl" level="ERROR"/>
     <logger name="de.kintel.ki.model.BoardUtils" level="ERROR"/>
 </configuration>
