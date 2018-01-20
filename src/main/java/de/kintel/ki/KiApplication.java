@@ -118,7 +118,7 @@ public class KiApplication implements CommandLineRunner {
                         }
 
                         if(!anyMatch) {
-                            logger.error("Zugzwang nicht beachtet");
+                            logger.error("Dieser Zug ist nicht gültig.");
                             move = currentPlayer.getNextMove(depth);
                         }
 

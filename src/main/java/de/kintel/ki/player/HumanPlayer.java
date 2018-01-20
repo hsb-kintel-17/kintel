@@ -3,11 +3,15 @@ package de.kintel.ki.player;
 import de.kintel.ki.algorithm.MoveClassifier;
 import de.kintel.ki.model.*;
 import de.kintel.ki.util.UMLCoordToCoord2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Scanner;
 
 public class HumanPlayer extends Participant {
+
+    private static final Logger logger = LoggerFactory.getLogger(HumanPlayer.class);
 
     private final UMLCoordToCoord2D converter;
     private final MoveClassifier moveClassifier;
@@ -26,7 +30,7 @@ public class HumanPlayer extends Participant {
         boolean inputCorrect = false;
 
         while (!inputCorrect) {
-            System.out.println("" + this.getPlayer() + " ist am Zug:");
+            logger.info("" + this.getPlayer() + " ist am Zug:");
             String humanInput = s.nextLine();
 
             move = this.transform(humanInput);
@@ -34,7 +38,7 @@ public class HumanPlayer extends Participant {
                 moveClassifier.classify(move, getBoard());
                 inputCorrect = move.getForwardClassification() != MoveClassifier.MoveType.INVALID;
             } else {
-                System.out.println("Eingabe ist kein valider Zug!");
+                logger.error("Eingabe ist keine Koordinate!");
             }
         }
 
