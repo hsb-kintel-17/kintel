@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MoveClassifier {
 
-    IRulesChecker rulesChecker;
+    private IRulesChecker rulesChecker;
+
     /**
      * Available move types
      */

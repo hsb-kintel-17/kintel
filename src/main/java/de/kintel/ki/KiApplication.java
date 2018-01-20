@@ -83,10 +83,10 @@ public class KiApplication implements CommandLineRunner {
 
             if( new IOUtil().readMainMenu() == 1) {
                 kiPlayer = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki);
-                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, new MoveClassifier(new RulesChecker()));
+                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, moveClassifier);
             } else {
                 kiPlayer = currentPlayer = new KiPlayer(board, Player.WEISS, ki);
-                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, new MoveClassifier(new RulesChecker()));
+                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, moveClassifier);
             }
 
             ki.setCurrentPlayer(currentPlayer.getPlayer().name());
