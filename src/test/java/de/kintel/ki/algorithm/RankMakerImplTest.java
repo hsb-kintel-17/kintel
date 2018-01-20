@@ -44,8 +44,8 @@ public class RankMakerImplTest {
         moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
-        assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein) );
-        assertThat( board.getField(coordinateTo).getSteine().peekFirst().getRank(), is(Rank.rot) );
+        assertThat( board.getField(coordinateTo).getPieces(), Matchers.contains(schwarzerStein) );
+        assertThat( board.getField(coordinateTo).getPieces().peekFirst().getRank(), is(Rank.rot) );
     }
 
 
@@ -72,20 +72,20 @@ public class RankMakerImplTest {
         move.setForwardSourceRank(schwarzerStein.getRank());
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
-        assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains(schwarzerStein) );
-        assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( board.getField(coordinateFrom).getPieces(), Matchers.contains(schwarzerStein) );
+        assertThat( board.getField(coordinateFrom).getPieces().peekFirst().getRank(), is(Rank.normal) );
 
         moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
-        assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein) );
-        assertThat( board.getField(coordinateTo).getSteine().peekFirst().getRank(), is(Rank.rot) );
+        assertThat( board.getField(coordinateTo).getPieces(), Matchers.contains(schwarzerStein) );
+        assertThat( board.getField(coordinateTo).getPieces().peekFirst().getRank(), is(Rank.rot) );
 
         moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
-        assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains(schwarzerStein) );
-        assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( board.getField(coordinateFrom).getPieces(), Matchers.contains(schwarzerStein) );
+        assertThat( board.getField(coordinateFrom).getPieces().peekFirst().getRank(), is(Rank.normal) );
     }
 
     @Test
@@ -122,9 +122,9 @@ public class RankMakerImplTest {
         moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
-        assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
+        assertThat( board.getField(coordinateTo).getPieces(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
         // schwarzer Stein wurde befördert
-        assertThat( board.getField(coordinateTo).getSteine().peekFirst().getRank(), is(Rank.magenta) );
+        assertThat( board.getField(coordinateTo).getPieces().peekFirst().getRank(), is(Rank.magenta) );
         // weißer stein2 wurde degradiert
         assertThat( weisserStein2.getRank(), is(Rank.normal) );
     }
@@ -163,25 +163,25 @@ public class RankMakerImplTest {
         move.setForwardSourceRank(Rank.normal);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
-        assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
-        assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( board.getField(coordinateFrom).getPieces(), Matchers.contains( schwarzerStein, weisserStein) );
+        assertThat( board.getField(coordinateFrom).getPieces().peekFirst().getRank(), is(Rank.normal) );
         assertThat( weisserStein2.getRank(), is(Rank.gelb) );
 
         moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
-        assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
+        assertThat( board.getField(coordinateTo).getPieces(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
         // schwarzer Stein wurde befördert
-        assertThat( board.getField(coordinateTo).getSteine().peekFirst().getRank(), is(Rank.magenta) );
+        assertThat( board.getField(coordinateTo).getPieces().peekFirst().getRank(), is(Rank.magenta) );
         // weißer stein2 wurde degradiert
         assertThat( weisserStein2.getRank(), is(Rank.normal) );
 
         moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
-        assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
-        assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
-        assertThat( board.getField(coordinateOpponent).getSteine(), Matchers.contains( weisserStein2, schwarzerStein2) );
+        assertThat( board.getField(coordinateFrom).getPieces(), Matchers.contains( schwarzerStein, weisserStein) );
+        assertThat( board.getField(coordinateFrom).getPieces().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( board.getField(coordinateOpponent).getPieces(), Matchers.contains( weisserStein2, schwarzerStein2) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
     }
 
@@ -217,25 +217,25 @@ public class RankMakerImplTest {
         move.setForwardOpponentRank(Optional.of(weisserStein2.getRank()));
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
-        assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
-        assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( board.getField(coordinateFrom).getPieces(), Matchers.contains( schwarzerStein, weisserStein) );
+        assertThat( board.getField(coordinateFrom).getPieces().peekFirst().getRank(), is(Rank.normal) );
         assertThat( weisserStein2.getRank(), is(Rank.gelb) );
 
         moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
-        assertThat( board.getField(coordinateTo).getSteine(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
+        assertThat( board.getField(coordinateTo).getPieces(), Matchers.contains(schwarzerStein, weisserStein, weisserStein2) );
         // schwarzer Stein wurde befördert
-        assertThat( board.getField(coordinateTo).getSteine().peekFirst().getRank(), is(Rank.magenta) );
+        assertThat( board.getField(coordinateTo).getPieces().peekFirst().getRank(), is(Rank.magenta) );
         // weißer stein2 wurde degradiert
         assertThat( weisserStein2.getRank(), is(Rank.normal) );
 
         moveMaker.undoMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(false) );
-        assertThat( board.getField(coordinateFrom).getSteine(), Matchers.contains( schwarzerStein, weisserStein) );
-        assertThat( board.getField(coordinateFrom).getSteine().peekFirst().getRank(), is(Rank.normal) );
-        assertThat( board.getField(coordinateOpponent).getSteine(), Matchers.contains( weisserStein2 ) );
+        assertThat( board.getField(coordinateFrom).getPieces(), Matchers.contains( schwarzerStein, weisserStein) );
+        assertThat( board.getField(coordinateFrom).getPieces().peekFirst().getRank(), is(Rank.normal) );
+        assertThat( board.getField(coordinateOpponent).getPieces(), Matchers.contains( weisserStein2 ) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
     }
 

@@ -72,7 +72,7 @@ public class MoveMakerImpl implements MoveMaker {
                 transportPieces(fieldFrom, fieldTo);
             } else {
                 transportPieces(fieldTo, fieldFrom);
-                fieldFrom.getSteine().peekFirst().setRank(move.getForwardSourceRank());
+                fieldFrom.getPieces().peekFirst().setRank(move.getForwardSourceRank());
             }
 
         } else if (moveType.equals(MoveClassifier.MoveType.CAPTURE)) {
@@ -86,15 +86,15 @@ public class MoveMakerImpl implements MoveMaker {
                     throw new IllegalStateException("No piece on the opponent field.");
                 }
                 pieceOpt.get().degrade(); //TODO: Degrade in rankMaker
-                fieldTo.getSteine().push(fieldOpponent.getSteine().pollFirst());
+                fieldTo.getPieces().push(fieldOpponent.getPieces().pollFirst());
                 transportPieces(fieldFrom, fieldTo);
             } else {
-                Piece opponentPiece = fieldTo.getSteine().pollLast();
+                Piece opponentPiece = fieldTo.getPieces().pollLast();
                 fieldOpponent.addStein(opponentPiece);
                 move.getForwardOpponentRank().ifPresent(opponentPiece::setRank);
                 transportPieces(fieldTo, fieldFrom);
                 try {
-                    fieldFrom.getSteine().peekFirst().setRank(move.getForwardSourceRank());
+                    fieldFrom.getPieces().peekFirst().setRank(move.getForwardSourceRank());
                 }catch (NullPointerException e){
                     System.out.println("");
                 }
@@ -109,9 +109,9 @@ public class MoveMakerImpl implements MoveMaker {
     }
 
     private void transportPieces(Field fieldFrom, Field fieldTo) {
-        final Iterator<Piece> it = fieldFrom.getSteine().descendingIterator();
+        final Iterator<Piece> it = fieldFrom.getPieces().descendingIterator();
         while (it.hasNext()) {
-            fieldTo.getSteine().push(it.next());
+            fieldTo.getPieces().push(it.next());
             it.remove();
         }
     }

@@ -47,13 +47,13 @@ public class MoveMakerImplTest {
 
         final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
         move.setForwardClassification(MoveClassifier.MoveType.MOVE);
-        assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateFrom).getPieces(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
 
         moveMaker.makeMove(move,board);
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
-        assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateTo).getPieces(), contains(schwarzerStein) );
     }
 
     @Test
@@ -83,19 +83,19 @@ public class MoveMakerImplTest {
         move.setForwardClassification(MoveClassifier.MoveType.MOVE);
         move.setForwardSourceRank(schwarzerStein.getRank());
 
-        assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateFrom).getPieces(), contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
 
         moveMaker.makeMove(move,board);
         schwarzerStein = board.getField(coordinateTo).peekHead().get();
 
         assertThat( board.getField(coordinateFrom).isEmpty(), is(true) );
-        assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateTo).getPieces(), contains(schwarzerStein) );
 
         moveMaker.undoMove(move,board);
         schwarzerStein = board.getField(coordinateFrom).peekHead().get();
 
-        assertTrue( board.getField(coordinateFrom).getSteine().contains(schwarzerStein) );
+        assertTrue( board.getField(coordinateFrom).getPieces().contains(schwarzerStein) );
         assertThat( board.getField(coordinateTo).isEmpty(), is(true) );
     }
 
@@ -130,15 +130,15 @@ public class MoveMakerImplTest {
         move.setForwardSourceRank(schwarzerStein.getRank());
         move.setForwardOpponentRank(Optional.of(weisserStein.getRank()));
 
-        assertThat(  board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
+        assertThat(  board.getField(coordinateFrom).getPieces(), contains(schwarzerStein) );
         assertTrue(  board.getField(coordinateTo).isEmpty() );
 
         moveMaker.makeMove(move,board);
 
         assertTrue(  board.getField(coordinateFrom).isEmpty() );
         assertTrue(  board.getField(coordinateBetween).isEmpty() );
-        assertThat(  board.getField(coordinateTo).getSteine().pollFirst(), is(schwarzerStein));
-        assertThat(  board.getField(coordinateTo).getSteine().pollFirst(), is(weisserStein) );
+        assertThat(  board.getField(coordinateTo).getPieces().pollFirst(), is(schwarzerStein));
+        assertThat(  board.getField(coordinateTo).getPieces().pollFirst(), is(weisserStein) );
     }
 
     @Test
@@ -172,20 +172,20 @@ public class MoveMakerImplTest {
         move.setForwardSourceRank(schwarzerStein.getRank());
         move.setForwardOpponentRank(Optional.of(weisserStein.getRank()));
 
-        assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateFrom).getPieces(), contains(schwarzerStein) );
         assertTrue( board.getField(coordinateTo).isEmpty() );
 
         moveMaker.makeMove(move,board);
 
         assertTrue( board.getField(coordinateFrom).isEmpty() );
         assertTrue( board.getField(coordinateBetween).isEmpty() );
-        assertThat( board.getField(coordinateTo).getSteine().peekFirst(), is(schwarzerStein) );
-        assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein, weisserStein) );
+        assertThat( board.getField(coordinateTo).getPieces().peekFirst(), is(schwarzerStein) );
+        assertThat( board.getField(coordinateTo).getPieces(), contains(schwarzerStein, weisserStein) );
 
         moveMaker.undoMove(move,board);
 
-        assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
-        assertThat( board.getField(coordinateBetween).getSteine(), contains(weisserStein) );
+        assertThat( board.getField(coordinateFrom).getPieces(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateBetween).getPieces(), contains(weisserStein) );
         assertTrue( board.getField(coordinateTo).isEmpty() );
     }
 
@@ -240,23 +240,23 @@ public class MoveMakerImplTest {
         move.setForwardOpponentRank(Optional.of(weisserStein.getRank()));
         move.setForwardSourceRank(schwarzerStein.getRank());
 
-        assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
-        assertThat( board.getField(coordinateBetween).getSteine().peekFirst(), is( weisserStein ) );
-        assertThat( board.getField(coordinateBetween).getSteine(), contains( weisserStein, schwarzerStein2 ) );
+        assertThat( board.getField(coordinateFrom).getPieces(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateBetween).getPieces().peekFirst(), is( weisserStein ) );
+        assertThat( board.getField(coordinateBetween).getPieces(), contains( weisserStein, schwarzerStein2 ) );
         assertTrue( board.getField(coordinateTo).isEmpty() );
 
         moveMaker.makeMove(move,board);
 
         assertTrue( board.getField(coordinateFrom).isEmpty() );
-        assertThat( board.getField(coordinateBetween).getSteine().peekFirst(), is( schwarzerStein2 ) );
-        assertThat( board.getField(coordinateTo).getSteine().peekFirst(), is(schwarzerStein) );
-        assertThat( board.getField(coordinateTo).getSteine(), contains(schwarzerStein, weisserStein) );
+        assertThat( board.getField(coordinateBetween).getPieces().peekFirst(), is( schwarzerStein2 ) );
+        assertThat( board.getField(coordinateTo).getPieces().peekFirst(), is(schwarzerStein) );
+        assertThat( board.getField(coordinateTo).getPieces(), contains(schwarzerStein, weisserStein) );
 
         moveMaker.undoMove(move,board);
 
-        assertThat( board.getField(coordinateFrom).getSteine(), contains(schwarzerStein) );
-        assertThat( board.getField(coordinateBetween).getSteine().peekFirst(), is( weisserStein ) );
-        assertThat( board.getField(coordinateBetween).getSteine(), contains( weisserStein, schwarzerStein2 ) );
+        assertThat( board.getField(coordinateFrom).getPieces(), contains(schwarzerStein) );
+        assertThat( board.getField(coordinateBetween).getPieces().peekFirst(), is( weisserStein ) );
+        assertThat( board.getField(coordinateBetween).getPieces(), contains( weisserStein, schwarzerStein2 ) );
         assertTrue( board.getField(coordinateTo).isEmpty() );
     }
 }

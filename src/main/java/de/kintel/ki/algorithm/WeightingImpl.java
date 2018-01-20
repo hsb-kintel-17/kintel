@@ -22,7 +22,7 @@ public class WeightingImpl implements Weighting {
         final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
         double heights = fieldsOccupiedBy.stream()
                         .map(coordinate -> board.getField(coordinate))
-                        .mapToDouble(f -> f.getSteine()
+                        .mapToDouble(f -> f.getPieces()
                         .size())
                         .map(d -> d * Weight.WIN.getValue()).sum();
         return heights;

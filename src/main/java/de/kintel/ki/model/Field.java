@@ -15,7 +15,7 @@ public class Field implements Serializable {
 
     private static final long serialVersionUID = -8508348237650305754L;
     private boolean isForbidden;
-    private Deque<Piece> steine = new LinkedList<>();
+    private Deque<Piece> pieces = new LinkedList<>();
 
     public Field(boolean isForbidden) {
         this.isForbidden = isForbidden;
@@ -25,7 +25,7 @@ public class Field implements Serializable {
      * Pushes an element onto the top of this field.
      */
     public void addStein(@Nonnull final Piece s) {
-        steine.push(s);
+        pieces.push(s);
     }
 
     /**
@@ -37,10 +37,10 @@ public class Field implements Serializable {
      *         {@link Optional#empty()} if this field is empty
      */
     public Optional<Piece> peekHead() {
-        if (steine.isEmpty()) {
+        if (pieces.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(steine.peek());
+            return Optional.of(pieces.peek());
         }
     }
 
@@ -52,10 +52,10 @@ public class Field implements Serializable {
      *         {@link Optional#empty()} if this field is empty
      */
     public Optional<Piece> pollHead() {
-        if (steine.isEmpty()) {
+        if (pieces.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(steine.pollFirst());
+            return Optional.of(pieces.pollFirst());
         }
     }
 
@@ -67,15 +67,15 @@ public class Field implements Serializable {
      *         {@link Optional#empty()} if this field is empty
      */
     public Optional<Player> getOwner() {
-        if (steine.isEmpty()) {
+        if (pieces.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(steine.peek().getOwner());
+            return Optional.of(pieces.peek().getOwner());
         }
     }
 
-    public Deque<Piece> getSteine() {
-        return steine;
+    public Deque<Piece> getPieces() {
+        return pieces;
     }
 
     /**
@@ -84,7 +84,7 @@ public class Field implements Serializable {
      * @return <tt>true</tt> if this field is empty
      */
     public boolean isEmpty() {
-        return steine.isEmpty();
+        return pieces.isEmpty();
     }
 
     /**
@@ -98,12 +98,12 @@ public class Field implements Serializable {
 
     private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
         stream.writeBoolean(isForbidden);
-        stream.writeObject(steine);
+        stream.writeObject(pieces);
     }
 
     private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         isForbidden = stream.readBoolean();
-        steine = (Deque<Piece>) stream.readObject();
+        pieces = (Deque<Piece>) stream.readObject();
     }
 
     @Override
@@ -112,12 +112,12 @@ public class Field implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Field field = (Field) o;
         return isForbidden == field.isForbidden &&
-                Objects.equals(steine, field.steine);
+                Objects.equals(pieces, field.pieces);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isForbidden, steine);
+        return Objects.hash(isForbidden, pieces);
     }
 
     @Override
@@ -126,8 +126,8 @@ public class Field implements Serializable {
         if( isForbidden ) {
             sb.append( String.valueOf('\u25A8'));
         } else {
-            steine.stream().limit(1).map( s -> s.toString() + "<" + s.getRank().name().charAt(0) + ">").forEach(sb::append);
-            steine.stream().skip(1).forEach(sb::append);
+            pieces.stream().limit(1).map(s -> s.toString() + "<" + s.getRank().name().charAt(0) + ">").forEach(sb::append);
+            pieces.stream().skip(1).forEach(sb::append);
         }
         return sb.toString();
     }

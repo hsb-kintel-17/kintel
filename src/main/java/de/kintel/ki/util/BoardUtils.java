@@ -52,20 +52,20 @@ public class BoardUtils {
         final List<Move> moves = new ArrayList<>();
         final List<Coordinate2D> coordinatesOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
 
-        for( Coordinate2D coordinateFrom : coordinatesOccupiedBy ) {
-            final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordinateFrom, 2);
+        for( Coordinate2D coordinateSource : coordinatesOccupiedBy ) {
+            final List<Coordinate2D> diagonalSurroundings = BoardUtils.getDiagonalSurroundings(board, coordinateSource, 2);
 
-            for( Coordinate2D surrounding : diagonalSurroundings ) {
-                Move move = new UMLMove(coordinateFrom, surrounding, currentPlayer);
+            for( Coordinate2D coordinateTarget : diagonalSurroundings ) {
+                Move move = new UMLMove(coordinateSource, coordinateTarget, currentPlayer);
                 moveClassifier.classify(move, board);
                 if(move.getForwardClassification() != MoveClassifier.MoveType.INVALID) {
                     if( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE ) {
-                        move.setForwardOpponentRank( Optional.of(board.getField(Coordinate2D.between(coordinateFrom, surrounding)).getSteine().getFirst().getRank()));
+                        move.setForwardOpponentRank( Optional.of(board.getField(Coordinate2D.between(coordinateSource, coordinateTarget)).getPieces().getFirst().getRank()));
                     } else {
                         move.setForwardOpponentRank(Optional.empty());
                     }
 
-                    move.setForwardSourceRank(board.getField(coordinateFrom).getSteine().getFirst().getRank());
+                    move.setForwardSourceRank(board.getField(coordinateSource).getPieces().getFirst().getRank());
 
                     if ( move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE) {
                         zugzwaenge.add( move );
@@ -76,7 +76,7 @@ public class BoardUtils {
             }
         }
 
-        // If there are zugwang moves then these moves are the only possible moves
+        // If there are zugzwang moves then these moves are the only possible moves
         possibleMoves = zugzwaenge.isEmpty() ? moves : zugzwaenge;
 
         logger.info("{} possible moves for player {}", possibleMoves.size(), currentPlayer);

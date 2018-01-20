@@ -22,9 +22,9 @@ public class FieldTest {
     public void peekHead() {
         assertThat( field.peekHead(), is(Optional.empty()));
         field.addStein( new Piece(Player.SCHWARZ));
-        assertThat( field.getSteine().size(), is(1));
+        assertThat( field.getPieces().size(), is(1));
         assertThat( field.peekHead().orElseThrow(IllegalStateException::new).getOwner(), is(Player.SCHWARZ));
-        assertThat( field.getSteine().size(), is(1));
+        assertThat( field.getPieces().size(), is(1));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class FieldTest {
         final Piece piece = new Piece(Player.SCHWARZ);
         assertThat( field.isEmpty(), is(true));
         field.addStein( piece );
-        assertThat( field.getSteine(), hasItem(piece));
+        assertThat( field.getPieces(), hasItem(piece));
     }
 
     @Test
@@ -57,9 +57,9 @@ public class FieldTest {
         final Piece piece2 = new Piece(Player.WEISS);
         field.addStein( piece1 );
         field.addStein( piece2 );
-        assertThat( field.getSteine().size(), is(2));
+        assertThat( field.getPieces().size(), is(2));
         assertThat( field.pollHead().orElseThrow(IllegalStateException::new), is(piece2));
-        assertThat( field.getSteine().size(), is(1));
+        assertThat( field.getPieces().size(), is(1));
     }
 
     @Test

@@ -83,7 +83,7 @@ public class KITest {
         final Coordinate2D coordinateTo = new Coordinate2D(3, 3);
 
         final Move move = new UMLMove( coordinateFrom, coordinateTo, Player.SCHWARZ);
-        move.setForwardSourceRank(board.getField(coordinateFrom).getSteine().peekFirst().getRank());
+        move.setForwardSourceRank(board.getField(coordinateFrom).getPieces().peekFirst().getRank());
         move.setForwardClassification(MoveClassifier.MoveType.MOVE);
 
         assertThat(board.getField(2, 2).isEmpty(), is(false));
@@ -102,7 +102,7 @@ public class KITest {
         final Coordinate2D coordinateTo = new Coordinate2D(3, 1);
 
         final Move move = new UMLMove(coordinateFrom, coordinateTo, Player.SCHWARZ);
-        move.setForwardSourceRank(board.getField(coordinateFrom).getSteine().peekFirst().getRank());
+        move.setForwardSourceRank(board.getField(coordinateFrom).getPieces().peekFirst().getRank());
         move.setForwardClassification(MoveClassifier.MoveType.MOVE);
 
         assertThat(board.getField(2, 2).isEmpty(), is(false));

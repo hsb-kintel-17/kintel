@@ -22,7 +22,7 @@ public class RankMakerImpl implements RankMaker {
                 fieldTo.peekHead().get().promote(move.getForwardClassification());
             }
             //degrate the captured piece
-            final ArrayList<Piece> pieces = Lists.newArrayList(fieldTo.getSteine());
+            final ArrayList<Piece> pieces = Lists.newArrayList(fieldTo.getPieces());
             if (pieces.size() >= 2 && move.getForwardClassification() == MoveClassifier.MoveType.CAPTURE) {
                 pieces.get(1).degrade();
             }

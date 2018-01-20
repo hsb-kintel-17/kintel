@@ -1,14 +1,11 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.ArrayDeque;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -19,7 +16,6 @@ public class MoveClassifierTest {
 
     @Autowired
     MoveClassifier moveClassifier;
-
 
     @Test
     public void classify2Path_simple() {
@@ -43,7 +39,7 @@ public class MoveClassifierTest {
     }
 
     @Test
-    public void classify3Path_simple() {
+    public void classify3Path_invalid() {
 
         Field a = new Field(false);
         Field e = new Field(false);
@@ -84,8 +80,6 @@ public class MoveClassifierTest {
 
 
         moveClassifier.classify(umlMove,board);
-
-
         assertThat( umlMove.getForwardClassification(), is(MoveClassifier.MoveType.CAPTURE));
     }
 
