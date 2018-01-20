@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class WeightingImpl implements Weighting {
@@ -25,7 +26,30 @@ public class WeightingImpl implements Weighting {
                         .mapToDouble(f -> f.getPieces()
                         .size())
                         .map(d -> d * Weight.WIN.getValue()).sum();
-        return heights;
+        int ranks = 0;
+        for (Coordinate2D coord : fieldsOccupiedBy) {
+            final Field field = board.getField(coord);
+            final Optional<Piece> head = field.peekHead();
+            if( head.isPresent() ) {
+                int val = 0;
+                switch (head.get().getRank()) {
+                    case normal:
+                        val = 1;
+                        break;
+                    case gelb:
+                    case gruen:
+                        val = 50;
+                        break;
+                    case rot:
+                    case magenta:
+                        val = 250;
+                        break;
+                }
+                ranks += val * Weight.WIN.getValue();
+            }
+        }
+
+        return heights + ranks;
     }
 
     /**
@@ -37,6 +61,6 @@ public class WeightingImpl implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return 12*4.0;
+        return 12*4.0 + 250*12;
     }
 }
