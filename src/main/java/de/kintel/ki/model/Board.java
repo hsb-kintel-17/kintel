@@ -111,6 +111,7 @@ public class Board implements Serializable {
             }
             sb.append("\n");
         }
+
         return sb.toString();
     }
 

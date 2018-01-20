@@ -37,9 +37,7 @@ public class UMLMove extends Move  implements Serializable {
     }
 
     public boolean isForward() {
-
         boolean isForward = getCurrentPlayer().equals(Player.SCHWARZ) ? getSourceCoordinate().getX() < getTargetCoordinate().getX() : getSourceCoordinate().getX() > getTargetCoordinate().getX();
-
         return isForward;
     }
 

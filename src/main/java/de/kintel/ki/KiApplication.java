@@ -8,13 +8,12 @@ import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.KiFxApplication;
 import de.kintel.ki.model.Board;
-import de.kintel.ki.util.BoardUtils;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.player.HumanPlayer;
 import de.kintel.ki.player.KiPlayer;
 import de.kintel.ki.player.Participant;
-import de.kintel.ki.ruleset.RulesChecker;
+import de.kintel.ki.util.BoardUtils;
 import de.kintel.ki.util.IOUtil;
 import de.kintel.ki.util.UMLCoordToCoord2D;
 import org.slf4j.Logger;
@@ -123,7 +122,7 @@ public class KiApplication implements CommandLineRunner {
                             move = currentPlayer.getNextMove(depth);
                         }
 
-                    }while (!anyMatch);
+                    } while (!anyMatch);
                 }
                 if( null == move ) {
                     logger.debug(ki.toString());

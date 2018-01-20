@@ -16,16 +16,16 @@ public class RuleDistance implements IRule {
     @Override
     public boolean isValidMove(@Nonnull Move move, Board board) {
 
-        int sqaredDistance = move.getSourceCoordinate().distanceSquaredTo(move.getTargetCoordinate());
-        if(sqaredDistance>8){
+        int squaredDistance = move.getSourceCoordinate().distanceSquaredTo(move.getTargetCoordinate());
+        if(squaredDistance>8){
             return false;
         }
-        else if(sqaredDistance == 8) {
+        else if(squaredDistance == 8) {
             if(board.getField(Coordinate2D.between(move.getSourceCoordinate(),move.getTargetCoordinate())).isEmpty()){
                 return false;
             }
         }
-        else if (sqaredDistance<2){
+        else if (squaredDistance<2){
             return false;
         }
 
