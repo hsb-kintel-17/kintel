@@ -26,6 +26,7 @@ repositories {
 
 
 dependencies {
+    compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     compile 'org.apache.commons:commons-lang3:3.7'
     testCompile 'com.shazam:shazamcrest:0.11'
     compile 'de.saxsys:mvvmfx:1.7.0'
