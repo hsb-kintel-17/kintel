@@ -8,6 +8,36 @@ import static org.junit.Assert.assertThat;
 
 public class PieceTest {
 
+    @Test(expected = NullPointerException.class)
+    public void test_RankNull() throws Exception {
+        final Piece piece = new Piece(Player.SCHWARZ);
+        piece.setRank(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_GruenNotValidForSchwarz() throws Exception {
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
+        schwarzerStein.setRank(Rank.gruen);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_GelbNotValidForSchwarz() throws Exception {
+        final Piece schwarzerStein = new Piece(Player.SCHWARZ);
+        schwarzerStein.setRank(Rank.gelb);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_RotNotValidForWeiss() throws Exception {
+        final Piece schwarzerStein = new Piece(Player.WEISS);
+        schwarzerStein.setRank(Rank.rot);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_MagentaNotValidForWeiss() throws Exception {
+        final Piece schwarzerStein = new Piece(Player.WEISS);
+        schwarzerStein.setRank(Rank.magenta);
+    }
+
     @Test
     public void test_defaultRank() throws Exception {
         final Piece schwarzerStein = new Piece(Player.SCHWARZ);
@@ -60,7 +90,7 @@ public class PieceTest {
         piece.promote(MoveClassifier.MoveType.MOVE);
         assertThat( piece.getRank(), is(Rank.gruen));
         piece.promote(MoveClassifier.MoveType.CAPTURE);
-        assertThat("Aus grünen Steinen werden bei Beförderung bei Vorwärtsschlagen goldene Steine",
+        assertThat("Aus grünen Steinen werden bei Beförderung bei Vorwärtsschlagen gelbe/goldene Steine",
                    piece.getRank(), is(Rank.gelb));
     }
 
@@ -71,7 +101,7 @@ public class PieceTest {
         piece.promote(MoveClassifier.MoveType.MOVE);
         assertThat( piece.getRank(), is(Rank.rot));
         piece.promote(MoveClassifier.MoveType.CAPTURE);
-        assertThat("Aus roten Steinen (=schwarz) werden bei Beförderung bei Vorwärtsschlagen purpur Steine",
+        assertThat("Aus roten Steinen (=schwarz) werden bei Beförderung bei Vorwärtsschlagen magenta/purpur Steine",
                    piece.getRank(), is(Rank.magenta));
     }
 
