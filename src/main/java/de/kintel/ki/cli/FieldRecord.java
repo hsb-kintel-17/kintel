@@ -3,6 +3,7 @@ package de.kintel.ki.cli;
 import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Piece;
 import de.kintel.ki.model.Rank;
+import org.apache.commons.lang3.StringUtils;
 import org.fusesource.jansi.Ansi.Color;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class FieldRecord implements Record {
     @Override
     public String getValue(String column) {
         final StringBuilder sb = new StringBuilder();
-        field.getPieces().stream().skip(1).forEach(sb::append);
+        field.getPieces().forEach(sb::append);
         return sb.toString();
     }
 
@@ -49,13 +50,15 @@ public class FieldRecord implements Record {
                 case magenta:
                     color = Color.MAGENTA;
                     break;
+                default:
+                    color = Color.DEFAULT;
             }
         }
 
         final Color colorFinal = color;
-       
-        field.getPieces().stream().limit(1).map(s ->  colorize(""+s.toString().charAt(0), colorFinal) ).forEach(sb::append);
-        field.getPieces().stream().skip(1).forEach(sb::append);
+        final String value = getValue(column);
+        final int posFirstPiece = StringUtils.indexOfAny(value, 'S', 'W');
+        sb.append(StringUtils.replaceOnce(value, "" + value.charAt(posFirstPiece), colorize("" + value.charAt(posFirstPiece), colorFinal)));
         return sb.toString();
     }
 
