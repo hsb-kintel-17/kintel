@@ -131,7 +131,8 @@ public class Field implements Serializable {
             sb.append( "-");
         }
 
-        pieces.forEach(sb::append);
+        pieces.stream().limit(1).forEach(sb::append);
+        pieces.stream().skip(1).map(p -> p.toString().toLowerCase()).forEach(sb::append);
 
         return sb.toString();
     }
