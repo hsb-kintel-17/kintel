@@ -26,6 +26,7 @@ import static java.lang.Math.max;
  */
 public class TablePrinter
 {
+    public static int currentRow;
     private final Logger logger = LoggerFactory.getLogger(TablePrinter.class);
     private final List<String> columns;
     private final Record headerRecord;
@@ -52,8 +53,6 @@ public class TablePrinter
 
     public void print(List<Record> records)
     {
-        final ImmutableList<Record> records1 = ImmutableList.copyOf(records);
-
         StringBuilder sb = new StringBuilder("\n");
         if (Ansi.isEnabled()) {
             Map<String, Integer> columns = newLinkedHashMap();
@@ -65,7 +64,7 @@ public class TablePrinter
                 if (iterator.hasNext()) {
                     columnSize = column.length();
 
-                    for (Record record : records1) {
+                    for (Record record : records) {
                         String value = record.getValue(column);
                         if (value != null) {
                             columnSize = Math.max(value.length() + 3, columnSize);
@@ -75,14 +74,15 @@ public class TablePrinter
                 columns.put(column, columnSize);
             }
 
-            for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records1)) {
+            for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records)) {
+                currentRow = ++currentRow % records.size();
                 String line = Joiner.on(columnSeparator).join(transform(columns.entrySet(), columnFormatter(record)));
                 sb.append(line.replaceAll("\\s*$", ""));
                 sb.append("\n");
             }
         }
         else {
-            for (Record record : records1) {
+            for (Record record : records) {
                 boolean first = true;
                 for (String column : columns) {
                     if (!first) {
@@ -105,7 +105,6 @@ public class TablePrinter
         return entry -> {
             String column = entry.getKey();
             int columnSize = entry.getValue();
-
             String value = MoreObjects.firstNonNull(record.getValue(column), "");
             String colorizedValue = MoreObjects.firstNonNull(record.getColorizedValue(column), "");
 

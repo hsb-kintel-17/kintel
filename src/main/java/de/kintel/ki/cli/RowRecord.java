@@ -21,14 +21,10 @@ import static de.kintel.ki.cli.Ansi.colorize;
  */
 public class RowRecord implements Record {
 
-    private static int intRowCount = 0;
-    private int rowCount = 0;
     private final List<Field> fields;
 
     public RowRecord(List<Field> fields) {
         Preconditions.checkArgument(fields.size() == 9, "A row must consist of 9 elements but only %s provided", fields.size());
-        this.rowCount = intRowCount;
-        intRowCount++;
         this.fields = fields;
     }
 
@@ -43,12 +39,12 @@ public class RowRecord implements Record {
     }
 
     private String columnToLabel(String column) {
-        char c = (char) ('G' - rowCount);
+        char c = (char) ('G' - TablePrinter.currentRow);
         return String.valueOf(c);
     }
 
     private String columnToLabelColorized(String column) {
-        char c = (char) ('G' - rowCount);
+        char c = (char) ('G' - TablePrinter.currentRow);
         return colorize(String.valueOf(c), Color.CYAN);
     }
 

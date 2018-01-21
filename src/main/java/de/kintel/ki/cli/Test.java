@@ -47,6 +47,9 @@ public class Test {
         RowRecord r3 = new RowRecord( Lists.newArrayList(fieldA, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
         TablePrinter tablePrinter = new TablePrinter("", generateBoardHeader() );
         tablePrinter.print(Lists.newArrayList(r1, r2, r3));
+
+        TablePrinter tablePrinter2 = new TablePrinter("", generateBoardHeader() );
+        tablePrinter2.print(Lists.newArrayList(r1, r2, r3));
     }
 
     public List<String> generateBoardHeader() {
