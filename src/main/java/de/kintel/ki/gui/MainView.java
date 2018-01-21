@@ -3,7 +3,6 @@ package de.kintel.ki.gui;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.sun.javafx.tk.Toolkit;
 import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.GuiEventType;
@@ -14,26 +13,22 @@ import de.saxsys.mvvmfx.FxmlView;
 import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.Constructor;
 import java.util.List;
 
 @Component
@@ -85,23 +80,13 @@ public class MainView implements FxmlView<MainViewModel> {
         gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : new Label(cellField.getState().toString()));
 
         gridModel.getCells().forEach(c -> {
-            /*Tooltip tooltip = new Tooltip("" + (char)(height-c.getRow()+'a' - 1) + (c.getColumn() + 1 ));
-            tooltip.setAutoHide(false);
-            Tooltip.install(gridView.getCellPane(c), tooltip);*/
-
             final Tooltip t = new Tooltip("" + (char)(height-c.getRow()+'a' - 1) + (c.getColumn() + 1 ));
             Pane cellPane = gridView.getCellPane(c);
-            cellPane.setOnMouseEntered(new EventHandler<MouseEvent>() {
-
-                @Override
-                public void handle(MouseEvent event) {
-                    Point2D p = cellPane.localToScreen(cellPane.getLayoutBounds().getMaxX(), cellPane.getLayoutBounds().getMaxY()); //I position the tooltip at bottom right of the node (see below for explanation)
-                    t.show(cellPane, p.getX(), p.getY());
-                }
+            cellPane.setOnMouseEntered(event -> {
+                Point2D p = cellPane.localToScreen(cellPane.getLayoutBounds().getMaxX(), cellPane.getLayoutBounds().getMaxY()); //I position the tooltip at bottom right of the node (see below for explanation)
+                t.show(cellPane, p.getX(), p.getY());
             });
             cellPane.setOnMouseExited(e -> t.hide());
-
-
         });
 
         AnchorPane.setBottomAnchor(stackPane, 0.0);
