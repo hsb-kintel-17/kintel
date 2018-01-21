@@ -1,8 +1,10 @@
 package de.kintel.ki.model;
 
+import com.google.common.base.Preconditions;
 import de.kintel.ki.algorithm.MoveClassifier;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
@@ -32,10 +34,10 @@ public class Piece implements Serializable {
     public void promote(MoveClassifier.MoveType moveType) {
         if( moveType == MoveClassifier.MoveType.MOVE ) {
             if (rank == Rank.normal) {
-                rank = owner.equals(Player.WEISS) ? Rank.gruen : Rank.rot;
+                setRank(owner.equals(Player.WEISS) ? Rank.gruen : Rank.rot);
             }
         } else if( moveType == MoveClassifier.MoveType.CAPTURE ) {
-            rank = owner.equals(Player.WEISS) ? Rank.gelb : Rank.magenta;
+            setRank(owner.equals(Player.WEISS) ? Rank.gelb : Rank.magenta);
         }
     }
 
@@ -43,7 +45,8 @@ public class Piece implements Serializable {
         rank = Rank.normal;
     }
 
-    public void setRank(Rank rank) {
+    public void setRank(@Nullable Rank rank) {
+        Preconditions.checkNotNull(rank, "Rank must not be null");
         boolean valid = false;
 
         if(owner.equals(Player.WEISS) && (rank.equals(Rank.normal) || rank.equals(Rank.gruen) || rank.equals(Rank.gelb)) ) {

@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
@@ -68,13 +67,8 @@ public class MainView implements FxmlView<MainViewModel> {
     @Autowired
     private Board board;
 
-    @PostConstruct
-    public void init(){
-        eventBus.register(this);
-    }
-
-
     public void initialize() {
+        eventBus.register(this);
         gridModel = new GridModel<>();
 
         gridModel.setDefaultState( new Field(true) );
