@@ -1,5 +1,6 @@
 package de.kintel.ki.cli;
 
+import com.google.common.collect.Lists;
 import de.kintel.ki.model.Field;
 import de.kintel.ki.model.Piece;
 import de.kintel.ki.model.Player;
@@ -30,7 +31,7 @@ public class Test {
 
         fieldA.addStein(pieceA1);
         fieldA.addStein(pieceA2);
-        fields.add( fieldA );
+
 
         Field fieldB = new Field(false);
         final Piece pieceB1 = new Piece(Player.WEISS);
@@ -40,13 +41,15 @@ public class Test {
 
         fieldB.addStein(pieceB1);
         fieldB.addStein(pieceB2);
-        fields.add( fieldB );
 
-        TablePrinter tablePrinter = new TablePrinter("|", generateBoardHeader() );
-        tablePrinter.print(FieldRecord.toFieldRecords(fields));
+        RowRecord r1 = new RowRecord( Lists.newArrayList(new Field(true), fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
+        RowRecord r2 = new RowRecord( Lists.newArrayList(fieldA, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
+        RowRecord r3 = new RowRecord( Lists.newArrayList(fieldA, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
+        TablePrinter tablePrinter = new TablePrinter("", generateBoardHeader() );
+        tablePrinter.print(Lists.newArrayList(r1, r2, r3));
     }
 
-    public Iterable<String> generateBoardHeader() {
-        return IntStream.rangeClosed(1, 9).boxed().map(String::valueOf).collect(Collectors.toList());
+    public List<String> generateBoardHeader() {
+        return IntStream.rangeClosed(0, 9).boxed().map(String::valueOf).collect(Collectors.toList());
     }
 }

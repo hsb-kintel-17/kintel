@@ -1,8 +1,12 @@
 package de.kintel.ki.cli;
 
-import com.google.common.base.*;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import org.apache.commons.lang3.StringUtils;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.Ansi.Color;
 import org.slf4j.Logger;
@@ -32,7 +36,7 @@ public class TablePrinter
         this("  ", ImmutableList.copyOf(columns));
     }
 
-    public TablePrinter(String columnSeparator, Iterable<String> columns)
+    public TablePrinter(String columnSeparator, List<String> columns)
     {
         Preconditions.checkNotNull(columnSeparator, "columnSeparator is null");
         Preconditions.checkNotNull(columns, "headers is null");
@@ -46,8 +50,10 @@ public class TablePrinter
         this.headerRecord = builder.build();
     }
 
-    public void print(Iterable<Record> records)
+    public void print(List<Record> records)
     {
+        final ImmutableList<Record> records1 = ImmutableList.copyOf(records);
+
         StringBuilder sb = new StringBuilder("\n");
         if (Ansi.isEnabled()) {
             Map<String, Integer> columns = newLinkedHashMap();
@@ -59,24 +65,24 @@ public class TablePrinter
                 if (iterator.hasNext()) {
                     columnSize = column.length();
 
-                    for (Record record : records) {
+                    for (Record record : records1) {
                         String value = record.getValue(column);
                         if (value != null) {
-                            columnSize = Math.max(value.length(), columnSize);
+                            columnSize = Math.max(value.length() + 3, columnSize);
                         }
                     }
                 }
                 columns.put(column, columnSize);
             }
 
-            for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records)) {
+            for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records1)) {
                 String line = Joiner.on(columnSeparator).join(transform(columns.entrySet(), columnFormatter(record)));
                 sb.append(line.replaceAll("\\s*$", ""));
                 sb.append("\n");
             }
         }
         else {
-            for (Record record : records) {
+            for (Record record : records1) {
                 boolean first = true;
                 for (String column : columns) {
                     if (!first) {
@@ -103,7 +109,7 @@ public class TablePrinter
             String value = MoreObjects.firstNonNull(record.getValue(column), "");
             String colorizedValue = MoreObjects.firstNonNull(record.getColorizedValue(column), "");
 
-            return colorizedValue + spaces(max(0, columnSize - value.length()));
+            return StringUtils.center(colorizedValue + spaces(max(0, columnSize - value.length())), max(0, columnSize - value.length()));
         };
     }
 

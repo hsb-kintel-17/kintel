@@ -88,25 +88,20 @@ public class Board implements Serializable {
         String[] letters2 = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
         for (int i = 0 ; i <= fields.length ; i++){
             for (int j = 0 ; j <= fields[0].length ; j++) {
-                String cell = "";
                 if (i == 0) {
-                    cell += letters2[j];
+                    sb.append(letters2[j]);
                 } else if (j == 0){
-                    cell += letters[i];
+                    sb.append(letters[i]);
                 } else {
                     int i_offset = i-1;
                     int j_offset = j-1;
                     if( fields[i_offset][j_offset] != null && width >= 1) {
                         final Field field = fields[i_offset][j_offset];
                         if (field != null) {
-                            cell += field;
+                            sb.append(field);
                         }
                     }
                 }
-
-                int lenght = (cell.length() > 6) ? cell.length() : 6;
-                final String padCell = String.format("%1$" + lenght + "s", cell);
-                sb.append(padCell);
                 sb.append(" | ");
             }
             sb.append("\n");

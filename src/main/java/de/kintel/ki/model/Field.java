@@ -1,8 +1,5 @@
 package de.kintel.ki.model;
 
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.Ansi.Color;
-
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
@@ -10,8 +7,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
-
-import static de.kintel.ki.cli.Ansi.colorize;
 
 /**
  * Represents field that can hold fields.
@@ -128,35 +123,13 @@ public class Field implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-       Ansi.Color color = Color.DEFAULT;
 
         if( isForbidden ) {
-            sb.append( " - ");
-        } else {
-            final Optional<Piece> headOpt = peekHead();
-            if( headOpt.isPresent() ) {
-                Rank rank = headOpt.get().getRank();
-                switch (rank) {
-                    case gelb:
-                        color = Ansi.Color.YELLOW;
-                        break;
-                    case gruen:
-                        color = Ansi.Color.GREEN;
-                        break;
-                    case rot:
-                        color = Ansi.Color.RED;
-                        break;
-                    case magenta:
-                        color = Ansi.Color.MAGENTA;
-                        break;
-                }
-            }
-
-            final Color colorFinal = color;
-
-            pieces.stream().limit(1).map(s ->  colorize(""+s.toString().charAt(0), colorFinal) ).forEach(sb::append);
-            pieces.stream().skip(1).forEach(sb::append);
+            sb.append( "-");
         }
+
+        pieces.forEach(sb::append);
+
         return sb.toString();
     }
 }
