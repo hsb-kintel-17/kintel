@@ -23,14 +23,14 @@ public class FieldRecord implements Record {
     }
 
     @Override
-    public String getValue(Column column) {
+    public String getValue(String column) {
         final StringBuilder sb = new StringBuilder();
         field.getPieces().stream().skip(1).forEach(sb::append);
         return sb.toString();
     }
 
     @Override
-    public String getColorizedValue(Column column) {
+    public String getColorizedValue(String column) {
         final StringBuilder sb = new StringBuilder();
         Color color = Color.CYAN;
         final Optional<Piece> headOpt = field.peekHead();

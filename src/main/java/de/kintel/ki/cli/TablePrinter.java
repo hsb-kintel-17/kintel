@@ -1,9 +1,6 @@
 package de.kintel.ki.cli;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
+import com.google.common.base.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import org.fusesource.jansi.Ansi;
@@ -26,16 +23,16 @@ import static java.lang.Math.max;
 public class TablePrinter
 {
     private final Logger logger = LoggerFactory.getLogger(TablePrinter.class);
-    private final List<Column> columns;
+    private final List<String> columns;
     private final Record headerRecord;
     private final String columnSeparator;
 
-    public TablePrinter(Column... columns)
+    public TablePrinter(String... columns)
     {
         this("  ", ImmutableList.copyOf(columns));
     }
 
-    public TablePrinter(String columnSeparator, Iterable<Column> columns)
+    public TablePrinter(String columnSeparator, Iterable<String> columns)
     {
         Preconditions.checkNotNull(columnSeparator, "columnSeparator is null");
         Preconditions.checkNotNull(columns, "headers is null");
@@ -43,24 +40,24 @@ public class TablePrinter
         this.columnSeparator = columnSeparator;
         this.columns = ImmutableList.copyOf(columns);
         SimpleRecord.Builder builder = SimpleRecord.builder();
-        for (Column column : columns) {
-            builder = builder.addValue(column, column.getHeader(), Color.CYAN);
+        for (String column : columns) {
+            builder = builder.addValue(column, column, Color.CYAN);
         }
         this.headerRecord = builder.build();
     }
 
     public void print(Iterable<Record> records)
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("\n");
         if (Ansi.isEnabled()) {
-            Map<Column, Integer> columns = newLinkedHashMap();
+            Map<String, Integer> columns = newLinkedHashMap();
 
-            for (Iterator<Column> iterator = this.columns.iterator(); iterator.hasNext(); ) {
-                Column column = iterator.next();
+            for (Iterator<String> iterator = this.columns.iterator(); iterator.hasNext(); ) {
+                String column = iterator.next();
 
                 int columnSize = 0;
                 if (iterator.hasNext()) {
-                    columnSize = column.getHeader().length();
+                    columnSize = column.length();
 
                     for (Record record : records) {
                         String value = record.getValue(column);
@@ -81,13 +78,13 @@ public class TablePrinter
         else {
             for (Record record : records) {
                 boolean first = true;
-                for (Column column : columns) {
+                for (String column : columns) {
                     if (!first) {
                         sb.append("\t");
                     }
                     first = false;
 
-                    String value = Objects.firstNonNull(record.getValue(column), "");
+                    String value = MoreObjects.firstNonNull(record.getValue(column), "");
 
                     sb.append(value);
                 }
@@ -97,14 +94,14 @@ public class TablePrinter
         logger.info(sb.toString());
     }
 
-    private Function<Entry<Column, Integer>, String> columnFormatter(final Record record)
+    private Function<Entry<String, Integer>, String> columnFormatter(final Record record)
     {
         return entry -> {
-            Column column = entry.getKey();
+            String column = entry.getKey();
             int columnSize = entry.getValue();
 
-            String value = Objects.firstNonNull(record.getValue(column), "");
-            String colorizedValue = Objects.firstNonNull(record.getColorizedValue(column), "");
+            String value = MoreObjects.firstNonNull(record.getValue(column), "");
+            String colorizedValue = MoreObjects.firstNonNull(record.getColorizedValue(column), "");
 
             return colorizedValue + spaces(max(0, columnSize - value.length()));
         };

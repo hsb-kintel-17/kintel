@@ -19,33 +19,33 @@ public class SimpleRecord
         return new Builder();
     }
 
-    private final Map<Column, String> values;
-    private final Map<Column, String> colorizedValues;
+    private final Map<String, String> values;
+    private final Map<String, String> colorizedValues;
 
-    SimpleRecord(Map<Column, String> values, Map<Column, String> colorizedValues)
+    SimpleRecord(Map<String, String> values, Map<String, String> colorizedValues)
     {
         this.values = ImmutableMap.copyOf(values);
         this.colorizedValues = ImmutableMap.copyOf(colorizedValues);
     }
 
     @Override
-    public String getValue(Column column)
+    public String getValue(String column)
     {
         return values.get(column);
     }
 
     @Override
-    public String getColorizedValue(Column column)
+    public String getColorizedValue(String column)
     {
         return colorizedValues.get(column);
     }
 
     public static class Builder
     {
-        private final Map<Column, String> values = newLinkedHashMap();
-        private final Map<Column, String> colorizedValues = newLinkedHashMap();
+        private final Map<String, String> values = newLinkedHashMap();
+        private final Map<String, String> colorizedValues = newLinkedHashMap();
 
-        public Builder addValue(Column name, Object value)
+        public Builder addValue(String name, Object value)
         {
             String stringValue = value == null ? "" : value.toString();
             values.put(name, stringValue);
@@ -53,7 +53,7 @@ public class SimpleRecord
             return this;
         }
 
-        public Builder addValue(Column name, Object value, Color color)
+        public Builder addValue(String name, Object value, Color color)
         {
             String stringValue = value == null ? "" : value.toString();
             values.put(name, stringValue);

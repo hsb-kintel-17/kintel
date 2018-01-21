@@ -36,7 +36,7 @@ public class Test {
         fieldB.addStein(pieceB2);
         fields.add( fieldB );
 
-        TablePrinter tablePrinter = new TablePrinter(Column.A, Column.B);
+        TablePrinter tablePrinter = new TablePrinter("A", "B");
         tablePrinter.print(FieldRecord.toFieldRecords(fields));
     }
 }
