@@ -7,6 +7,8 @@ import de.kintel.ki.model.Rank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by kintel on 21.01.2018.
@@ -14,6 +16,10 @@ import java.util.List;
 public class Test {
 
     public static void main(String[] args) {
+        new Test().run();
+    }
+
+    private void run() {
         List<Field> fields = new ArrayList<>();
 
         Field fieldA = new Field(false);
@@ -36,7 +42,11 @@ public class Test {
         fieldB.addStein(pieceB2);
         fields.add( fieldB );
 
-        TablePrinter tablePrinter = new TablePrinter("A", "B");
+        TablePrinter tablePrinter = new TablePrinter("|", generateBoardHeader() );
         tablePrinter.print(FieldRecord.toFieldRecords(fields));
+    }
+
+    public Iterable<String> generateBoardHeader() {
+        return IntStream.rangeClosed(1, 9).boxed().map(String::valueOf).collect(Collectors.toList());
     }
 }
