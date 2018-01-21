@@ -32,15 +32,13 @@ public class Piece implements Serializable {
     }
 
     public void promote(MoveClassifier.MoveType moveType) {
-        Rank rankToSet = null;
         if( moveType == MoveClassifier.MoveType.MOVE ) {
             if (rank == Rank.normal) {
-                rankToSet = owner.equals(Player.WEISS) ? Rank.gruen : Rank.rot;
+                setRank(owner.equals(Player.WEISS) ? Rank.gruen : Rank.rot);
             }
         } else if( moveType == MoveClassifier.MoveType.CAPTURE ) {
-            rankToSet = owner.equals(Player.WEISS) ? Rank.gelb : Rank.magenta;
+            setRank(owner.equals(Player.WEISS) ? Rank.gelb : Rank.magenta);
         }
-        setRank(rankToSet);
     }
 
     public void degrade() {
