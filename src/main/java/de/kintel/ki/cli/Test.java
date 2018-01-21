@@ -21,8 +21,6 @@ public class Test {
     }
 
     private void run() {
-        List<Field> fields = new ArrayList<>();
-
         Field fieldA = new Field(false);
         final Piece pieceA1 = new Piece(Player.SCHWARZ);
         pieceA1.setRank(Rank.magenta);
@@ -38,13 +36,16 @@ public class Test {
         pieceB1.setRank(Rank.gruen);
         final Piece pieceB2 = new Piece(Player.WEISS);
         pieceB2.setRank(Rank.gelb);
+        final Piece pieceB3 = new Piece(Player.WEISS);
+        pieceB3.setRank(Rank.gelb);
 
         fieldB.addStein(pieceB1);
         fieldB.addStein(pieceB2);
+        fieldB.addStein(pieceB3);
 
-        RowRecord r1 = new RowRecord( Lists.newArrayList(new Field(true), fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
+        RowRecord r1 = new RowRecord( Lists.newArrayList(new Field(true), fieldB, fieldA, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
         RowRecord r2 = new RowRecord( Lists.newArrayList(fieldA, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
-        RowRecord r3 = new RowRecord( Lists.newArrayList(fieldA, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB));
+        RowRecord r3 = new RowRecord( Lists.newArrayList(fieldA, fieldB, fieldB, fieldB, fieldB, fieldB, fieldB, fieldA, fieldB));
         TablePrinter tablePrinter = new TablePrinter("", generateBoardHeader() );
         tablePrinter.print(Lists.newArrayList(r1, r2, r3));
 

@@ -10,19 +10,24 @@ import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.util.Arrow;
 import de.kintel.ki.model.*;
 import de.saxsys.mvvmfx.FxmlView;
+import eu.lestard.grid.Cell;
 import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -77,7 +82,7 @@ public class MainView implements FxmlView<MainViewModel> {
         gridModel.setNumberOfRows(height);
 
         gridView.setGridModel(gridModel);
-        gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : new Label(cellField.getState().toString()));
+        gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : getRankAwareLabel(cellField));
 
         gridModel.getCells().forEach(c -> {
             final Tooltip t = new Tooltip("" + (char)(height-c.getRow()+'a' - 1) + (c.getColumn() + 1 ));
@@ -95,6 +100,25 @@ public class MainView implements FxmlView<MainViewModel> {
         AnchorPane.setRightAnchor(stackPane,0.0);
     }
 
+    private Node getRankAwareLabel(Cell<Field> cellField) {
+        final String text = cellField.getState().toString();
+
+        Color fxColor;
+        Ansi.Color rankColor = cellField.getState().getRankColor();
+        if(rankColor == Ansi.Color.DEFAULT) {
+            fxColor = Color.BLACK;
+        } else {
+            fxColor = Color.valueOf(rankColor.name());
+        }
+
+        final Label label = new Label("" + text.charAt(0));
+        label.setTextFill(fxColor);
+        final Label label2 = new Label("" + text.substring(1));
+        label.setTextFill(Color.BLACK);
+        final HBox hBox = new HBox(label, label2);
+        hBox.setAlignment(Pos.CENTER);
+        return hBox;
+    }
 
 
     private Point2D locate(Coordinate2D coordinate) {
