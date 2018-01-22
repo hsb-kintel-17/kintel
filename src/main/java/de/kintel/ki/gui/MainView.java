@@ -105,11 +105,11 @@ public class MainView implements FxmlView<MainViewModel> {
             fxColor = Color.valueOf(rankColor.name());
         }
 
-        final Label label = new Label("" + text.charAt(0));
-        label.setTextFill(fxColor);
-        final Label label2 = new Label("" + text.substring(1));
-        label.setTextFill(Color.BLACK);
-        final HBox hBox = new HBox(label, label2);
+        final Label headLabel = new Label("" + text.charAt(0));
+        headLabel.setTextFill(fxColor);
+        final Label tailLabel = new Label("" + text.substring(1));
+        tailLabel.setTextFill(Color.BLACK);
+        final HBox hBox = new HBox(headLabel, tailLabel);
         hBox.setAlignment(Pos.CENTER);
         return hBox;
     }
