@@ -9,7 +9,11 @@ import java.util.concurrent.TimeUnit;
 public class KiPlayer extends Participant {
     
     private final KI ki;
+    private final int CYCLE_DEPTH_ADDITION = 1;
     private long timeConsumed;
+    private int depth;
+    private boolean cycleDetected = false;
+
 
     public KiPlayer(Board board, Player player, KI ki) {
         super( board, player );
@@ -18,9 +22,16 @@ public class KiPlayer extends Participant {
     
     @Override
     public Move getNextMove(int depth) {
+        this.depth = depth;
         ki.setCurrentPlayer(getPlayer().name());
         long timeBefore = System.currentTimeMillis();
-        final Move bestMove = ki.getBestMove(depth);
+        Move bestMove = ki.getBestMove(this.depth);
+        if(ki.isCycle(bestMove) && !cycleDetected){
+            cycleDetected = true;
+            bestMove = ki.getBestMove(this.depth + CYCLE_DEPTH_ADDITION);
+        }
+            cycleDetected = false;
+
         timeConsumed += System.currentTimeMillis() - timeBefore;
         return bestMove;
     }

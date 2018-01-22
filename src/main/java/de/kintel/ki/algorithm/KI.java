@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Created by kintel on 19.12.2017.
@@ -23,12 +24,38 @@ import java.util.List;
 public class KI extends ParallelNegamax<Move> implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(KI.class);
+    private static final int MAX_CICLE_FIFO_SIZE = 3;
     private MoveMaker moveMaker;
     private Weighting weighting;
     private Board board;
     private Player currentPlayer;
     private MoveClassifier moveClassifier;
+    private LinkedList<Move> lastMoves = new LinkedList<Move>();
 
+    
+    /**
+     * checks if last Moves have a circle
+     * @param move move to be made
+     * @return if move to be made will force a circular game
+     */
+    public boolean isCycle(@Nonnull Move move)
+    {
+        if(lastMoves.size() >= 2) //it has to be at least to have a circle.
+        {            
+            if(lastMoves.contains(move)) //checks if Move is already in list -> circle
+            {
+                return true;
+            }
+        }        
+        
+        if(lastMoves.size() > MAX_CICLE_FIFO_SIZE)
+        {
+            lastMoves.removeFirst();    //keeps the maximum circle detection List Entry number to MAX_CICLE_FIFO_SIZE
+        }
+        
+        return false;        
+    }
+    
     @Autowired
     public KI(@Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board) {
         this.moveMaker = moveMaker;
@@ -57,9 +84,10 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
      */
     @Override
     public void makeMove(@Nonnull Move move) {
-        logger.debug("make move " + move);
-        moveMaker.makeMove(move, board);
-        next();
+            logger.debug("make move " + move);
+            moveMaker.makeMove(move, board);
+            lastMoves.add(move);    //adds move to circle detection list    
+            next(); 
     }
 
     /**
@@ -74,6 +102,10 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     public void unmakeMove(@Nonnull Move move) {
         logger.debug("unmake move " + move);
         moveMaker.undoMove(move, board);
+        if(lastMoves.size() > 0)
+        {      
+            lastMoves.removeLast(); //removes the last Move from circle Detection list
+        }
         previous();
     }
 
