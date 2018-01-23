@@ -130,7 +130,6 @@ public class KiApplication implements CommandLineRunner {
                     } while (!anyMatch);
                 }
                 if( null == move ) {
-                    logger.debug(ki.toString());
                     throw new IllegalStateException("No best move found");
                 }
 
