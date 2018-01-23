@@ -75,10 +75,12 @@ public class TablePrinter
             }
 
             for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records)) {
-                currentRow = (currentRow + 1) % (records.size() + 1);
                 String line = Joiner.on(columnSeparator).join(transform(columns.entrySet(), columnFormatter(record)));
                 sb.append(line.replaceAll("\\s*$", ""));
                 sb.append("\n");
+                if( record != headerRecord ) {
+                    currentRow = (currentRow + 1) % (records.size());
+                }
             }
         }
         else {

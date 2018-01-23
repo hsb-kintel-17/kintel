@@ -44,8 +44,7 @@ public class RowRecord implements Record {
     }
 
     private String columnToLabelColorized(String column) {
-        char c = (char) ('G' - TablePrinter.currentRow);
-        return colorize(String.valueOf(c), Color.CYAN);
+        return colorize(columnToLabel(column), Color.CYAN);
     }
 
     @Override
@@ -79,7 +78,6 @@ public class RowRecord implements Record {
 
         String value = getValue(column);
         final int posFirstPiece = StringUtils.indexOfAny(value, 'S', 'W');
-        final String content;
         if( posFirstPiece >= 0 ) {
             value = StringUtils.replaceOnce(value, "" + value.charAt(posFirstPiece), colorize("" + value.charAt(posFirstPiece), color));
         }
