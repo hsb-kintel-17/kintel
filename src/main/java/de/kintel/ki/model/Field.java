@@ -1,5 +1,7 @@
 package de.kintel.ki.model;
 
+import org.fusesource.jansi.Ansi;
+
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,6 +18,7 @@ public class Field implements Serializable {
     private static final long serialVersionUID = -8508348237650305754L;
     private boolean isForbidden;
     private Deque<Piece> pieces = new LinkedList<>();
+    private Object rankColor;
 
     public Field(boolean isForbidden) {
         this.isForbidden = isForbidden;
@@ -123,12 +126,22 @@ public class Field implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
+
         if( isForbidden ) {
-            sb.append( String.valueOf('\u25A8'));
-        } else {
-            pieces.stream().limit(1).map(s -> s.toString() + "<" + s.getRank().name().charAt(0) + ">").forEach(sb::append);
-            pieces.stream().skip(1).forEach(sb::append);
+            sb.append( "-");
         }
+
+        pieces.stream().limit(1).forEach(sb::append);
+        pieces.stream().skip(1).map(p -> p.toString().toLowerCase()).forEach(sb::append);
+
         return sb.toString();
+    }
+
+    public Ansi.Color getRankColor() {
+        final Optional<Piece> head = peekHead();
+        if( head.isPresent() ) {
+            return head.get().getRank().getRankColor();
+        }
+        return Ansi.Color.DEFAULT;
     }
 }

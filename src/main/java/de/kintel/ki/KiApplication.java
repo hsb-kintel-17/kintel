@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.algorithm.MoveClassifier;
 import de.kintel.ki.algorithm.MoveMaker;
+import de.kintel.ki.cli.TablePrinter;
 import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.KiFxApplication;
@@ -29,6 +30,8 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import static de.kintel.ki.cli.RowRecord.toFieldRecords;
+
 @SpringBootApplication
 @ComponentScan({"de.kintel"})
 public class KiApplication implements CommandLineRunner {
@@ -42,14 +45,16 @@ public class KiApplication implements CommandLineRunner {
     private Participant humanPlayer;
     private final MoveClassifier moveClassifier;
     private MoveMaker moveMaker;
+    private final TablePrinter tablePrinter;
 
     @Autowired
-    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, KI ki, EventBus eventBus) {
+    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, KI ki, EventBus eventBus, TablePrinter tablePrinter) {
         this.board = board;
         this.moveClassifier = moveClassifier;
         this.moveMaker = moveMaker;
         this.ki = ki;
         this.eventBus = eventBus;
+        this.tablePrinter = tablePrinter;
     }
 
     private static final Logger logger = LoggerFactory.getLogger(KiApplication.class);
@@ -75,7 +80,7 @@ public class KiApplication implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-        final int depth = 12;
+        final int depth = 10;
 
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {
@@ -97,7 +102,7 @@ public class KiApplication implements CommandLineRunner {
                 Thread.currentThread().interrupt();
             }
 
-            logger.debug(ki.toString());
+            tablePrinter.print(toFieldRecords(board));
 
             while( true ) {
 
@@ -139,7 +144,7 @@ public class KiApplication implements CommandLineRunner {
 
                 eventBus.post(new BestMoveEvent(move));
 
-                logger.debug(ki.toString());
+                tablePrinter.print(toFieldRecords(board));
 
                 currentPlayer = currentPlayer.equals(kiPlayer) ? humanPlayer : kiPlayer;
             }
