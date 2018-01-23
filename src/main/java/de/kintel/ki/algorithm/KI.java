@@ -155,8 +155,9 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     }
 
     public Move getBestMove(int depth) {
-        if (!getBestMoves(depth).isEmpty()) {
-            return getBestMoves(depth).get(0);
+        List<Move> bestmoves = getBestMoves(depth);
+        if (!bestmoves.isEmpty()) {
+            return bestmoves.get(0);
         } else {
             return null;
         }
