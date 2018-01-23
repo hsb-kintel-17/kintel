@@ -1,8 +1,8 @@
 package de.kintel.ki.algorithm;
 
+import de.kintel.ki.libs.minimax4j.impl.ParallelNegamax;
 import de.kintel.ki.model.*;
 import de.kintel.ki.util.BoardUtils;
-import fr.avianey.minimax4j.impl.ParallelNegamax;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+
 
 /**
  * Created by kintel on 19.12.2017.
