@@ -1,6 +1,8 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
+import de.kintel.ki.util.BoardUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,13 @@ import java.util.Optional;
 @Component
 @Qualifier("weightingHeightAndRank")
 public class WeightingImpl implements Weighting {
+
+    private MoveClassifier moveClassifier;
+
+    @Autowired
+    public WeightingImpl(MoveClassifier moveClassifier) {
+        this.moveClassifier = moveClassifier;
+    }
 
     /**
      * Evaluate the state of the game <strong>for the current player</strong> after a move.
@@ -51,7 +60,14 @@ public class WeightingImpl implements Weighting {
             }
         }
 
-        return heights + ranks;
+        Player opponentPlayer = (currentPlayer == Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
+        int endsieg = 0;
+        final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier);
+        if( possibleMoves.isEmpty() ) {
+            endsieg = 10000 * Weight.WIN.getValue();
+        }
+
+        return heights + endsieg + ranks;
     }
 
     /**
@@ -63,6 +79,6 @@ public class WeightingImpl implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return 12*4.0 + 250*12;
+        return 10000 * Weight.WIN.getValue();
     }
 }

@@ -49,7 +49,7 @@ public class AppConfiguration {
 
     @Bean
     @Autowired
-    public KI ki2(MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("weightingDummy") Weighting weighting, Board board) {
+    public KI ki2(MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("magicFormular") Weighting weighting, Board board) {
         return new KI(moveClassifier, moveMaker,weighting,board);
     }
 }

@@ -82,7 +82,7 @@ public class KiApplication implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-        final int depth = 10;
+        final int depth = 7;
 
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {

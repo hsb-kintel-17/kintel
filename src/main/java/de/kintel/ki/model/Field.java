@@ -18,7 +18,6 @@ public class Field implements Serializable {
     private static final long serialVersionUID = -8508348237650305754L;
     private boolean isForbidden;
     private Deque<Piece> pieces = new LinkedList<>();
-    private Object rankColor;
 
     public Field(boolean isForbidden) {
         this.isForbidden = isForbidden;
@@ -143,5 +142,18 @@ public class Field implements Serializable {
             return head.get().getRank().getRankColor();
         }
         return Ansi.Color.DEFAULT;
+    }
+
+    public String toStringWithRanks() {
+        final StringBuilder sb = new StringBuilder();
+
+        if( isForbidden ) {
+            sb.append( "-");
+        }
+
+        pieces.stream().limit(1).map(p -> p.toString()+ "<" + p.getRank() + ">").forEach(sb::append);
+        pieces.stream().skip(1).map(p -> p.toString().toLowerCase()).forEach(sb::append);
+
+        return sb.toString();
     }
 }
