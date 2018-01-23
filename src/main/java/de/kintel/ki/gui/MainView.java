@@ -103,6 +103,10 @@ public class MainView implements FxmlView<MainViewModel> {
             fxColor = Color.BLACK;
         } else {
             fxColor = Color.valueOf(rankColor.name());
+            // Yellow is really hard to read on screen so replace it with better color
+            if( fxColor == Color.YELLOW ) {
+                fxColor = Color.GOLD;
+            }
         }
 
         final Label headLabel = new Label("" + text.charAt(0));
