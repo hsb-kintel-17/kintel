@@ -139,7 +139,7 @@ public class IOUtil {
     
     public int readMainMenu() {
         printMainMenu("Spielmodus (schwarz beginnt immer): ");
-        return (int) readNumberBetween("", 1, 4);
+        return (int) readNumberBetween("", 1, 6);
     }
     
     private void printMainMenu(String beschreibung) {
@@ -148,5 +148,6 @@ public class IOUtil {
         ausgabe("2) schwarz(ki) vs weiß(manual input)");
         ausgabe("3) weiß(ki) vs schwarz(ki)");
         ausgabe("4) weiß(ki) vs schwarz(manual input)");
+        ausgabe("5) schwarz(manual input) vs weiß(manual input)");
     }
 }
