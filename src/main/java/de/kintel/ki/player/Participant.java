@@ -23,4 +23,6 @@ public abstract class Participant {
     public Board getBoard() {
         return board;
     }
+
+    public abstract void makeMove(Move move);
 }

@@ -138,13 +138,15 @@ public class IOUtil {
     }
     
     public int readMainMenu() {
-        printMainMenu("KI spielt auf Farbe: ");
-        return (int) readNumberBetween("", 1, 2);
+        printMainMenu("Spielmodus (schwarz beginnt immer): ");
+        return (int) readNumberBetween("", 1, 4);
     }
     
     private void printMainMenu(String beschreibung) {
         ausgabe(beschreibung);
-        ausgabe("1) schwarz");
-        ausgabe("2) weiß");
+        ausgabe("1) schwarz(ki) vs weiß(ki)");
+        ausgabe("2) schwarz(ki) vs weiß(manual input)");
+        ausgabe("3) weiß(ki) vs schwarz(ki)");
+        ausgabe("4) weiß(ki) vs schwarz(manual input)");
     }
 }

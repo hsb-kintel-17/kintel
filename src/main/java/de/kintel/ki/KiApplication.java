@@ -38,21 +38,23 @@ public class KiApplication implements CommandLineRunner {
 
     private static CountDownLatch latch = new CountDownLatch(1);
     private EventBus eventBus;
-    private final KI ki;
+    private final KI ki1;
+    private final KI ki2;
     private final Board board;
     private Participant currentPlayer;
-    private Participant kiPlayer;
-    private Participant humanPlayer;
+    private Participant player1;
+    private Participant player2;
     private final MoveClassifier moveClassifier;
     private MoveMaker moveMaker;
     private final TablePrinter tablePrinter;
 
     @Autowired
-    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, KI ki, EventBus eventBus, TablePrinter tablePrinter) {
+    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, KI ki1, KI ki2, EventBus eventBus, TablePrinter tablePrinter) {
         this.board = board;
         this.moveClassifier = moveClassifier;
         this.moveMaker = moveMaker;
-        this.ki = ki;
+        this.ki1 = ki1;
+        this.ki2 = ki2;
         this.eventBus = eventBus;
         this.tablePrinter = tablePrinter;
     }
@@ -85,15 +87,28 @@ public class KiApplication implements CommandLineRunner {
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {
 
-            if( new IOUtil().readMainMenu() == 1) {
-                kiPlayer = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki);
-                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, moveClassifier);
-            } else {
-                kiPlayer = currentPlayer = new KiPlayer(board, Player.WEISS, ki);
-                humanPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, moveClassifier);
+		    switch (new IOUtil().readMainMenu()) {
+                // 1) schwarz(ki) vs weiß(ki)
+                // 2) schwarz(ki) vs weiß(hum)
+                // 3) weiß(ki) vs schwarz(ki)
+                // 4) weiß(ki) vs schwarz(hum)
+                case 1:
+                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1 );
+                    player2 = new KiPlayer(board, Player.WEISS, ki2 );
+                    break;
+                case 2:
+                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1);
+                    player2 = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, moveClassifier, moveMaker);
+                    break;
+                case 3:
+                    player1 = new KiPlayer(board, Player.WEISS, ki1);
+                    player2 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki2);
+                    break;
+                case 4:
+                    player1 = new KiPlayer(board, Player.WEISS, ki1);
+                    player2 = currentPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, moveClassifier, moveMaker);
+                    break;
             }
-
-            ki.setCurrentPlayer(currentPlayer.getPlayer().name());
 
             try {
                 latch.await();
@@ -112,40 +127,17 @@ public class KiApplication implements CommandLineRunner {
 
                 Move move = currentPlayer.getNextMove(depth);
 
-                if(currentPlayer instanceof HumanPlayer) {
-                    boolean anyMatch;
-
-                    do{
-                        anyMatch = false;
-
-                        for(Move possibleMove : possibleMoves){
-                            anyMatch |= move.getSourceCoordinate().equals(possibleMove.getSourceCoordinate()) && move.getTargetCoordinate().equals(possibleMove.getTargetCoordinate());
-                        }
-
-                        if(!anyMatch) {
-                            logger.error("Dieser Zug ist nicht gültig.");
-                            move = currentPlayer.getNextMove(depth);
-                        }
-
-                    } while (!anyMatch);
-                }
                 if( null == move ) {
                     throw new IllegalStateException("No best move found");
                 }
 
-                if( currentPlayer instanceof KiPlayer) {
-                    logger.debug("Found best move to execute now: {}", move);
-                    logger.debug("Time consumed: {}s", ((KiPlayer) kiPlayer).getTimeConsumed());
-                    ki.makeMove(move);
-                } else {
-                    moveMaker.makeMove(move, board);
-                }
+                currentPlayer.makeMove(move);
 
                 eventBus.post(new BestMoveEvent(move));
 
                 tablePrinter.print(toFieldRecords(board));
 
-                currentPlayer = currentPlayer.equals(kiPlayer) ? humanPlayer : kiPlayer;
+                currentPlayer = currentPlayer.equals(player1) ? player2 : player1;
             }
 		}}).start();
 	}
