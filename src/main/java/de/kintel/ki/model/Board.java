@@ -133,4 +133,35 @@ public class Board implements Serializable {
     public Board deepCopy() {
         return SerializationUtils.roundtrip(this);
     }
+
+
+
+    public String toStringWithRanks() {
+        final StringBuilder sb = new StringBuilder("");
+        sb.append("\n");
+        String[] letters = {" ", "G", "F", "E", "D", "C", "B", "A"};
+        String[] letters2 = {" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        for (int i = 0 ; i <= fields.length ; i++){
+            for (int j = 0 ; j <= fields[0].length ; j++) {
+                if (i == 0) {
+                    sb.append(letters2[j]);
+                } else if (j == 0){
+                    sb.append(letters[i]);
+                } else {
+                    int i_offset = i-1;
+                    int j_offset = j-1;
+                    if( fields[i_offset][j_offset] != null && width >= 1) {
+                        final Field field = fields[i_offset][j_offset];
+                        if (field != null) {
+                            sb.append(field.toStringWithRanks());
+                        }
+                    }
+                }
+                sb.append(" | ");
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 }
