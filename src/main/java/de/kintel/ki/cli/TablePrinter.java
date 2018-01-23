@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Maps.newLinkedHashMap;
+import static de.kintel.ki.cli.Ansi.colorize;
 import static java.lang.Math.max;
 
 /**
@@ -75,7 +76,11 @@ public class TablePrinter
             }
 
             for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records)) {
-                String line = Joiner.on(columnSeparator).join(transform(columns.entrySet(), columnFormatter(record)));
+                String line = "";
+                if( record == headerRecord ) {
+                    line = String.format("Farben als Referenz: %s %s %s %s %n", colorize("Rot", Color.RED), colorize("Gruen", Color.GREEN), colorize("Gelb", Color.YELLOW), colorize("Magenta", Color.MAGENTA));
+                }
+                line += Joiner.on(columnSeparator).join(transform(columns.entrySet(), columnFormatter(record)));
                 sb.append(line.replaceAll("\\s*$", ""));
                 sb.append("\n");
                 if( record != headerRecord ) {
