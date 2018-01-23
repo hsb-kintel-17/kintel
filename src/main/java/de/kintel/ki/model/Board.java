@@ -4,16 +4,13 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-@Component
-@Scope("prototype")
+
 public class Board implements Serializable {
 
     private static final long serialVersionUID = -3717253852145631360L;
