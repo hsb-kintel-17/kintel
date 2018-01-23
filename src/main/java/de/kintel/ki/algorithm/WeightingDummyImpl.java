@@ -2,6 +2,8 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Player;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,6 +11,9 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Dummy Implementation with weighting.
  */
+
+@Component
+@Qualifier("weightingDummy")
 public class WeightingDummyImpl implements Weighting {
 
     private static final int MIN = 1;

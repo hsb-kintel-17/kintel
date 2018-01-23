@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'org.springframework.boot'
@@ -35,7 +36,7 @@ dependencies {
     compile 'com.github.lestard:Grid:0190d50d93'
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     compile 'com.google.guava:guava:19.0'
-    compile 'com.github.avianey:minimax4j:fcb7a9c77b'
+    //compile 'com.github.avianey:minimax4j:fcb7a9c77b'
     compile('org.springframework.boot:spring-boot-starter')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

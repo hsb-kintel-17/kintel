@@ -1,6 +1,7 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Qualifier("weightingHeightAndRank")
 public class WeightingImpl implements Weighting {
 
     /**

@@ -57,8 +57,6 @@ public class MainView implements FxmlView<MainViewModel> {
     @Autowired
     private EventBus eventBus;
 
-    @Autowired
-    private KI ki;
     @Value("${board.width}")
     private int width;
     @Value("${board.height}")

@@ -4,6 +4,7 @@ import de.kintel.ki.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -12,6 +13,7 @@ import java.util.Iterator;
 import java.util.Optional;
 
 @Component
+@Scope("prototype")
 public class MoveMakerImpl implements MoveMaker {
 
     private final Logger logger = LoggerFactory.getLogger(MoveMakerImpl.class);

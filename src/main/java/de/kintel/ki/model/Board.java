@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Component
-@Scope("singleton")
+@Scope("prototype")
 public class Board implements Serializable {
 
     private static final long serialVersionUID = -3717253852145631360L;

@@ -18,8 +18,7 @@ import java.util.List;
 /**
  * Created by kintel on 19.12.2017.
  */
-@Component
-@Scope("prototype")
+
 public class KI extends ParallelNegamax<Move> implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(KI.class);
@@ -29,7 +28,6 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     private Player currentPlayer;
     private MoveClassifier moveClassifier;
 
-    @Autowired
     public KI(@Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board) {
         this.moveMaker = moveMaker;
         this.weighting = weighting;
