@@ -108,7 +108,7 @@ public class KiApplication implements CommandLineRunner {
 
                 final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, currentPlayer.getPlayer(), moveClassifier);
 
-                eventBus.post( new PossibleMovesEvent(possibleMoves));
+                eventBus.post( new PossibleMovesEvent(possibleMoves, board.deepCopy()));
 
                 Move move = currentPlayer.getNextMove(depth);
 

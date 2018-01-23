@@ -64,7 +64,6 @@ public class MainView implements FxmlView<MainViewModel> {
     @Value("${board.height}")
     private int height;
     private Player lastPlayer;
-    @Autowired
     private Board board;
 
     public void initialize() {
@@ -149,6 +148,7 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @Subscribe
     public void newPossibleMoves(PossibleMovesEvent e) {
+        board = e.getBoard();
         Platform.runLater(() -> {
             updateFields(e.id, e.getPossibleMoves());
             if( e.getPossibleMoves().isEmpty()) {
@@ -162,6 +162,11 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @Subscribe
     public void newBestMove(BestMoveEvent e) {
+        // The board should be set by newPossibleMoves event but eventbus is asynchron so
+        // maybe newBestMove is processed before newPossibleMoves
+        if( null == board ) {
+            return;
+        }
         final Move bestMove = e.getBestMove();
         Platform.runLater(() -> {
             if(bestMove != null){
