@@ -11,12 +11,12 @@ import javax.annotation.Nonnull;
 
 @Component
 @Qualifier("magicFormular")
-public class WeigtingImplTest implements Weighting {
+public class WeigtingMagicFormular implements Weighting {
 
     private MoveClassifier moveClassifier;
 
     @Autowired
-    public WeigtingImplTest(MoveClassifier moveClassifier) {
+    public WeigtingMagicFormular(MoveClassifier moveClassifier) {
         this.moveClassifier = moveClassifier;
     }
 

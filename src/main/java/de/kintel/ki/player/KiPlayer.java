@@ -1,7 +1,9 @@
 package de.kintel.ki.player;
 
+import com.google.common.base.MoreObjects;
 import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.algorithm.MoveMaker;
+import de.kintel.ki.algorithm.WeigtingMagicFormular;
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
@@ -65,4 +67,8 @@ public class KiPlayer extends Participant {
         return TimeUnit.MILLISECONDS.toSeconds(timeConsumed);
     }
 
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("player", getPlayer()).add("ki", ki.getWeighting().getClass().getSimpleName()).toString();
+    }
 }

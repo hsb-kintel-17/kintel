@@ -116,6 +116,14 @@ public class KiApplication implements CommandLineRunner {
                     break;
             }
 
+            if( player1 instanceof KiPlayer ) {
+                logger.debug("player1: {}", player1);
+            }
+
+            if( player2 instanceof KiPlayer ) {
+                logger.debug("player2: {}", player2);
+            }
+
             try {
                 latch.await();
             } catch (InterruptedException e) {

@@ -7,17 +7,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 @Qualifier("weightingHeightAndRank")
-public class WeightingImpl implements Weighting {
+public class WeightingHeightAndRank implements Weighting {
 
     private MoveClassifier moveClassifier;
 
     @Autowired
-    public WeightingImpl(MoveClassifier moveClassifier) {
+    public WeightingHeightAndRank(MoveClassifier moveClassifier) {
         this.moveClassifier = moveClassifier;
     }
 
@@ -31,14 +32,22 @@ public class WeightingImpl implements Weighting {
      */
     @Override
     public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
-        final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
-        double heights = fieldsOccupiedBy.stream()
-                        .map(coordinate -> board.getField(coordinate))
-                        .mapToDouble(f -> f.getPieces()
-                        .size())
-                        .map(d -> d * Weight.WIN.getValue()).sum();
+        Player opponentPlayer = (currentPlayer == Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
+        final List<Coordinate2D> coordsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
+
+        int eigeneSteinhoehe = 0;
+        for (Coordinate2D coordOccupiedBy : coordsOccupiedBy) {
+            Field fieldsOccupiedBy = board.getField(coordOccupiedBy);
+            final Iterator<Piece> iterator = fieldsOccupiedBy.getPieces()
+                                                             .iterator();
+            while (iterator.hasNext() && iterator.next()
+                                                 .getOwner() == currentPlayer) {
+                eigeneSteinhoehe++;
+            }
+        }
+
         int ranks = 0;
-        for (Coordinate2D coord : fieldsOccupiedBy) {
+        for (Coordinate2D coord : coordsOccupiedBy) {
             final Field field = board.getField(coord);
             final Optional<Piece> head = field.peekHead();
             if( head.isPresent() ) {
@@ -49,25 +58,27 @@ public class WeightingImpl implements Weighting {
                         break;
                     case gelb:
                     case gruen:
-                        val = 50;
+                        val = 10;
                         break;
                     case rot:
                     case magenta:
-                        val = 250;
+                        val = 20;
                         break;
                 }
                 ranks += val * Weight.WIN.getValue();
             }
         }
 
-        Player opponentPlayer = (currentPlayer == Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
+
         int endsieg = 0;
         final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier);
         if( possibleMoves.isEmpty() ) {
             endsieg = 10000 * Weight.WIN.getValue();
         }
 
-        return heights + endsieg + ranks;
+        int opponentMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier).size();
+
+        return 10*eigeneSteinhoehe + endsieg + ranks + 10*(possibleMoves.size() - 1.5 * opponentMoves);
     }
 
     /**

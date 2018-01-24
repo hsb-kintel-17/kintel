@@ -194,4 +194,8 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     public void setBoard(Board board) {
         this.board = board;
     }
+
+    public Weighting getWeighting() {
+        return weighting;
+    }
 }
