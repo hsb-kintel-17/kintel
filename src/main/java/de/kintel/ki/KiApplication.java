@@ -20,6 +20,7 @@ import de.kintel.ki.util.UMLCoordToCoord2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -49,7 +50,7 @@ public class KiApplication implements CommandLineRunner {
     private final TablePrinter tablePrinter;
 
     @Autowired
-    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, KI ki1, KI ki2, EventBus eventBus, TablePrinter tablePrinter) {
+    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("ki1") KI ki1, @Qualifier("ki2")KI ki2, EventBus eventBus, TablePrinter tablePrinter) {
         this.board = board;
         this.moveClassifier = moveClassifier;
         this.moveMaker = moveMaker;
