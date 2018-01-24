@@ -28,7 +28,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    @Scope("prototype")
+    @Scope("singleton")
     public Board board(@Value("${board.height}") int boardHeight, @Value("${board.width}") int boardWidth) {
         return new Board(boardHeight, boardWidth);
     }

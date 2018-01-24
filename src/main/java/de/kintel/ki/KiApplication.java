@@ -94,19 +94,19 @@ public class KiApplication implements CommandLineRunner {
                 // 4) weiß(ki) vs schwarz(hum)
                 // 5) schwarz(manual input) vs weiß(manual input)
                 case 1:
-                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1 );
-                    player2 = new KiPlayer(board, Player.WEISS, ki2 );
+                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1, moveMaker);
+                    player2 = new KiPlayer(board, Player.WEISS, ki2, moveMaker);
                     break;
                 case 2:
-                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1);
+                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1, moveMaker);
                     player2 = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, moveClassifier, moveMaker);
                     break;
                 case 3:
-                    player1 = new KiPlayer(board, Player.WEISS, ki1);
-                    player2 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki2);
+                    player1 = new KiPlayer(board, Player.WEISS, ki1, moveMaker);
+                    player2 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki2, moveMaker);
                     break;
                 case 4:
-                    player1 = new KiPlayer(board, Player.WEISS, ki1);
+                    player1 = new KiPlayer(board, Player.WEISS, ki1, moveMaker);
                     player2 = currentPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, moveClassifier, moveMaker);
                     break;
                 case 5:
