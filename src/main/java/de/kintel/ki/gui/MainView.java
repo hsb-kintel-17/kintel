@@ -26,8 +26,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,7 +76,7 @@ public class MainView implements FxmlView<MainViewModel> {
         gridView.cellBorderColorProperty().set(Color.DARKGRAY);
         gridView.cellBorderWidthProperty().set(0.5);
         // Color for forbidden fields
-        gridView.addColorMapping(new Field(true), Color.web("f4f3f3"));
+        gridView.addColorMapping(new Field(true), Color.web("A4A4A4"));
 
         gridModel.getCells().forEach(c -> {
             final Tooltip t = new Tooltip("" + (char)(height-c.getRow()+'a' - 1) + (c.getColumn() + 1 ));
