@@ -9,6 +9,11 @@ import java.util.ArrayList;
 @Component
 public class RankMakerImpl implements RankMaker {
 
+    /**
+     * Degrate and/or promote the pieces that were involved in the move, if necessary
+     * @param move The move that was executed before.
+     * @param board The board, on which the move was executed
+     */
     @Override
     public void processRankChange(Move move, Board board) {
         final Coordinate2D coordTo = move.getTargetCoordinate();

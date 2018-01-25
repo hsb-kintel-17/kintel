@@ -20,6 +20,14 @@ public class WeigtingMagicFormular implements Weighting {
         this.moveClassifier = moveClassifier;
     }
 
+    /**
+     * Evaluate the state of the game <strong>for the current player</strong> after a move.
+     * The greatest the value is, the better the position of the current player is.
+     *
+     * @param board the board
+     * @return The evaluation of the position for the current player
+     * @see #maxEvaluateValue()
+     */
     @Override
     public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
         Player opponentPlayer = (currentPlayer == Player.WEISS) ? Player.SCHWARZ : Player.WEISS;

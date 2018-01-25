@@ -37,18 +37,30 @@ import static de.kintel.ki.cli.RowRecord.toFieldRecords;
 @ComponentScan({"de.kintel"})
 public class KiApplication implements CommandLineRunner {
 
-    private static CountDownLatch latch = new CountDownLatch(1);
-    private EventBus eventBus;
-    private final KI ki1;
-    private final KI ki2;
-    private final Board board;
-    private Participant currentPlayer;
-    private Participant player1;
-    private Participant player2;
-    private final MoveClassifier moveClassifier;
-    private MoveMaker moveMaker;
-    private final TablePrinter tablePrinter;
+    private static CountDownLatch latch = new CountDownLatch(1); //needed to wait for the gui to start
+    private EventBus eventBus; //eventbus to communicate with the gui
+    private final KI ki1; //an ai
+    private final KI ki2; // another ai
+    private final Board board; // the board of the game
+    private Participant currentPlayer; //current player that executes a move
+    private Participant player1; //One of the two participants, that can be either human or an AI
+    private Participant player2; //The second of the two participants, that can be either human or an AI
+    private final MoveClassifier moveClassifier; // To classify the moves and check if they are valid
+    private MoveMaker moveMaker; // to actually execute the moves on the board
+    private final TablePrinter tablePrinter; // to print the board in ascii
 
+    private static final Logger logger = LoggerFactory.getLogger(KiApplication.class);
+
+    /**
+     * This constructor will be called by spring and all argumend are autowired.
+     * @param board The board of the game
+     * @param moveClassifier To classify the moves and check if they are valid
+     * @param moveMaker To actually execute the moves on the board
+     * @param ki1 An ai, that may participate in the game
+     * @param ki2 An ai, that may participate in the game
+     * @param eventBus To communicate with the gui
+     * @param tablePrinter to print the board in ascii
+     */
     @Autowired
     public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("ki1") KI ki1, @Qualifier("ki2")KI ki2, EventBus eventBus, TablePrinter tablePrinter) {
         this.board = board;
@@ -60,8 +72,11 @@ public class KiApplication implements CommandLineRunner {
         this.tablePrinter = tablePrinter;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(KiApplication.class);
 
+    /**
+     * Start a SpringBoot Application
+     * @param args
+     */
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = new SpringApplicationBuilder(KiApplication.class)
                 .headless(false)
@@ -70,6 +85,9 @@ public class KiApplication implements CommandLineRunner {
         KiFxApplication.launchGUI(ctx, latch, args);
     }
 
+    /**
+     * Register this class with the eventBus
+     */
     @PostConstruct
     public void init(){
         eventBus.register(this);
@@ -88,6 +106,7 @@ public class KiApplication implements CommandLineRunner {
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {
 
+		    //Print the main menu and set the Participants
 		    switch (new IOUtil().readMainMenu()) {
                 // 1) schwarz(ki) vs weiß(ki)
                 // 2) schwarz(ki) vs weiß(hum)
@@ -133,24 +152,32 @@ public class KiApplication implements CommandLineRunner {
 
             tablePrinter.print(toFieldRecords(board));
 
+		    //The main loop of the game
             while( true ) {
 
+                //find all poosible moves for the current player
                 final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, currentPlayer.getPlayer(), moveClassifier);
 
+                //post the possible moves on the eventbus
                 eventBus.post( new PossibleMovesEvent(possibleMoves, board.deepCopy()));
 
+                //Let the player deciude, which move of the possible moves should be executed
                 Move move = currentPlayer.getNextMove(depth);
 
                 if( null == move ) {
                     throw new IllegalStateException("No best move found");
                 }
 
+                //Let the player do the move
                 currentPlayer.makeMove(move);
 
+                //Post the move that the plyer has done to the eventbus
                 eventBus.post(new BestMoveEvent(move));
 
+                //print the new board on the terminal
                 tablePrinter.print(toFieldRecords(board));
 
+                //toggle the current player
                 currentPlayer = currentPlayer.equals(player1) ? player2 : player1;
             }
 		}}).start();

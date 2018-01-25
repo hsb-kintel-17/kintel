@@ -5,6 +5,9 @@ import de.kintel.ki.model.Move;
 
 import java.util.List;
 
+/**
+ * This event can be posted on the eventbus to tell the gui, which moves are possible for the current player
+ */
 public class PossibleMovesEvent {
     public static final GuiEventType id = GuiEventType.POSSIBLE_MOVES;
 
