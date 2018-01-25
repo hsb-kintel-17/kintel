@@ -17,7 +17,7 @@ public abstract class Participant {
         this.converter = converter;
     }
 
-    public abstract Move getNextMove(int depth);
+    public abstract Move getNextMove();
 
     public Player getPlayer() {
         return this.player;

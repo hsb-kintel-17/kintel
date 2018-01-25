@@ -32,7 +32,7 @@ public class IOUtil {
      * Reads in a line from the console.
      * @return String input
      */
-    private String read() {
+    public String read() {
         String input = "";
         try {
             input = br.readLine();
@@ -42,7 +42,7 @@ public class IOUtil {
         return input;
     }
     
-    private String read(String beschreibung) {
+    public String read(String beschreibung) {
         ausgabe(beschreibung);
         return read();
     }

@@ -6,6 +6,7 @@ import de.kintel.ki.algorithm.MoveMaker;
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
+import de.kintel.ki.util.IOUtil;
 import de.kintel.ki.util.UMLCoordToCoord2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +15,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class KiPlayer extends Participant {
+public class KiPlayer extends Participant{
 
     private static final Logger logger = LoggerFactory.getLogger(KiPlayer.class);
 
     private final KI ki;
+    private int depth;
     private long timeConsumed;
     private Map<String,Move> moveMap;
     private MoveMaker moveMaker;
+    private boolean decideDepthOnce;
 
     public KiPlayer(Board board, UMLCoordToCoord2D converter,  Player player, KI ki, MoveMaker moveMaker) {
         super( board, player, converter );
@@ -29,16 +32,32 @@ public class KiPlayer extends Participant {
         this.moveMaker = moveMaker;
         this.ki.setCurrentPlayer(player.name());
         moveMap = new HashMap<>();
+        IOUtil ioUtil = new IOUtil();
+        String input;
+        do{
+            input = ioUtil.read("Soll immer mit der selben Suchtiefe gesucht werden? (Ja/Nein)").toLowerCase();
+            if(!(input.equals("ja") || input.equals("nein"))){
+                ioUtil.ausgabe("Falsch Eingabe!");
+            }
+        }while (!(input.equals("ja") || input.equals("nein")));
+        decideDepthOnce = (input.equals("ja")) ? true : false;
+        if(decideDepthOnce){
+            depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll IMMER gesucht werden?"));
+        }
     }
     
     @Override
-    public Move getNextMove(int depth) {
+    public Move getNextMove() {
         // erstelle Kopie des boards, auf dem die KI machen kann, was sie will
         ki.setBoard(getBoard().deepCopy());
         //Diese zeile ist wichtig, damit der Negamax mit dem richtigen Player anfängt!
         ki.setCurrentPlayer(getPlayer().name());
-        long timeBefore = System.currentTimeMillis();
 
+        if(!decideDepthOnce){
+            depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll gesucht werden?"));
+        }
+
+        long timeBefore = System.currentTimeMillis();
         Move bestMove = moveMap.get(getBoard().toStringWithRanks());
         if(bestMove != null){
 

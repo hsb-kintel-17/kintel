@@ -163,7 +163,7 @@ public class KiApplication implements CommandLineRunner {
                 eventBus.post( new PossibleMovesEvent(possibleMoves, board.deepCopy()));
 
                 //Let the player decide, which move of the possible moves should be executed
-                Move move = currentPlayer.getNextMove(depth);
+                Move move = currentPlayer.getNextMove();
 
                 if( null == move ) {
                     throw new IllegalStateException("No best move found");

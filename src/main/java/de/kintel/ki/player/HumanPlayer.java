@@ -27,7 +27,7 @@ public class HumanPlayer extends Participant {
     }
 
     @Override
-    public Move getNextMove(int depth) {
+    public Move getNextMove() {
         Move move = askUserForMoveInput();
 
         boolean anyMatch;
