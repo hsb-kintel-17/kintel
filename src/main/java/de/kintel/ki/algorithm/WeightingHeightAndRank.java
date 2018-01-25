@@ -73,12 +73,12 @@ public class WeightingHeightAndRank implements Weighting {
         int endsieg = 0;
         final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier);
         if( possibleMoves.isEmpty() ) {
-            endsieg = 10000 * Weight.WIN.getValue();
+            return 20000;
         }
 
         int opponentMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier).size();
 
-        return 10*eigeneSteinhoehe + endsieg + ranks + 10*(possibleMoves.size() - 1.5 * opponentMoves);
+        return 10*eigeneSteinhoehe + ranks + 10*(possibleMoves.size() - 1.5 * opponentMoves);
     }
 
     /**
@@ -90,6 +90,6 @@ public class WeightingHeightAndRank implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return 10000 * Weight.WIN.getValue();
+        return 20000;
     }
 }

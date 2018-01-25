@@ -4,6 +4,7 @@ import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.model.Weight;
+import de.kintel.ki.util.BoardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -33,11 +34,18 @@ public class WeightingHumanHard implements Weighting {
     @Override
     public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
         final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
+        Player opponentPlayer = (currentPlayer == Player.WEISS) ? Player.SCHWARZ : Player.WEISS;
+
+        if(BoardUtils.getPossibleMoves(board,opponentPlayer).isEmpty()){
+            return 10000;
+        }
+
         double heights = fieldsOccupiedBy.stream()
-                                         .map(coordinate -> board.getField(coordinate))
-                                         .mapToDouble(f -> f.getPieces()
-                                                            .size())
-                                         .map(d -> d * Weight.WIN.getValue()).sum();
+                .map(board::getField)
+                .mapToDouble(f -> f.getPieces()
+                        .size())
+                .map(d -> d * Weight.WIN.getValue()).sum();
+
         return heights;
     }
 
@@ -50,6 +58,6 @@ public class WeightingHumanHard implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return 12*4;
+        return 10000;
     }
 }
