@@ -23,6 +23,7 @@ public abstract class AbstractJavaFxApplicationSupport extends Application imple
     @Override
     public void stop() throws Exception {
         super.stop();
+        stopMvvmfx();
         applicationContext.close();
     }
 
