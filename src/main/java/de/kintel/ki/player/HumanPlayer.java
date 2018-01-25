@@ -58,15 +58,19 @@ public class HumanPlayer extends Participant {
         while (!inputCorrect) {
             logger.info("" + this.getPlayer() + " ist am Zug:");
             String humanInput = s.nextLine();
-
+            logger.info("Eingabe: {}", humanInput);
             move = this.transform(humanInput);
             if (move != null) {
                 moveClassifier.classify(move, getBoard());
                 inputCorrect = move.getForwardClassification() != MoveClassifier.MoveType.INVALID;
+                if( !inputCorrect ) {
+                    logger.error("Dieser Zug ist nicht erlaubt.");
+                }
             } else {
                 logger.error("Eingabe ist keine Koordinate!");
             }
         }
+
         return move;
     }
 
