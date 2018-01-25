@@ -1,11 +1,10 @@
 package de.kintel.ki.util;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.kintel.ki.model.Coordinate2D;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by kintel on 17.01.2018.
@@ -14,7 +13,7 @@ import java.util.Map;
 @Scope("singleton")
 public class UMLCoordToCoord2D {
 
-    private Map<Character, Integer> mapBoardLetters = new LinkedHashMap<>();
+    private BiMap<Character, Integer> mapBoardLetters = HashBiMap.create();
     {
         this.mapBoardLetters.put('g', 1);
         this.mapBoardLetters.put('f', 2);
@@ -45,11 +44,14 @@ public class UMLCoordToCoord2D {
             }
         }
 
-        int coordinates[] = { mapBoardLetters.get(umlCoord.charAt(0)) - 1, Character.getNumericValue(umlCoord.charAt(1)) - 1};
+        int[] coordinates = { mapBoardLetters.get(umlCoord.charAt(0)) - 1, Character.getNumericValue(umlCoord.charAt(1)) - 1};
 
         final Coordinate2D coord = new Coordinate2D(coordinates[0], coordinates[1]);
 
         return coord;
     }
 
+    public String convertCoordToUML(Coordinate2D coord) {
+        return "" + mapBoardLetters.inverse().get(coord.getX() + 1) + (coord.getY() + 1);
+    }
 }

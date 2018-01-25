@@ -3,10 +3,10 @@ package de.kintel.ki.player;
 import com.google.common.base.MoreObjects;
 import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.algorithm.MoveMaker;
-import de.kintel.ki.algorithm.WeigtingMagicFormular;
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
+import de.kintel.ki.util.UMLCoordToCoord2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +23,8 @@ public class KiPlayer extends Participant {
     private Map<String,Move> moveMap;
     private MoveMaker moveMaker;
 
-    public KiPlayer(Board board, Player player, KI ki, MoveMaker moveMaker) {
-        super( board, player );
+    public KiPlayer(Board board, UMLCoordToCoord2D converter,  Player player, KI ki, MoveMaker moveMaker) {
+        super( board, player, converter );
         this.ki = ki;
         this.moveMaker = moveMaker;
         this.ki.setCurrentPlayer(player.name());
@@ -60,6 +60,7 @@ public class KiPlayer extends Participant {
     @Override
     public void makeMove(Move move) {
         logger.debug("Found best move to execute now: {}", move);
+        logger.debug("Found best move to execute now: {}{}", getConverter().convertCoordToUML(move.getSourceCoordinate()), getConverter().convertCoordToUML(move.getTargetCoordinate()) );
         moveMaker.makeMove(move, getBoard());
     }
 

@@ -16,14 +16,12 @@ public class HumanPlayer extends Participant {
 
     private static final Logger logger = LoggerFactory.getLogger(HumanPlayer.class);
 
-    private final UMLCoordToCoord2D converter;
     private final MoveClassifier moveClassifier;
     private final MoveMaker moveMaker;
 
     @Autowired
     public HumanPlayer(Board board, UMLCoordToCoord2D converter, Player player, MoveClassifier moveClassifier, MoveMaker moveMaker) {
-        super(board, player);
-        this.converter = converter;
+        super(board, player, converter);
         this.moveClassifier = moveClassifier;
         this.moveMaker = moveMaker;
     }

@@ -45,6 +45,7 @@ public class KiApplication implements CommandLineRunner {
     private Participant currentPlayer; //current player that executes a move
     private Participant player1; //One of the two participants, that can be either human or an AI
     private Participant player2; //The second of the two participants, that can be either human or an AI
+    private final UMLCoordToCoord2D umlCoordToCoord2D; // converter for coordinates
     private final MoveClassifier moveClassifier; // To classify the moves and check if they are valid
     private MoveMaker moveMaker; // to actually execute the moves on the board
     private final TablePrinter tablePrinter; // to print the board in ascii
@@ -62,8 +63,9 @@ public class KiApplication implements CommandLineRunner {
      * @param tablePrinter to print the board in ascii
      */
     @Autowired
-    public KiApplication(Board board, MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("ki1") KI ki1, @Qualifier("ki2")KI ki2, EventBus eventBus, TablePrinter tablePrinter) {
+    public KiApplication(Board board, UMLCoordToCoord2D umlCoordToCoord2D, MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("ki1") KI ki1, @Qualifier("ki2")KI ki2, EventBus eventBus, TablePrinter tablePrinter) {
         this.board = board;
+        this.umlCoordToCoord2D = umlCoordToCoord2D;
         this.moveClassifier = moveClassifier;
         this.moveMaker = moveMaker;
         this.ki1 = ki1;
@@ -71,7 +73,6 @@ public class KiApplication implements CommandLineRunner {
         this.eventBus = eventBus;
         this.tablePrinter = tablePrinter;
     }
-
 
     /**
      * Start a SpringBoot Application
@@ -114,24 +115,24 @@ public class KiApplication implements CommandLineRunner {
                 // 4) weiß(ki) vs schwarz(hum)
                 // 5) schwarz(manual input) vs weiß(manual input)
                 case 1:
-                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1, moveMaker);
-                    player2 = new KiPlayer(board, Player.WEISS, ki2, moveMaker);
+                    player1 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki1, moveMaker);
+                    player2 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki2, moveMaker);
                     break;
                 case 2:
-                    player1 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki1, moveMaker);
-                    player2 = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, moveClassifier, moveMaker);
+                    player1 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki1, moveMaker);
+                    player2 = new HumanPlayer(board, umlCoordToCoord2D, Player.WEISS, moveClassifier, moveMaker);
                     break;
                 case 3:
-                    player1 = new KiPlayer(board, Player.WEISS, ki1, moveMaker);
-                    player2 = currentPlayer = new KiPlayer(board, Player.SCHWARZ, ki2, moveMaker);
+                    player1 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki1, moveMaker);
+                    player2 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki2, moveMaker);
                     break;
                 case 4:
-                    player1 = new KiPlayer(board, Player.WEISS, ki1, moveMaker);
-                    player2 = currentPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, moveClassifier, moveMaker);
+                    player1 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki1, moveMaker);
+                    player2 = currentPlayer = new HumanPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, moveClassifier, moveMaker);
                     break;
                 case 5:
-                    player1 = currentPlayer = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.SCHWARZ, moveClassifier, moveMaker);
-                    player2 = new HumanPlayer(board, new UMLCoordToCoord2D(), Player.WEISS, moveClassifier, moveMaker);
+                    player1 = currentPlayer = new HumanPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, moveClassifier, moveMaker);
+                    player2 = new HumanPlayer(board, umlCoordToCoord2D, Player.WEISS, moveClassifier, moveMaker);
                     break;
             }
 
@@ -155,13 +156,13 @@ public class KiApplication implements CommandLineRunner {
 		    //The main loop of the game
             while( true ) {
 
-                //find all poosible moves for the current player
+                //find all possible moves for the current player
                 final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, currentPlayer.getPlayer(), moveClassifier);
 
                 //post the possible moves on the eventbus
                 eventBus.post( new PossibleMovesEvent(possibleMoves, board.deepCopy()));
 
-                //Let the player deciude, which move of the possible moves should be executed
+                //Let the player decide, which move of the possible moves should be executed
                 Move move = currentPlayer.getNextMove(depth);
 
                 if( null == move ) {
@@ -171,7 +172,7 @@ public class KiApplication implements CommandLineRunner {
                 //Let the player do the move
                 currentPlayer.makeMove(move);
 
-                //Post the move that the plyer has done to the eventbus
+                //Post the move that the player has done to the eventbus
                 eventBus.post(new BestMoveEvent(move));
 
                 //print the new board on the terminal
