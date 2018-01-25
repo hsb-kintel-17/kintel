@@ -22,7 +22,7 @@ public class KiPlayer extends Participant{
     private final KI ki;
     private int depth;
     private long timeConsumed;
-    private Map<String,Move> moveMap;
+    private Map<String, Move> moveMap;
     private MoveMaker moveMaker;
     private boolean decideDepthOnce;
 
@@ -31,25 +31,25 @@ public class KiPlayer extends Participant{
         this.ki = ki;
         this.moveMaker = moveMaker;
         this.ki.setCurrentPlayer(player.name());
-        moveMap = new HashMap<>();
+        this.moveMap = new HashMap<>();
         IOUtil ioUtil = new IOUtil();
         String input;
-        do{
-            input = ioUtil.read("Soll immer mit der selben Suchtiefe gesucht werden? (Ja/Nein)").toLowerCase();
-            if(!(input.equals("ja") || input.equals("nein"))){
+        do {
+            input = ioUtil.read("Soll für " + getPlayer() + " immer mit der selben Suchtiefe gesucht werden? (Ja/Nein)").toLowerCase();
+            if (!(input.equals("ja") || input.equals("nein"))) {
                 ioUtil.ausgabe("Falsch Eingabe!");
             }
-        }while (!(input.equals("ja") || input.equals("nein")));
+        } while (!(input.equals("ja") || input.equals("nein")));
         decideDepthOnce = (input.equals("ja")) ? true : false;
-        if(decideDepthOnce){
+        if (decideDepthOnce) {
             depth = -1;
             do {
                 try {
                     depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll IMMER gesucht werden?"));
                 } catch (NumberFormatException ex) {
-                    ioUtil.ausgabe("Falsch Eingabe!");
+                    ioUtil.ausgabe("Falsche Eingabe!");
                 }
-            }while (depth== -1);
+            } while (depth == -1);
         }
     }
     
@@ -61,7 +61,7 @@ public class KiPlayer extends Participant{
         ki.setCurrentPlayer(getPlayer().name());
 
         if(!decideDepthOnce){
-            depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll gesucht werden?"));
+            depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll für " + getPlayer() + " gesucht werden?"));
         }
 
         long timeBefore = System.currentTimeMillis();
