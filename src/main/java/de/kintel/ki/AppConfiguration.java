@@ -43,7 +43,7 @@ public class AppConfiguration {
     @Bean
     @Primary
     @Autowired
-    public KI ki1(MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("weightingHeightAndRank") Weighting weighting, Board board) {
+    public KI ki1(MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("weightingHumanHard") Weighting weighting, Board board) {
         return new KI(moveClassifier, moveMaker,weighting,board);
     }
 
