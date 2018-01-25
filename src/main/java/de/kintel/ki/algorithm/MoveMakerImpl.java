@@ -4,6 +4,7 @@ import de.kintel.ki.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,9 @@ public class MoveMakerImpl implements MoveMaker {
      */
     private final HashMap<Move, String> guard = new HashMap<>();
     private final RankMakerImpl rankMaker;
+    /** guard is indented to be used while development to check board is the same before doing and un-doing a move */
+    @Value("${guardEnabled}")
+    private boolean guardEnabled = false;
 
     @Autowired
     public MoveMakerImpl(RankMakerImpl rankMaker) {
@@ -36,7 +40,9 @@ public class MoveMakerImpl implements MoveMaker {
      */
     @Override
     public void makeMove(@Nonnull final Move move, Board board) {
-        guard.put(move, board.toString());
+        if( guardEnabled ) {
+            guard.put(move, board.toString());
+        }
         doMove(move, board, false);
     }
 
@@ -48,11 +54,13 @@ public class MoveMakerImpl implements MoveMaker {
     @Override
     public void undoMove(@Nonnull final Move move, Board board) {
         doMove(move, board, true);
-        final String expected = guard.get(move);
-        final String actual = board.toString();
-        if (!expected.equals(actual)) {
-            String message = "Incorrect undo of move " + move.getUuid() + "! The field after the undo is not the same as before the do - but it should of course. move: " + board.toString();
-            throw new IllegalStateException(message);
+        if( guardEnabled ) {
+            final String expected = guard.get(move);
+            final String actual = board.toString();
+            if (!expected.equals(actual)) {
+                String message = "Incorrect undo of move " + move.getUuid() + "! The field after the undo is not the same as before the do - but it should of course. move: " + board.toString();
+                throw new IllegalStateException(message);
+            }
         }
     }
 
