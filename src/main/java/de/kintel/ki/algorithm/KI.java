@@ -1,19 +1,17 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.libs.minimax4j.impl.ParallelNegamax;
-import de.kintel.ki.model.*;
+import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Move;
+import de.kintel.ki.model.Player;
 import de.kintel.ki.util.BoardUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -158,6 +156,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
 
     public Move getBestMove(int depth) {
         List<Move> possibleMoves = getPossibleMoves();
+        // If there is only one move possible execute it without spending time on evaluation
         if(possibleMoves.size() == 1){
             return possibleMoves.get(0);
         }

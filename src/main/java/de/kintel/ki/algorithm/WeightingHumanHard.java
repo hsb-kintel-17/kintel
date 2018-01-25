@@ -36,14 +36,13 @@ public class WeightingHumanHard implements Weighting {
         final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
         Player opponentPlayer = (currentPlayer == Player.WEISS) ? Player.SCHWARZ : Player.WEISS;
 
-        if(BoardUtils.getPossibleMoves(board,opponentPlayer,moveClassifier).isEmpty()){
+        if (BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier).isEmpty()) {
             return 10000;
         }
 
         double heights = fieldsOccupiedBy.stream()
                 .map(board::getField)
-                .mapToDouble(f -> f.getPieces()
-                        .size())
+                .mapToDouble(f -> f.getPieces().size())
                 .map(d -> d * Weight.WIN.getValue()).sum();
 
         return heights;
