@@ -78,7 +78,7 @@ public class TablePrinter
             for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records)) {
                 String line = "";
                 if( record == headerRecord ) {
-                    line = String.format("Farben als Referenz: %s %s %s %s %n", colorize("Rot", Color.RED), colorize("Gruen", Color.GREEN), colorize("Gelb", Color.YELLOW), colorize("Magenta", Color.MAGENTA));
+                    line = String.format("Farben als Referenz: W: %s %s S: %s %s %n", colorize("Gruen", Color.GREEN), colorize("Gelb", Color.YELLOW), colorize("Rot", Color.RED), colorize("Magenta", Color.MAGENTA));
                 }
                 line += Joiner.on(columnSeparator).join(transform(columns.entrySet(), columnFormatter(record)));
                 sb.append(line.replaceAll("\\s*$", ""));
