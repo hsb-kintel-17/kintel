@@ -6,6 +6,7 @@ import de.kintel.ki.algorithm.MoveClassifier;
 import de.kintel.ki.algorithm.MoveMaker;
 import de.kintel.ki.cli.TablePrinter;
 import de.kintel.ki.event.BestMoveEvent;
+import de.kintel.ki.event.MeasuredTimeEvent;
 import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.KiFxApplication;
 import de.kintel.ki.model.Board;
@@ -22,7 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -173,6 +176,10 @@ public class KiApplication implements CommandLineRunner {
 
                 //Post the move that the plyer has done to the eventbus
                 eventBus.post(new BestMoveEvent(move));
+
+                if( currentPlayer instanceof KiPlayer ) {
+                    eventBus.post(new MeasuredTimeEvent( ((KiPlayer) currentPlayer).getTimeConsumedInSeconds()) );
+                }
 
                 //print the new board on the terminal
                 tablePrinter.print(toFieldRecords(board));

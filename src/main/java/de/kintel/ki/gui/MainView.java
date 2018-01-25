@@ -1,46 +1,51 @@
 package de.kintel.ki.gui;
 
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import de.kintel.ki.algorithm.KI;
-import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.GuiEventType;
-import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.util.Arrow;
-import de.kintel.ki.model.*;
+import de.kintel.ki.model.Coordinate2D;
+import de.kintel.ki.model.Field;
+import de.kintel.ki.model.Move;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.Cell;
-import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
+import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.fusesource.jansi.Ansi;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 @Scope("singleton")
-public class MainView implements FxmlView<MainViewModel> {
+public class MainView implements FxmlView<MainViewModel>, Initializable {
+
+    @InjectViewModel
+    MainViewModel viewModel;
 
     @FXML
-    private AnchorPane root;
+    public ProgressIndicator progressIndicator;
+    @FXML
+    private BorderPane root;
     @FXML
     private StackPane stackPane;
     @FXML
@@ -52,43 +57,80 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML
     private Label winLabel;
 
-    private GridModel<Field> gridModel;
+    private Tooltip tooltip;
+    /**
+     * Called to initialize a controller after its root element has been
+     * completely processed.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  <tt>null</tt> if the location is not known.
+     * @param resources The resources used to localize the root object, or <tt>null</tt> if
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        tooltip = new Tooltip();
 
-    @Autowired
-    private EventBus eventBus;
-
-    @Value("${board.width}")
-    private int width;
-    @Value("${board.height}")
-    private int height;
-    private Player lastPlayer;
-    private Board board;
-
-    public void initialize() {
-        eventBus.register(this);
-        gridModel = new GridModel<>();
-
-        gridModel.setDefaultState( new Field(true) );
-        gridModel.setNumberOfColumns(width);
-        gridModel.setNumberOfRows(height);
-
-        gridView.setGridModel(gridModel);
+        progressIndicator.progressProperty().bind(viewModel.progressProperty());
+        gridView.setGridModel(viewModel.getGridModel());
         gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : getRankAwareLabel(cellField));
 
-        gridModel.getCells().forEach(c -> {
-            final Tooltip t = new Tooltip("" + (char)(height-c.getRow()+'a' - 1) + (c.getColumn() + 1 ));
-            Pane cellPane = gridView.getCellPane(c);
-            cellPane.setOnMouseEntered(event -> {
-                Point2D p = cellPane.localToScreen(cellPane.getLayoutBounds().getMaxX(), cellPane.getLayoutBounds().getMaxY()); //I position the tooltip at bottom right of the node (see below for explanation)
-                t.show(cellPane, p.getX(), p.getY());
+        winLabel.setId("winLabel");
+        winLabel.visibleProperty().bind(viewModel.winnerProperty().isNotNull());
+        winLabel.textProperty().bind(
+                Bindings.when(
+                        viewModel.winnerProperty().isEqualTo("").or(viewModel.winnerProperty().isNull()))
+                        .then("Tie")
+                        .otherwise(Bindings.concat("Winner is ", viewModel.winnerProperty())));
+
+        gridView.getGridModel().cells().stream().map(c -> gridView.getCellPane(c)).forEach( cellPane -> {
+            cellPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    // popup tooltip on the right, you can adjust these values for different positions
+                    tooltip.show( cellPane.getScene().getWindow(), cellPane.getLayoutX(), cellPane.getLayoutY());
+                } else {
+                    tooltip.hide();
+                }
             });
-            cellPane.setOnMouseExited(e -> t.hide());
         });
 
-        AnchorPane.setBottomAnchor(stackPane, 0.0);
-        AnchorPane.setTopAnchor(stackPane,0.0);
-        AnchorPane.setLeftAnchor(stackPane,0.0);
-        AnchorPane.setRightAnchor(stackPane,0.0);
+        gridView.cellBorderColorProperty().set(Color.DARKGRAY);
+        gridView.cellBorderWidthProperty().set(0.5);
+        // Color for forbidden fields
+        gridView.addColorMapping(new Field(true), Color.web("f4f3f3"));
+
+        gridView.getGridModel().cells().forEach(c -> {
+
+            Pane cellPane = gridView.getCellPane(c);
+            cellPane.setOnMouseEntered(event -> {
+                tooltip.setText("" + (char) ( viewModel.getGridModel().getNumberOfRows() - c.getRow() +'a' - 1) + (c.getColumn() + 1));
+                Point2D p = cellPane.localToScreen(cellPane.getLayoutBounds().getMaxX(), cellPane.getLayoutBounds().getMaxY()); //I'm position the tooltip at bottom right of the node (see below for explanation)
+                tooltip.show(cellPane, p.getX(), p.getY());
+            });
+            cellPane.setOnMouseExited(e -> tooltip.hide());
+        });
+
+        viewModel.possibleMovesProperty().addListener((InvalidationListener) observable -> updateArrows(GuiEventType.POSSIBLE_MOVES));
+        viewModel.bestMoveProperty().addListener(observable -> updateArrows(GuiEventType.BEST_MOVE));
+    }
+
+    private void updateArrows(GuiEventType id) {
+        Platform.runLater(() -> {
+            switch (id) {
+                case BEST_MOVE:
+                    groupBestMove.getChildren().clear();
+                    final Move bestMove = viewModel.bestMoveProperty().get();
+                    drawArrow(groupBestMove, Color.RED, bestMove.getSourceCoordinate(), bestMove.getTargetCoordinate());
+                    break;
+                case POSSIBLE_MOVES:
+                    groupPossibleMoves.getChildren().clear();
+                    final List<Move> moves = new ArrayList<>(viewModel.possibleMovesProperty());
+                    moves.forEach( move -> {
+                        drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
+                    });
+                    break;
+            }
+        });
+
     }
 
     private Node getRankAwareLabel(Cell<Field> cellField) {
@@ -115,67 +157,8 @@ public class MainView implements FxmlView<MainViewModel> {
         return hBox;
     }
 
-
-    private Point2D locate(Coordinate2D coordinate) {
-        final Pane cellPane = gridView.getCellPane(gridModel.getCell(coordinate.getY(), coordinate.getX()));
-        final Bounds boundsInParent = cellPane.localToScene(cellPane.getLayoutBounds());
-        final Point2D point2D = new Point2D(boundsInParent.getMaxX(), boundsInParent.getMaxY()).midpoint(boundsInParent.getMinX(), boundsInParent.getMinY());
-        return point2D;
-    }
-
-    private void updateFields(GuiEventType id, List<Move> moves) {
-        //set new fields first to trigger change event of gridView
-        gridModel.getCells().forEach(c -> c.changeState( new Field(true) ));
-        gridModel.getCells().forEach(c -> c.changeState(board.getField(c.getRow(), c.getColumn())));
-
-        switch (id){
-            case BEST_MOVE:
-                groupBestMove.getChildren().clear();
-                drawArrow(groupBestMove, Color.RED, moves.get(0).getSourceCoordinate(), moves.get(0).getTargetCoordinate());
-                break;
-            case POSSIBLE_MOVES:
-                groupPossibleMoves.getChildren().clear();
-                moves.forEach( move -> {
-                    drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
-
-                });
-                break;
-        }
-
-    }
-
-    @Subscribe
-    public void newPossibleMoves(PossibleMovesEvent e) {
-        board = e.getBoard();
-        Platform.runLater(() -> {
-            updateFields(e.id, e.getPossibleMoves());
-            if( e.getPossibleMoves().isEmpty()) {
-                winLabel.setId("winLabel");
-                winLabel.setVisible(true);
-                winLabel.setText("Winner is " + lastPlayer);
-            }
-        });
-
-    }
-
-    @Subscribe
-    public void newBestMove(BestMoveEvent e) {
-        // The board should be set by newPossibleMoves event but eventbus is asynchron so
-        // maybe newBestMove is processed before newPossibleMoves
-        if( null == board ) {
-            return;
-        }
-        final Move bestMove = e.getBestMove();
-        Platform.runLater(() -> {
-            if(bestMove != null){
-                lastPlayer = bestMove.getCurrentPlayer();
-                updateFields(e.id, Lists.newArrayList(bestMove));
-            }
-        });
-    }
-
     private void drawArrow(Group group, Color color, Coordinate2D from, Coordinate2D to) {
-        int width_offset = 25;
+        int width_offset = 0;
         final Arrow arrow = new Arrow();
 
         final Point2D from2d = locate(from);
@@ -187,4 +170,15 @@ public class MainView implements FxmlView<MainViewModel> {
 
         group.getChildren().add(arrow);
     }
+
+    private Point2D locate(Coordinate2D coordinate) {
+        final Cell<Field> cell = gridView.getGridModel()
+                                         .getCell(coordinate.getY(), coordinate.getX());
+        final Pane cellPane = gridView.getCellPane(gridView.getGridModel().getCell(coordinate.getY(), coordinate.getX()));
+
+        //Bounds bounds = cellPane.localToScene(new Point2D(0.0, 0.0));
+        //return new Point2D(bounds.getMaxX(), bounds.getMaxY()).midpoint(bounds.getMinX(), bounds.getMinY());
+        return cellPane.localToScreen(0.0, 0.0);
+    }
+
 }

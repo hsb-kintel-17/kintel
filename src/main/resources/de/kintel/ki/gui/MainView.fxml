@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import eu.lestard.grid.GridView?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.Group?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
-<?import java.net.URL?>
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.kintel.ki.gui.MainView">
-    <stylesheets>
-        <URL value="@MainView.css"/>
-    </stylesheets>
+<?import javafx.scene.layout.VBox?>
 
-    <children>
-        <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0">
+<BorderPane fx:id="root" prefHeight="378.0" prefWidth="481.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.kintel.ki.gui.MainView">
+   <center>
+        <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <GridView fx:id="gridView"/>
+              <GridView fx:id="gridView" prefHeight="378.0" prefWidth="333.0" />
+              <Label fx:id="winLabel" visible="false" />
+              <Group fx:id="groupPossibleMoves" />
+              <Group fx:id="groupBestMove" />
             </children>
         </StackPane>
-        <Label fx:id="winLabel" visible="false"/>
-        <Group fx:id="groupPossibleMoves"/>
-        <Group fx:id="groupBestMove"/>
-    </children>
-</AnchorPane>
+   </center>
+   <right>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <ProgressIndicator fx:id="progressIndicator" progress="0.0" />
+         </children>
+      </VBox>
+   </right>
+</BorderPane>
