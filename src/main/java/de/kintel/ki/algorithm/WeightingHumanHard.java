@@ -36,7 +36,7 @@ public class WeightingHumanHard implements Weighting {
         final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
         Player opponentPlayer = (currentPlayer == Player.WEISS) ? Player.SCHWARZ : Player.WEISS;
 
-        if(BoardUtils.getPossibleMoves(board,opponentPlayer).isEmpty()){
+        if(BoardUtils.getPossibleMoves(board,opponentPlayer,moveClassifier).isEmpty()){
             return 10000;
         }
 
