@@ -42,7 +42,14 @@ public class KiPlayer extends Participant{
         }while (!(input.equals("ja") || input.equals("nein")));
         decideDepthOnce = (input.equals("ja")) ? true : false;
         if(decideDepthOnce){
-            depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll IMMER gesucht werden?"));
+            depth = -1;
+            do {
+                try {
+                    depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll IMMER gesucht werden?"));
+                } catch (NumberFormatException ex) {
+                    ioUtil.ausgabe("Falsch Eingabe!");
+                }
+            }while (depth== -1);
         }
     }
     
