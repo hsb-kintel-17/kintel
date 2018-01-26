@@ -1,5 +1,6 @@
 package de.kintel.ki.model;
 
+import com.google.common.base.MoreObjects;
 import de.kintel.ki.algorithm.MoveClassifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,19 +44,11 @@ public class UMLMove extends Move  implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Move{");
-        sb.append(getSourceCoordinate())
-          .append("(")
-        .append(getSourceCoordinate())
-        .append(")")
-        .append(" to ")
-        .append(getTargetCoordinate())
-          .append("(")
-          .append(getTargetCoordinate())
-          .append(")")
-          .append(" for player ")
-          .append(getCurrentPlayer());
-        return sb.toString();
+        return MoreObjects.toStringHelper(this)
+                          .add("from", getSourceCoordinate())
+                          .add("to", getTargetCoordinate())
+                          .add("for player", getCurrentPlayer())
+                          .toString();
     }
 
     @Override
