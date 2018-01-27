@@ -66,14 +66,14 @@ public class KiPlayer extends Participant{
 
         long timeBefore = System.currentTimeMillis();
         Move bestMove = moveMap.get(getBoard().toStringWithRanks());
-        if(bestMove != null){
-
+        if(bestMove != null) {
+            logger.info("Historical board state detected - going fast.");
             try {
                 Thread.sleep(100,0);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error("Error in waiting ", e);
             }
-        }else {
+        } else {
             bestMove = ki.getBestMove(depth);
             moveMap.put(getBoard().toStringWithRanks(), bestMove);
         }
