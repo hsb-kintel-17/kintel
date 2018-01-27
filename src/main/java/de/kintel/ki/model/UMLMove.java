@@ -2,10 +2,10 @@ package de.kintel.ki.model;
 
 import com.google.common.base.MoreObjects;
 import de.kintel.ki.algorithm.MoveClassifier;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,7 +30,7 @@ public class UMLMove extends Move  implements Serializable {
     private Optional<Rank> forwardOpponentRank;
     private Rank forwardSourceRank;
 
-    public UMLMove(@Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
+    public UMLMove(@NonNull Coordinate2D from, @NonNull Coordinate2D to, @NonNull Player currentPlayer) {
         uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;

@@ -1,6 +1,7 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class MoveMakerImpl implements MoveMaker {
      * @param move the move
      */
     @Override
-    public void makeMove(@Nonnull final Move move, Board board) {
+    public void makeMove(@NonNull final Move move, Board board) {
         if( guardEnabled ) {
             guard.put(move, board.toString());
         }
@@ -52,7 +52,7 @@ public class MoveMakerImpl implements MoveMaker {
      * @param move the move
      */
     @Override
-    public void undoMove(@Nonnull final Move move, Board board) {
+    public void undoMove(@NonNull final Move move, Board board) {
         doMove(move, board, true);
         if( guardEnabled ) {
             final String expected = guard.get(move);

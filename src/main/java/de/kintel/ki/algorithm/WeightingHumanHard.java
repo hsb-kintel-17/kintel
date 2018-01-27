@@ -5,11 +5,11 @@ import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.model.Weight;
 import de.kintel.ki.util.BoardUtils;
+import org.eclipse.jdt.annotation.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 @Component
@@ -32,7 +32,7 @@ public class WeightingHumanHard implements Weighting {
      * @see #maxEvaluateValue()
      */
     @Override
-    public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
+    public double evaluate(@NonNull Board board, @NonNull Player currentPlayer) {
         final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
         Player opponentPlayer = (currentPlayer == Player.WEISS) ? Player.SCHWARZ : Player.WEISS;
 

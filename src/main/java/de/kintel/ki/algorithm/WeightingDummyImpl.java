@@ -2,10 +2,10 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Player;
+import org.eclipse.jdt.annotation.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -28,7 +28,7 @@ public class WeightingDummyImpl implements Weighting {
      * @param board the board
      */
     @Override
-    public double evaluate(@Nonnull final Board board, @Nonnull final Player currentPlayer) {
+    public double evaluate(@NonNull final Board board, @NonNull final Player currentPlayer) {
         // Create random in interval [MIN,MAX]
         int eval = ThreadLocalRandom.current().nextInt(MIN, MAX + 1);
         return eval;

@@ -2,9 +2,9 @@ package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
 import de.kintel.ki.algorithm.MoveClassifier;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,7 +18,7 @@ public class Piece implements Serializable {
     private Player owner;
     private Rank rank;
 
-    public Piece(@Nonnull final Player owner) {
+    public Piece(@NonNull final Player owner) {
         this.owner = owner;
         this.rank = Rank.normal;
     }

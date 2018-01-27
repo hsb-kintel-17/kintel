@@ -2,10 +2,10 @@ package de.kintel.ki.util;
 
 import de.kintel.ki.algorithm.MoveClassifier;
 import de.kintel.ki.model.*;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class BoardUtils {
      * @param radius
      * @return the surrounding fields in diagonal
      */
-    public static List<Coordinate2D> getDiagonalSurroundings(@Nonnull final Board board, @Nonnull final Coordinate2D coordFrom, int radius) {
+    public static List<Coordinate2D> getDiagonalSurroundings(@NonNull final Board board, @NonNull final Coordinate2D coordFrom, int radius) {
         int[][] directions = new int[][]{{-1, -1}, {-1, 1}, {1, 1}, {1, -1}};
         int x = coordFrom.getX();
         int y = coordFrom.getY();

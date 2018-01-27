@@ -19,7 +19,13 @@ apply plugin: 'org.springframework.boot'
 
 group = 'de.kintel'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
+sourceCompatibility = 9
+targetCompatibility = 9
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.5'
+    distributionType = 'BIN'
+}
 
 repositories {
     mavenCentral()
@@ -34,7 +40,8 @@ dependencies {
     compile 'de.saxsys:mvvmfx:1.7.0'
     compile 'com.gluonhq:ignite-spring:1.0.0'
     compile 'com.github.lestard:Grid:0190d50d93'
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '2.1.100'
+    compileOnly 'javax.annotation:javax.annotation-api:1.3.1'
     compile 'com.google.guava:guava:19.0'
     //compile 'com.github.avianey:minimax4j:fcb7a9c77b'
     compile('org.springframework.boot:spring-boot-starter')

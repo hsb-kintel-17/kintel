@@ -2,11 +2,11 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
 import de.kintel.ki.util.BoardUtils;
+import org.eclipse.jdt.annotation.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class WeightingHeightAndRank implements Weighting {
      * @see #maxEvaluateValue()
      */
     @Override
-    public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
+    public double evaluate(@NonNull Board board, @NonNull Player currentPlayer) {
         Player opponentPlayer = (currentPlayer == Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
         final List<Coordinate2D> coordsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
 

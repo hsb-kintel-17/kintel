@@ -27,8 +27,8 @@
 package de.kintel.ki.libs.minimax4j.impl;
 
 import de.kintel.ki.libs.minimax4j.IA;
-import de.kintel.ki.libs.minimax4j.Move;
 import de.kintel.ki.libs.minimax4j.IAUtils;
+import de.kintel.ki.libs.minimax4j.Move;
 
 import java.util.Collections;
 import java.util.Iterator;

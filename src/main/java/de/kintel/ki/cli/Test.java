@@ -6,7 +6,6 @@ import de.kintel.ki.model.Piece;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.model.Rank;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

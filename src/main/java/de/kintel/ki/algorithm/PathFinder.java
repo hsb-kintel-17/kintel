@@ -1,12 +1,17 @@
 package de.kintel.ki.algorithm;
 
-import de.kintel.ki.model.*;
+import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Coordinate2D;
+import de.kintel.ki.model.Move;
 import de.kintel.ki.util.BoardUtils;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Finds path on grid.
@@ -15,7 +20,7 @@ public class PathFinder {
 
     private static Logger logger = LoggerFactory.getLogger(PathFinder.class);
 
-    public static Deque<Coordinate2D> find(@Nonnull final Move move, Board board) {
+    public static Deque<Coordinate2D> find(@NonNull final Move move, Board board) {
         return calcPath(board, move.getSourceCoordinate(), move.getTargetCoordinate(), new ArrayDeque<>());
     }
 
@@ -29,7 +34,7 @@ public class PathFinder {
      * @param path The path coordTo add the fields gradually
      * @return the path coordTo the target field
      */
-    private static Deque<Coordinate2D> calcPath(@Nonnull final Board board, @Nonnull final Coordinate2D coordFrom, @Nonnull final Coordinate2D coordTo, @Nonnull final Deque<Coordinate2D> path) {
+    private static Deque<Coordinate2D> calcPath(@NonNull final Board board, @NonNull final Coordinate2D coordFrom, @NonNull final Coordinate2D coordTo, @NonNull final Deque<Coordinate2D> path) {
         logger.debug("Try coordTo find path coordFrom {}({}) coordTo {}({})", board.getField(coordFrom), coordFrom,
                      board.getField(coordTo),coordTo);
 
