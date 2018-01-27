@@ -20,36 +20,36 @@ public class KiPlayer extends Participant{
     private static final Logger logger = LoggerFactory.getLogger(KiPlayer.class);
 
     private final KI ki;
-    private int depth;
     private long timeConsumed;
     private Map<String, Move> moveMap;
     private MoveMaker moveMaker;
+    private int depth;
     private boolean decideDepthOnce;
-
-    public KiPlayer(Board board, UMLCoordToCoord2D converter,  Player player, KI ki, MoveMaker moveMaker) {
+    public KiPlayer(Board board, UMLCoordToCoord2D converter,  Player player, KI ki, MoveMaker moveMaker, int depth) {
         super( board, player, converter );
         this.ki = ki;
         this.moveMaker = moveMaker;
         this.ki.setCurrentPlayer(player.name());
         this.moveMap = new HashMap<>();
+        this.depth = depth;
         IOUtil ioUtil = new IOUtil();
         String input;
         do {
             input = ioUtil.read("Soll für " + getPlayer() + " immer mit der selben Suchtiefe gesucht werden? (Ja/Nein)").toLowerCase();
-            if (!(input.equals("ja") || input.equals("nein"))) {
-                ioUtil.ausgabe("Falsch Eingabe!");
+            if (!(input.startsWith("j") || input.startsWith("n"))) {
+                ioUtil.ausgabe("Falsche Eingabe!");
             }
         } while (!(input.equals("ja") || input.equals("nein")));
         decideDepthOnce = (input.equals("ja")) ? true : false;
+
         if (decideDepthOnce) {
-            depth = -1;
-            do {
+            while (depth == -1) {
                 try {
-                    depth = new IOUtil().readNumberBetween("Mit welcher Tiefe soll IMMER gesucht werden?", 1, 11);
+                    depth = ioUtil.readNumberBetween("Mit welcher Tiefe soll IMMER gesucht werden?", 1, 11);
                 } catch (NumberFormatException ex) {
                     ioUtil.ausgabe("Falsche Eingabe!");
                 }
-            } while (depth == -1);
+            }
         }
     }
     

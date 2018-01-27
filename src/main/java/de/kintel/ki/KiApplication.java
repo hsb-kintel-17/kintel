@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -37,7 +38,9 @@ import static de.kintel.ki.cli.RowRecord.toFieldRecords;
 @ComponentScan({"de.kintel"})
 public class KiApplication implements CommandLineRunner {
 
+
     private static CountDownLatch latch = new CountDownLatch(1); //needed to wait for the gui to start
+    private int depth;
     private EventBus eventBus; //eventbus to communicate with the gui
     private final KI ki1; //an ai
     private final KI ki2; // another ai
@@ -63,7 +66,7 @@ public class KiApplication implements CommandLineRunner {
      * @param tablePrinter to print the board in ascii
      */
     @Autowired
-    public KiApplication(Board board, UMLCoordToCoord2D umlCoordToCoord2D, MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("ki1") KI ki1, @Qualifier("ki2")KI ki2, EventBus eventBus, TablePrinter tablePrinter) {
+    public KiApplication(Board board, UMLCoordToCoord2D umlCoordToCoord2D, MoveClassifier moveClassifier, MoveMaker moveMaker, @Qualifier("ki1") KI ki1, @Qualifier("ki2") KI ki2, EventBus eventBus, TablePrinter tablePrinter, @Value("${depth}") int depth) {
         this.board = board;
         this.umlCoordToCoord2D = umlCoordToCoord2D;
         this.moveClassifier = moveClassifier;
@@ -72,6 +75,7 @@ public class KiApplication implements CommandLineRunner {
         this.ki2 = ki2;
         this.eventBus = eventBus;
         this.tablePrinter = tablePrinter;
+        this.depth = depth;
     }
 
     /**
@@ -102,7 +106,6 @@ public class KiApplication implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-        final int depth = 7;
 
         new Thread(() -> {
 		if (args.length > 0 && args[0].equals("run")) {
@@ -115,19 +118,19 @@ public class KiApplication implements CommandLineRunner {
                 // 4) weiß(ki) vs schwarz(hum)
                 // 5) schwarz(manual input) vs weiß(manual input)
                 case 1:
-                    player1 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki1, moveMaker);
-                    player2 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki2, moveMaker);
+                    player1 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki1, moveMaker, depth);
+                    player2 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki2, moveMaker, depth);
                     break;
                 case 2:
-                    player1 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki1, moveMaker);
+                    player1 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki1, moveMaker, depth);
                     player2 = new HumanPlayer(board, umlCoordToCoord2D, Player.WEISS, moveClassifier, moveMaker);
                     break;
                 case 3:
-                    player1 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki1, moveMaker);
-                    player2 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki2, moveMaker);
+                    player1 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki1, moveMaker, depth);
+                    player2 = currentPlayer = new KiPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, ki2, moveMaker, depth);
                     break;
                 case 4:
-                    player1 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki1, moveMaker);
+                    player1 = new KiPlayer(board, umlCoordToCoord2D, Player.WEISS, ki1, moveMaker, depth);
                     player2 = currentPlayer = new HumanPlayer(board, umlCoordToCoord2D, Player.SCHWARZ, moveClassifier, moveMaker);
                     break;
                 case 5:
