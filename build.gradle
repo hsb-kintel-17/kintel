@@ -3,7 +3,7 @@ buildscript {
         springBootVersion = '1.5.9.RELEASE'
     }
     repositories {
-        mavenCentral()
+        jcenter()
         maven { url 'https://jitpack.io' }
     }
     dependencies {
@@ -16,6 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'org.springframework.boot'
+apply from: rootProject.file('gradle/jmh.gradle')
 
 group = 'de.kintel'
 version = '0.0.1-SNAPSHOT'
