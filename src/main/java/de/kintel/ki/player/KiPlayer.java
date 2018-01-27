@@ -79,7 +79,8 @@ public class KiPlayer extends Participant{
         }
 
         timeConsumed += System.currentTimeMillis() - timeBefore;
-        logger.debug("Time consumed: {}s", getTimeConsumedInSeconds() );
+
+        logger.debug("Time consumed: {}.{}s", getTimeConsumedInSeconds(), timeConsumed % 1000 );
         return bestMove;
     }
 
