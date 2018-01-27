@@ -93,11 +93,11 @@ public class IOUtil {
      * @param max Maximum
      * @return zahl
      */
-    public double readNumberBetween( String beschreibung, int min, int max ) {
+    public int readNumberBetween( String beschreibung, int min, int max ) {
         boolean valid = false;
-        double input;
+        int input;
         do {
-            input = readNumber( beschreibung );
+            input = (int) readNumber(beschreibung);
             if( input < min ) {
                 ausgabe("Fehlerhafte Eingabe! Bitte mindestens " + min + " eingeben!");
             } else if( input > max ) {
@@ -139,7 +139,7 @@ public class IOUtil {
     
     public int readMainMenu() {
         printMainMenu("Spielmodus (schwarz beginnt immer): ");
-        return (int) readNumberBetween("", 1, 6);
+        return readNumberBetween("", 1, 6);
     }
     
     private void printMainMenu(String beschreibung) {

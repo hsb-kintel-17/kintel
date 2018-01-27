@@ -45,7 +45,7 @@ public class KiPlayer extends Participant{
             depth = -1;
             do {
                 try {
-                    depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll IMMER gesucht werden?"));
+                    depth = new IOUtil().readNumberBetween("Mit welcher Tiefe soll IMMER gesucht werden?", 1, 11);
                 } catch (NumberFormatException ex) {
                     ioUtil.ausgabe("Falsche Eingabe!");
                 }
@@ -61,7 +61,7 @@ public class KiPlayer extends Participant{
         ki.setCurrentPlayer(getPlayer().name());
 
         if(!decideDepthOnce){
-            depth = Integer.valueOf(new IOUtil().read("Mit welcher Tiefe soll für " + getPlayer() + " gesucht werden?"));
+            depth = new IOUtil().readNumberBetween( "Mit welcher Tiefe soll für " + getPlayer() + " gesucht werden?", 1, 11 );
         }
 
         long timeBefore = System.currentTimeMillis();
