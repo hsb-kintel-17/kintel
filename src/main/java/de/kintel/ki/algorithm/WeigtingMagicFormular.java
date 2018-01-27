@@ -32,15 +32,18 @@ public class WeigtingMagicFormular implements Weighting {
     public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
         Player opponentPlayer = (currentPlayer == Player.WEISS) ? Player.SCHWARZ : Player.WEISS;
 
-        int ownMoves = BoardUtils.getPossibleMoves(board, currentPlayer, moveClassifier).size();
+        //int ownMoves = BoardUtils.getPossibleMoves(board, currentPlayer, moveClassifier).size();
         int opponentMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier).size();
 
+        if (opponentMoves == 0) {
+            return 10000;
+        }
 
-        return ownMoves - 1.5 * opponentMoves;
+        return 100 - opponentMoves;
     }
 
     @Override
     public double maxEvaluateValue() {
-        return 4*10 + 2*3;
+        return 10000+1;
     }
 }

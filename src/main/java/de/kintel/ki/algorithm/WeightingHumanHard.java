@@ -57,6 +57,6 @@ public class WeightingHumanHard implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return 10000;
+        return 10000+1;
     }
 }
