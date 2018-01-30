@@ -16,6 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'org.springframework.boot'
+apply from: rootProject.file('gradle/codecov.gradle')
 
 group = 'de.kintel'
 version = '0.0.1-SNAPSHOT'
