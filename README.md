@@ -1,4 +1,5 @@
-# kintel
+# kintel [![Build Status](https://travis-ci.org/hsb-kintel-17/kintel.svg?branch=master)](https://travis-ci.org/hsb-kintel-17/kintel) [![codecov.io](https://codecov.io/github/hsb-kintel-17/kintel/coverage.svg?branch=master)](https://codecov.io/github/hsb-kintel-17/kintel?branch=master)
+
 ## TODO
 
 - [ ] gute Bewertungsfunktion finden
