@@ -5,7 +5,6 @@ import de.kintel.ki.algorithm.MoveClassifier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -68,16 +67,6 @@ public class Piece implements Serializable {
         }
 
         this.rank = rank;
-    }
-
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        stream.writeObject(owner);
-        stream.writeObject(rank);
-    }
-
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        owner = (Player) stream.readObject();
-        rank = (Rank) stream.readObject();
     }
 
     @Override

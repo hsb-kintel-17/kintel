@@ -6,9 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,32 +80,6 @@ public class Board implements Serializable {
      */
     public Field getField(@Nonnull final Coordinate2D coordinate2D) {
         return getField(coordinate2D.getX(), coordinate2D.getY());
-    }
-
-    /**
-     * Serializes object to stream.
-     * @param stream the stream to write to
-     * @throws IOException if I/O errors occur while writing to the underlying
-     *          stream
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeInt(height);
-        stream.writeInt(width);
-        stream.writeObject(fields);
-    }
-
-    /**
-     * Deserialize object from stream.
-     * @param stream the stream to read from
-     * @throws IOException if I/O errors occur while writing to the underlying
-     *          stream
-     * @throws ClassNotFoundException Class of a serialized object cannot be
-     *          found.
-     */
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        height = stream.readInt();
-        width = stream.readInt();
-        fields = (Field[][]) stream.readObject();
     }
 
     /**

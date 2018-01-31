@@ -3,9 +3,6 @@ package de.kintel.ki.model;
 import org.fusesource.jansi.Ansi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -106,16 +103,6 @@ public class Field implements Serializable {
      */
     public boolean isForbidden() {
         return isForbidden;
-    }
-
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeBoolean(isForbidden);
-        stream.writeObject(pieces);
-    }
-
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        isForbidden = stream.readBoolean();
-        pieces = (Deque<Piece>) stream.readObject();
     }
 
     /**

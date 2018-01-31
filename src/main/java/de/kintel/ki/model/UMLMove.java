@@ -6,9 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,31 +64,6 @@ public class UMLMove extends Move implements Serializable {
     @Override
     public Player getCurrentPlayer() {
         return currentPlayer;
-    }
-
-
-    /**
-     * Write the object to an {@link ObjectOutputStream}. This is for serialization
-     * @param stream the stream to write the object to.
-     * @throws IOException if serialization failed.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeObject(this.from);
-        stream.writeObject(this.to);
-        stream.writeObject(this.currentPlayer);
-    }
-
-    /**
-     * Deserialize the object from a given {@link ObjectInputStream}
-     *
-     * @param stream the stream to write the object to.
-     * @throws IOException if deserialization failed.
-     * @throws ClassNotFoundException if a class of an object within the stream cannot be found.
-     */
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        this.from = (Coordinate2D) stream.readObject();
-        this.to = (Coordinate2D) stream.readObject();
-        this.currentPlayer = (Player) stream.readObject();
     }
 
     @Override

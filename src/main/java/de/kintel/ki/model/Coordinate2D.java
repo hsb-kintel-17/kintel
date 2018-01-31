@@ -3,7 +3,6 @@ package de.kintel.ki.model;
 import com.google.common.base.Objects;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -72,30 +71,6 @@ public class Coordinate2D implements Serializable {
           .append(y);
         sb.append('}');
         return sb.toString();
-    }
-
-    /**
-     * Serializes object to stream.
-     * @param stream the stream to write to
-     * @throws IOException if I/O errors occur while writing to the underlying
-     *          stream
-     */
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        stream.writeInt(x);
-        stream.writeInt(y);
-    }
-
-    /**
-     * Deserialize object from stream.
-     * @param stream the stream to read from
-     * @throws IOException if I/O errors occur while writing to the underlying
-     *          stream
-     * @throws ClassNotFoundException Class of a serialized object cannot be
-     *          found.
-     */
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        x = stream.readInt();
-        y = stream.readInt();
     }
 
     public int getX() {
