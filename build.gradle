@@ -19,7 +19,7 @@ apply plugin: 'org.springframework.boot'
 apply from: rootProject.file('gradle/codecov.gradle')
 
 group = 'de.kintel'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = 1.8
 
 repositories {
