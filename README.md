@@ -1,5 +1,5 @@
 # kintel [![Build Status](https://travis-ci.org/hsb-kintel-17/kintel.svg?branch=master)](https://travis-ci.org/hsb-kintel-17/kintel) [![codecov.io](https://codecov.io/github/hsb-kintel-17/kintel/coverage.svg?branch=master)](https://codecov.io/github/hsb-kintel-17/kintel?branch=master)
-##CLI
+## CLI
 There is a basic CLI version of the game that prints the board in colorized ansi chars.
 [![asciicast](https://asciinema.org/a/160294.png)](https://asciinema.org/a/160294)
 
