@@ -6,6 +6,5 @@ package de.kintel.ki.cli;
 public interface Record
 {
     String getValue(String column);
-
     String getColorizedValue(String column);
 }
