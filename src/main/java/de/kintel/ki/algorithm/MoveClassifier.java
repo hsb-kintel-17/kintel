@@ -37,7 +37,7 @@ public class MoveClassifier {
     }
 
     /**
-     * Classify the move and set the forwardClassification .
+     * Classify the move and set the forwardClassification as well as checking if the move is a valid move.
      *
      */
     public void classify(Move move, Board board) {

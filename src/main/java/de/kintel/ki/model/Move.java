@@ -9,6 +9,10 @@ public abstract class Move extends de.kintel.ki.libs.minimax4j.Move {
     public abstract Coordinate2D getSourceCoordinate();
     public abstract Coordinate2D getTargetCoordinate();
     public abstract Player getCurrentPlayer();
+    /**
+     * Returns, weather the {@link Move} is a forward move for the player, that executes the move.
+     * @return true, if the direction of the move is forward
+     */
     public abstract boolean isForward();
 
     public abstract Optional<Rank> getForwardOpponentRank();

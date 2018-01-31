@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
+/**
+ * A component, that will catch all the {@link DeadEvent}s.
+ * DeadEvents are generated, if an event is posted on the {@link EventBus}, that has no consumer.
+ *
+ */
 public class DeadEventProcessor {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DeadEventProcessor.class);

@@ -21,7 +21,7 @@ public class PathFinder {
 
     /**
      * Recursive algorithm coordTo traverse fields between two points on the board and add them coordTo a path.
-     * The Precondition is that the move is valid {@link de.kintel.ki.ruleset.RulesChecker#isValidMove(Move)}.
+     * The Precondition is that the move is valid {@link de.kintel.ki.ruleset.RulesChecker#isValidMove(Move, Board)}}.
      *
      * @param board The board coordTo refer
      * @param coordFrom The field coordTo start

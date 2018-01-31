@@ -23,17 +23,26 @@ public class RowRecord implements Record {
 
     private final List<Field> fields;
 
+    /**
+     * Constructor
+     * @param fields List of fields in the row
+     */
     public RowRecord(List<Field> fields) {
         Preconditions.checkArgument(fields.size() == 9, "A row must consist of 9 elements but only %s provided", fields.size());
         this.fields = fields;
     }
 
+    /**
+     * Get the value of a column within this particular row
+     * @param column Index of column
+     * @return
+     */
     @Override
     public String getValue(String column) {
         if(NumberUtils.toInt(column) == 0) {
             return columnToLabel(column);
         }
-        int index = column.charAt(0) - 49;
+        int index = column.charAt(0) - 49; // 49 is the ASCII offset
         final String toString = fields.get(index).toString();
         return toString;
     }
@@ -47,6 +56,11 @@ public class RowRecord implements Record {
         return colorize(columnToLabel(column), Color.CYAN);
     }
 
+    /**
+     * Get the color of the Head-piece of a column.
+     * @param column Column index
+     * @return
+     */
     @Override
     public String getColorizedValue(String column) {
         if(NumberUtils.toInt(column) == 0) {
@@ -85,6 +99,11 @@ public class RowRecord implements Record {
         return sb.toString();
     }
 
+    /**
+     * Generate a List of {@link Record} out of a given Board.
+     * @param board Board to generate the list of Records from
+     * @return
+     */
     public static List<Record> toFieldRecords(Board board) {
         List<Record> collector = Lists.newArrayList();
         for (int i = 0; i < board.getFields().length; i++) {

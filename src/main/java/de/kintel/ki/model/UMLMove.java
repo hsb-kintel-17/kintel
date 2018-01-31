@@ -16,19 +16,18 @@ import java.util.UUID;
 
 
 /**
- * Storage
  * Created by kintel on 19.12.2017.
  */
-public class UMLMove extends Move  implements Serializable {
+public class UMLMove extends Move implements Serializable {
 
     public static Logger logger = LoggerFactory.getLogger(UMLMove.class);
-    private UUID uuid;
-    private Coordinate2D from;
-    private Coordinate2D to;
-    private Player currentPlayer;
-    private MoveClassifier.MoveType forwardClassification;
-    private Optional<Rank> forwardOpponentRank;
-    private Rank forwardSourceRank;
+    private UUID uuid; //to make a move unique (necessairy for the hash)
+    private Coordinate2D from; // coordinate of the source field
+    private Coordinate2D to;// coordinate of the target/destination field
+    private Player currentPlayer; //the player, that executes this move
+    private MoveClassifier.MoveType forwardClassification; //classification of the move. needed for undoing the move.
+    private Optional<Rank> forwardOpponentRank; //save the rank of the opponent piece, if the move was a capture (needed for undoing)
+    private Rank forwardSourceRank; //save the rank of the player piece (needed for undoing)
 
     public UMLMove(@Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
         uuid = UUID.randomUUID();
@@ -37,6 +36,10 @@ public class UMLMove extends Move  implements Serializable {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Returns, weather the {@link UMLMove} is a forward move for the {@link UMLMove#currentPlayer}.
+     * @return true, if the direction of the move is forward
+     */
     public boolean isForward() {
         boolean isForward = getCurrentPlayer().equals(Player.SCHWARZ) ? getSourceCoordinate().getX() < getTargetCoordinate().getX() : getSourceCoordinate().getX() > getTargetCoordinate().getX();
         return isForward;
@@ -67,12 +70,24 @@ public class UMLMove extends Move  implements Serializable {
     }
 
 
+    /**
+     * Write the object to an {@link ObjectOutputStream}. This is for serialization
+     * @param stream the stream to write the object to.
+     * @throws IOException if serialization failed.
+     */
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.writeObject(this.from);
         stream.writeObject(this.to);
         stream.writeObject(this.currentPlayer);
     }
 
+    /**
+     * Deserialize the object from a given {@link ObjectInputStream}
+     *
+     * @param stream the stream to write the object to.
+     * @throws IOException if deserialization failed.
+     * @throws ClassNotFoundException if a class of an object within the stream cannot be found.
+     */
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         this.from = (Coordinate2D) stream.readObject();
         this.to = (Coordinate2D) stream.readObject();

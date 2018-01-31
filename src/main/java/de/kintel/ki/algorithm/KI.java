@@ -137,6 +137,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
         togglePlayer();
     }
 
+
     private void togglePlayer() {
         currentPlayer = currentPlayer.equals(Player.SCHWARZ) ? Player.WEISS : Player.SCHWARZ;
     }
@@ -176,10 +177,6 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         board = (Board) stream.readObject();
         currentPlayer = (Player) stream.readObject();
-    }
-
-    public KI deepCopy() {
-        return SerializationUtils.roundtrip(this);
     }
 
     @Override

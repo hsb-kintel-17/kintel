@@ -64,6 +64,12 @@ public class MoveMakerImpl implements MoveMaker {
         }
     }
 
+    /**
+     * Either execute or undo a move on a given board.
+     * @param move move to execute
+     * @param board board, that the move will be executed on
+     * @param undo if true, the given move will be executed in a reverse manner.
+     */
     private void doMove(Move move, Board board, boolean undo) {
         final Coordinate2D coordFrom = move.getSourceCoordinate();
         final Coordinate2D coordTo = move.getTargetCoordinate();
@@ -118,6 +124,11 @@ public class MoveMakerImpl implements MoveMaker {
         logger.debug("After {} move {}: {}", ((undo)? "undo":"do"),move.getUuid(), board.toString());
     }
 
+    /**
+     * Transport all pieces from one field to another while keeping the pieces in the same order.
+     * @param fieldFrom The source field
+     * @param fieldTo The destination field
+     */
     private void transportPieces(Field fieldFrom, Field fieldTo) {
         final Iterator<Piece> it = fieldFrom.getPieces().descendingIterator();
         while (it.hasNext()) {

@@ -31,6 +31,11 @@ public class Piece implements Serializable {
         return rank;
     }
 
+    /**
+     * Promote the piece according to its last move
+     * The precondition is, that the moves target location is the opponents 'base'.
+     * @param moveType
+     */
     public void promote(MoveClassifier.MoveType moveType) {
         if( moveType == MoveClassifier.MoveType.MOVE ) {
             if (rank == Rank.normal) {
@@ -41,6 +46,9 @@ public class Piece implements Serializable {
         }
     }
 
+    /**
+     * Set the rank back to {@link Rank#normal}
+     */
     public void degrade() {
         rank = Rank.normal;
     }

@@ -41,7 +41,13 @@ public class WeigtingMagicFormular implements Weighting {
 
         return 100 - opponentMoves;
     }
-
+    /**
+     * The absolute maximal value for the evaluate function.
+     * This value must not be equal to a possible return value of the evaluation function.
+     *
+     * @return The <strong>non inclusive</strong> maximal value
+     * @see #evaluate(Board, Player)
+     */
     @Override
     public double maxEvaluateValue() {
         return 10000+1;
