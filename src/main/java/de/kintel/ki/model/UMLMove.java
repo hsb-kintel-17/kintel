@@ -18,7 +18,7 @@ import java.util.UUID;
 public class UMLMove extends Move implements Serializable {
 
     public static Logger logger = LoggerFactory.getLogger(UMLMove.class);
-    private UUID uuid; //to make a move unique (necessairy for the hash)
+    private UUID uuid; //to make a move unique (necessary for the hash)
     private Coordinate2D from; // coordinate of the source field
     private Coordinate2D to;// coordinate of the target/destination field
     private Player currentPlayer; //the player, that executes this move

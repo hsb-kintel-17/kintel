@@ -65,7 +65,7 @@ public class WeightingHeightAndRank implements Weighting {
                         val = 20;
                         break;
                 }
-                ranks += val * Weight.WIN.getValue();
+                ranks += val;
             }
         }
 

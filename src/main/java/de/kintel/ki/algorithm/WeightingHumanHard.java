@@ -3,7 +3,6 @@ package de.kintel.ki.algorithm;
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Player;
-import de.kintel.ki.model.Weight;
 import de.kintel.ki.util.BoardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,8 +41,7 @@ public class WeightingHumanHard implements Weighting {
 
         double heights = fieldsOccupiedBy.stream()
                 .map(board::getField)
-                .mapToDouble(f -> f.getPieces().size())
-                .map(d -> d * Weight.WIN.getValue()).sum();
+                .mapToDouble(f -> f.getPieces().size()).sum();
 
         return heights;
     }
