@@ -4,6 +4,8 @@ import org.fusesource.jansi.Ansi;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -16,7 +18,15 @@ import java.util.Optional;
 public class Field implements Serializable {
 
     private static final long serialVersionUID = -8508348237650305754L;
+
+    /**
+     * Whether the field is forbidden and no piece can be placed on it
+     */
     private boolean isForbidden;
+
+    /**
+     * a collection of pieces on the field
+     */
     private Deque<Piece> pieces = new LinkedList<>();
 
     public Field(boolean isForbidden) {
@@ -98,14 +108,26 @@ public class Field implements Serializable {
         return isForbidden;
     }
 
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
+    private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.writeBoolean(isForbidden);
         stream.writeObject(pieces);
     }
 
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         isForbidden = stream.readBoolean();
         pieces = (Deque<Piece>) stream.readObject();
+    }
+
+    /**
+     * Get rank of the current field.
+     * @return the color of the rank
+     */
+    public Ansi.Color getRankColor() {
+        final Optional<Piece> head = peekHead();
+        if( head.isPresent() ) {
+            return head.get().getRank().getRankColor();
+        }
+        return Ansi.Color.DEFAULT;
     }
 
     @Override
@@ -136,19 +158,16 @@ public class Field implements Serializable {
         return sb.toString();
     }
 
-    public Ansi.Color getRankColor() {
-        final Optional<Piece> head = peekHead();
-        if( head.isPresent() ) {
-            return head.get().getRank().getRankColor();
-        }
-        return Ansi.Color.DEFAULT;
-    }
-
+    /**
+     * Generates a String that is unique for the current state (pieces, colors and their ranks) on the board.
+     * Sequential calls on the same state produce the same string
+     * @return a String that is unique for the current state (pieces, colors and their ranks)
+     */
     public String toStringWithRanks() {
         final StringBuilder sb = new StringBuilder();
 
         if( isForbidden ) {
-            sb.append( "-");
+            sb.append("-");
         }
 
         pieces.stream().limit(1).map(p -> p.toString()+ "<" + p.getRank() + ">").forEach(sb::append);

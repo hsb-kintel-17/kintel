@@ -52,7 +52,10 @@ public class KiPlayer extends Participant{
             }
         }
     }
-    
+
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Move getNextMove() {
         // erstelle Kopie des boards, auf dem die KI machen kann, was sie will
@@ -84,6 +87,9 @@ public class KiPlayer extends Participant{
         return bestMove;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void makeMove(Move move) {
         logger.debug("Found best move to execute now: {}", move);
@@ -91,7 +97,7 @@ public class KiPlayer extends Participant{
         moveMaker.makeMove(move, getBoard());
     }
 
-    public long getTimeConsumedInSeconds() {
+    private long getTimeConsumedInSeconds() {
         return TimeUnit.MILLISECONDS.toSeconds(timeConsumed);
     }
 

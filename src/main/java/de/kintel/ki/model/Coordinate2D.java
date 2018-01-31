@@ -11,6 +11,9 @@ public class Coordinate2D implements Serializable {
 
     private static final long serialVersionUID = -5775552204030261616L;
 
+    /**
+     * Comparator to compare by distance.
+     */
     class DistanceToOrder implements Comparator<Coordinate2D> {
         @Override
         public int compare(@Nonnull final Coordinate2D e1, @Nonnull final Coordinate2D e2) {
@@ -48,14 +51,12 @@ public class Coordinate2D implements Serializable {
         return dx*dx + dy*dy;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
+    /**
+     * Returns the coordinate between a and b.
+     * @param a coordinate a
+     * @param b coordinate b
+     * @return the coordinate between a and b.
+     */
     public static Coordinate2D between(Coordinate2D a, Coordinate2D b) {
         int x = (a.getX() + b.getX()) / 2;
         int y = (a.getY() + b.getY()) / 2;
@@ -73,14 +74,36 @@ public class Coordinate2D implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * Serializes object to stream.
+     * @param stream the stream to write to
+     * @throws IOException if I/O errors occur while writing to the underlying
+     *          stream
+     */
     private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
         stream.writeInt(x);
         stream.writeInt(y);
     }
 
+    /**
+     * Deserialize object from stream.
+     * @param stream the stream to read from
+     * @throws IOException if I/O errors occur while writing to the underlying
+     *          stream
+     * @throws ClassNotFoundException Class of a serialized object cannot be
+     *          found.
+     */
     private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         x = stream.readInt();
         y = stream.readInt();
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override

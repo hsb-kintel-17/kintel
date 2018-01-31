@@ -41,7 +41,16 @@ public class IOUtil {
         }
         return input;
     }
-    
+
+    /**
+     * Erstellt am: 03.11.2014
+     * Erstellt von: czoeller, atrogisch
+     * Verändert am:
+     * Verändert von:
+     * Writes description and reads in a line from console.
+     * @param beschreibung beschreibung des einzulesenden Wertes
+     * @return den eingelesenen Wert
+     */
     public String read(String beschreibung) {
         ausgabe(beschreibung);
         return read();

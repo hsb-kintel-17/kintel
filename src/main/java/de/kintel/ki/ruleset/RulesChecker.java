@@ -20,6 +20,9 @@ public class RulesChecker implements IRulesChecker {
         this.rules = rules;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean isValidMove(@Nonnull final Move move, Board board) {
         for (IRule r : rules) {

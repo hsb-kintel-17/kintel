@@ -26,6 +26,9 @@ public class HumanPlayer extends Participant {
         this.moveMaker = moveMaker;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Move getNextMove() {
         Move move = askUserForMoveInput();
@@ -50,6 +53,10 @@ public class HumanPlayer extends Participant {
         return move;
     }
 
+    /**
+     * Asks user for the next move to make.
+     * @return the users move input
+     */
     private Move askUserForMoveInput() {
         Scanner s = new Scanner(System.in, "UTF-8");
         Move move = null;
@@ -74,6 +81,9 @@ public class HumanPlayer extends Participant {
         return move;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void makeMove(Move move) {
         moveMaker.makeMove(move, getBoard());

@@ -17,7 +17,17 @@ public abstract class Participant {
         this.converter = converter;
     }
 
+    /**
+     * Instructs player to deliver next move.
+     * @return the move to make
+     */
     public abstract Move getNextMove();
+
+    /**
+     * Makes the move.
+     * @param move the move to make
+     */
+    public abstract void makeMove(Move move);
 
     public Player getPlayer() {
         return this.player;
@@ -26,8 +36,6 @@ public abstract class Participant {
     public Board getBoard() {
         return board;
     }
-
-    public abstract void makeMove(Move move);
 
     public UMLCoordToCoord2D getConverter() {
         return converter;
