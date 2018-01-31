@@ -6,12 +6,12 @@
 
 package de.kintel.ki.algorithm;
 
-import de.kintel.ki.libs.minimax4j.impl.ParallelNegamax;
+
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.util.BoardUtils;
-import org.apache.commons.lang3.SerializationUtils;
+import fr.avianey.minimax4j.impl.ParallelNegamax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
