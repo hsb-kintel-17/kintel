@@ -4,15 +4,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Field;
-import de.kintel.ki.model.Piece;
-import de.kintel.ki.model.Rank;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.fusesource.jansi.Ansi.Color;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static de.kintel.ki.cli.Ansi.colorize;
 
@@ -68,27 +65,7 @@ public class RowRecord implements Record {
         }
         final StringBuilder sb = new StringBuilder();
         int index = column.charAt(0) - 49;
-        Color color = Color.CYAN;
-        final Optional<Piece> headOpt = fields.get(index).peekHead();
-        if( headOpt.isPresent() ) {
-            Rank rank = headOpt.get().getRank();
-            switch (rank) {
-                case gelb:
-                    color = Color.YELLOW;
-                    break;
-                case gruen:
-                    color = Color.GREEN;
-                    break;
-                case rot:
-                    color = Color.RED;
-                    break;
-                case magenta:
-                    color = Color.MAGENTA;
-                    break;
-                default:
-                    color = Color.DEFAULT;
-            }
-        }
+        Color color = fields.get(index).getRankColor();
 
         String value = getValue(column);
         final int posFirstPiece = StringUtils.indexOfAny(value, 'S', 'W');
