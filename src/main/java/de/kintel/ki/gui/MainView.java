@@ -6,98 +6,141 @@
 
 package de.kintel.ki.gui;
 
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.GuiEventType;
-import de.kintel.ki.event.PossibleMovesEvent;
 import de.kintel.ki.gui.util.Arrow;
-import de.kintel.ki.model.*;
+import de.kintel.ki.model.Coordinate2D;
+import de.kintel.ki.model.Field;
+import de.kintel.ki.model.Move;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectViewModel;
 import eu.lestard.grid.Cell;
-import eu.lestard.grid.GridModel;
 import eu.lestard.grid.GridView;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.fusesource.jansi.Ansi;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 @Scope("singleton")
-public class MainView implements FxmlView<MainViewModel> {
+public class MainView implements FxmlView<MainViewModel>, Initializable {
+
+    @InjectViewModel
+    MainViewModel viewModel;
 
     @FXML
-    private AnchorPane root;
+    public ProgressIndicator progressIndicator;
+    @FXML
+    private BorderPane root;
     @FXML
     private StackPane stackPane;
     @FXML
     private GridView<Field> gridView;
     @FXML
-    private Group groupPossibleMoves;
+    private Pane panePossibleMoves;
     @FXML
-    private Group groupBestMove;
+    private Pane paneBestMove;
     @FXML
     private Label winLabel;
 
-    private GridModel<Field> gridModel;
+    private Tooltip tooltip;
+    /**
+     * Called to initialize a controller after its root element has been
+     * completely processed.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  <tt>null</tt> if the location is not known.
+     * @param resources The resources used to localize the root object, or <tt>null</tt> if
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        tooltip = new Tooltip();
 
-    @Autowired
-    private EventBus eventBus;
+        progressIndicator.progressProperty().bind(viewModel.progressProperty());
+        gridView.setGridModel(viewModel.getGridModel());
+        gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : getRankAwareLabel(cellField));
 
-    @Value("${board.width}")
-    private int width;
-    @Value("${board.height}")
-    private int height;
-    private Player lastPlayer;
-    private Board board;
+        winLabel.setId("winLabel");
+        winLabel.visibleProperty().bind(viewModel.winnerProperty().isNotNull());
+        winLabel.textProperty().bind(
+                Bindings.when(
+                        viewModel.winnerProperty().isEqualTo("").or(viewModel.winnerProperty().isNull()))
+                        .then("Tie")
+                        .otherwise(Bindings.concat("Winner is ", viewModel.winnerProperty())));
 
-    public void initialize() {
-        eventBus.register(this);
-        gridModel = new GridModel<>();
+        gridView.getGridModel().cells().stream().map(c -> gridView.getCellPane(c)).forEach( cellPane -> {
+            cellPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    // popup tooltip on the right, you can adjust these values for different positions
+                    tooltip.show( cellPane.getScene().getWindow(), cellPane.getLayoutX(), cellPane.getLayoutY());
+                } else {
+                    tooltip.hide();
+                }
+            });
+        });
 
-        gridModel.setDefaultState( new Field(true) );
-        gridModel.setNumberOfColumns(width);
-        gridModel.setNumberOfRows(height);
+        gridView.cellBorderColorProperty().set(Color.DARKGRAY);
+        gridView.cellBorderWidthProperty().set(0.5);
+        // Color for forbidden fields
+        gridView.addColorMapping(new Field(true), Color.web("f4f3f3"));
 
-        gridView.setGridModel(gridModel);
+        gridView.setGridModel(viewModel.getGridModel());
         gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : getRankAwareLabel(cellField));
         gridView.cellBorderColorProperty().set(Color.DARKGRAY);
         gridView.cellBorderWidthProperty().set(0.5);
         // Color for forbidden fields
         gridView.addColorMapping(new Field(true), Color.web("A4A4A4"));
+        gridView.getGridModel().cells().forEach(c -> {
 
-        gridModel.getCells().forEach(c -> {
-            final Tooltip t = new Tooltip("" + (char)(height-c.getRow()+'a' - 1) + (c.getColumn() + 1 ));
             Pane cellPane = gridView.getCellPane(c);
             cellPane.setOnMouseEntered(event -> {
-                Point2D p = cellPane.localToScreen(cellPane.getLayoutBounds().getMaxX(), cellPane.getLayoutBounds().getMaxY()); //I position the tooltip at bottom right of the node (see below for explanation)
-                t.show(cellPane, p.getX(), p.getY());
+                tooltip.setText("" + (char) ( viewModel.getGridModel().getNumberOfRows() - c.getRow() +'a' - 1) + (c.getColumn() + 1));
+                Point2D p = cellPane.localToScreen(cellPane.getLayoutBounds().getMaxX(), cellPane.getLayoutBounds().getMaxY()); //I'm position the tooltip at bottom right of the node (see below for explanation)
+                tooltip.show(cellPane, p.getX(), p.getY());
             });
-            cellPane.setOnMouseExited(e -> t.hide());
+            cellPane.setOnMouseExited(e -> tooltip.hide());
         });
 
-        AnchorPane.setBottomAnchor(stackPane, 0.0);
-        AnchorPane.setTopAnchor(stackPane,0.0);
-        AnchorPane.setLeftAnchor(stackPane,0.0);
-        AnchorPane.setRightAnchor(stackPane,0.0);
+        viewModel.possibleMovesProperty().addListener((InvalidationListener) observable -> updateArrows(GuiEventType.POSSIBLE_MOVES));
+        viewModel.bestMoveProperty().addListener(observable -> updateArrows(GuiEventType.BEST_MOVE));
+    }
+
+    private void updateArrows(GuiEventType id) {
+        Platform.runLater(() -> {
+            switch (id) {
+                case BEST_MOVE:
+                    paneBestMove.getChildren().clear();
+                    final Move bestMove = viewModel.bestMoveProperty().get();
+                    drawArrow(paneBestMove, Color.RED, bestMove.getSourceCoordinate(), bestMove.getTargetCoordinate());
+                    break;
+                case POSSIBLE_MOVES:
+                    panePossibleMoves.getChildren().clear();
+                    final List<Move> moves = new ArrayList<>(viewModel.possibleMovesProperty());
+                    moves.forEach( move -> {
+                        drawArrow(panePossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
+                    });
+                    break;
+            }
+        });
+
     }
 
     private Node getRankAwareLabel(Cell<Field> cellField) {
@@ -124,76 +167,34 @@ public class MainView implements FxmlView<MainViewModel> {
         return hBox;
     }
 
-
-    private Point2D locate(Coordinate2D coordinate) {
-        final Pane cellPane = gridView.getCellPane(gridModel.getCell(coordinate.getY(), coordinate.getX()));
-        final Bounds boundsInParent = cellPane.localToScene(cellPane.getLayoutBounds());
-        final Point2D point2D = new Point2D(boundsInParent.getMaxX(), boundsInParent.getMaxY()).midpoint(boundsInParent.getMinX(), boundsInParent.getMinY());
-        return point2D;
-    }
-
-    private void updateFields(GuiEventType id, List<Move> moves) {
-        //set new fields first to trigger change event of gridView
-        gridModel.getCells().forEach(c -> c.changeState( new Field(true) ));
-        gridModel.getCells().forEach(c -> c.changeState(board.getField(c.getRow(), c.getColumn())));
-
-        switch (id){
-            case BEST_MOVE:
-                groupBestMove.getChildren().clear();
-                drawArrow(groupBestMove, Color.RED, moves.get(0).getSourceCoordinate(), moves.get(0).getTargetCoordinate());
-                break;
-            case POSSIBLE_MOVES:
-                groupPossibleMoves.getChildren().clear();
-                moves.forEach( move -> {
-                    drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
-
-                });
-                break;
-        }
-
-    }
-
-    @Subscribe
-    public void newPossibleMoves(PossibleMovesEvent e) {
-        board = e.getBoard();
-        Platform.runLater(() -> {
-            updateFields(e.id, e.getPossibleMoves());
-            if( e.getPossibleMoves().isEmpty()) {
-                winLabel.setId("winLabel");
-                winLabel.setVisible(true);
-                winLabel.setText("Winner is " + lastPlayer);
-            }
-        });
-
-    }
-
-    @Subscribe
-    public void newBestMove(BestMoveEvent e) {
-        // The board should be set by newPossibleMoves event but eventbus is asynchron so
-        // maybe newBestMove is processed before newPossibleMoves
-        if( null == board ) {
-            return;
-        }
-        final Move bestMove = e.getBestMove();
-        Platform.runLater(() -> {
-            if(bestMove != null){
-                lastPlayer = bestMove.getCurrentPlayer();
-                updateFields(e.id, Lists.newArrayList(bestMove));
-            }
-        });
-    }
-
-    private void drawArrow(Group group, Color color, Coordinate2D from, Coordinate2D to) {
+    private void drawArrow(Pane pane, Color color, Coordinate2D from, Coordinate2D to) {
         int width_offset = 25;
         final Arrow arrow = new Arrow();
+        final Pane cellPane = gridView.getCellPane(gridView.getGridModel().getCell(from.getY(), from.getX() ));
+        final Pane cellPane2 = gridView.getCellPane(gridView.getGridModel().getCell(to.getY() , to.getX()));
+        cellPane.setBackground(new Background(new BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        cellPane2.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        final Point2D from2d = locate(from);
-        final Point2D to2d = locate(to);
+        Bounds n1InCommonAncestor = getRelativeBounds(cellPane, stackPane);
+        Bounds n2InCommonAncestor = getRelativeBounds(cellPane2, stackPane);
+        Point2D n1Center = getCenter(n1InCommonAncestor);
+        Point2D n2Center = getCenter(n2InCommonAncestor);
 
-        arrow.setStart(from2d.getX(), from2d.getY() + width_offset);
-        arrow.setEnd(to2d.getX(), to2d.getY() + width_offset);
+        pane.minHeight(500);
+        pane.minWidth(500);
+        arrow.setStart(n1Center.getX(), n1Center.getY() + width_offset);
+        arrow.setEnd(n2Center.getX(), n2Center.getY() + width_offset);
         arrow.draw(color);
-
-        group.getChildren().add(arrow);
+        pane.getChildren().add(arrow);
     }
+
+    private Bounds getRelativeBounds(Node node, Node relativeTo) {
+        Bounds nodeBoundsInScene = node.localToScene(node.getBoundsInLocal());
+        return relativeTo.sceneToLocal(nodeBoundsInScene);
+    }
+
+    private Point2D getCenter(Bounds b) {
+        return new Point2D(b.getMinX() + b.getWidth() / 2, b.getMinY() + b.getHeight() / 2);
+    }
+
 }

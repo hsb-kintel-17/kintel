@@ -37,6 +37,7 @@ public class KiFxApplication extends AbstractJavaFxApplicationSupport {
 
         Scene scene = new Scene(FluentViewLoader.fxmlView(MainView.class).load().getView());
         scene.setFill(Color.TRANSPARENT);
+        scene.getRoot().getStylesheets().add("de/kintel/ki/gui/MainView.css");
         primaryStage.setScene(scene);
         primaryStage.show();
 

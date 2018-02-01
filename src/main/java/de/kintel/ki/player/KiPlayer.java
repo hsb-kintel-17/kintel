@@ -103,7 +103,7 @@ public class KiPlayer extends Participant{
         moveMaker.makeMove(move, getBoard());
     }
 
-    private long getTimeConsumedInSeconds() {
+    public long getTimeConsumedInSeconds() {
         return TimeUnit.MILLISECONDS.toSeconds(timeConsumed);
     }
 
