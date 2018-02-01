@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.ruleset;
 
 import de.kintel.ki.model.Board;
@@ -20,6 +26,9 @@ public class RulesChecker implements IRulesChecker {
         this.rules = rules;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean isValidMove(@Nonnull final Move move, Board board) {
         for (IRule r : rules) {

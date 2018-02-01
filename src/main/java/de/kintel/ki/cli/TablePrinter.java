@@ -24,6 +24,7 @@ import static java.lang.Math.max;
 
 /**
  * Created by kintel on 21.01.2018.
+ * This class is used to print the board on the CLI/Terminal.
  */
 public class TablePrinter
 {
@@ -33,11 +34,20 @@ public class TablePrinter
     private final Record headerRecord;
     private final String columnSeparator;
 
+    /**
+     * Convenient constructor for a Tableprinter. uses a whitespace to separate the columns.
+     * @param columns The names of each column, separated by a whitespace
+     */
     public TablePrinter(String... columns)
     {
         this("  ", ImmutableList.copyOf(columns));
     }
 
+    /**
+     * Constructor
+     * @param columnSeparator The character, that will seperate the colums of th table
+     * @param columns The names of each column, separated by columnSeparator
+     */
     public TablePrinter(String columnSeparator, List<String> columns)
     {
         Preconditions.checkNotNull(columnSeparator, "columnSeparator is null");
@@ -52,6 +62,10 @@ public class TablePrinter
         this.headerRecord = builder.build();
     }
 
+    /**
+     * Print a list of records  (which form a table, obviously)
+     * @param records The records of the table.
+     */
     public void print(List<Record> records)
     {
         StringBuilder sb = new StringBuilder("\n");
@@ -78,7 +92,7 @@ public class TablePrinter
             for (final Record record : Iterables.concat(ImmutableList.of(headerRecord), records)) {
                 String line = "";
                 if( record == headerRecord ) {
-                    line = String.format("Farben als Referenz: %s %s %s %s %n", colorize("Rot", Color.RED), colorize("Gruen", Color.GREEN), colorize("Gelb", Color.YELLOW), colorize("Magenta", Color.MAGENTA));
+                    line = String.format("Farben als Referenz: W: %s %s S: %s %s %n", colorize("Gruen", Color.GREEN), colorize("Gelb", Color.YELLOW), colorize("Rot", Color.RED), colorize("Magenta", Color.MAGENTA));
                 }
                 line += Joiner.on(columnSeparator).join(transform(columns.entrySet(), columnFormatter(record)));
                 sb.append(line.replaceAll("\\s*$", ""));
@@ -107,6 +121,11 @@ public class TablePrinter
         logger.info(sb.toString());
     }
 
+    /**
+     * Format a column to maintain an even width of each cell in the table.
+     * @param record
+     * @return
+     */
     private Function<Entry<String, Integer>, String> columnFormatter(final Record record)
     {
         return entry -> {
@@ -119,6 +138,11 @@ public class TablePrinter
         };
     }
 
+    /**
+     * Method to generate spaces.
+     * @param count the number of whitespaces to generate.
+     * @return
+     */
     private static String spaces(int count)
     {
         StringBuilder result = new StringBuilder();

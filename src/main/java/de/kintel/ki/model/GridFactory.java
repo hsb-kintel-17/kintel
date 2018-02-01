@@ -1,7 +1,17 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.model;
 
 public class GridFactory {
 
+    /**
+     * Generates and returns a grid with initial setting of the laska grid.
+     * @return a grid with initial setting of the laska grid
+     */
     public static Field[][] getLaskaInitGrid() {
         Field[][] fields = new Field[7][9];
 
@@ -80,6 +90,12 @@ public class GridFactory {
         return fields;
     }
 
+    /**
+     * Returns a rect grid with initialized fields.
+     * @param height height
+     * @param width width
+     * @return the rect grid with initialized fields.
+     */
     public static Field[][] getRectGrid(int height, int width) {
         Field[][] fields = new Field[height][width];
         // Initialize whole board with forbidden fields

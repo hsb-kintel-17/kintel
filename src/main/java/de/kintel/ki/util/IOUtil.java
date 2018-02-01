@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.util;
 
 import com.google.common.base.Charsets;
@@ -32,7 +38,7 @@ public class IOUtil {
      * Reads in a line from the console.
      * @return String input
      */
-    private String read() {
+    public String read() {
         String input = "";
         try {
             input = br.readLine();
@@ -41,8 +47,17 @@ public class IOUtil {
         }
         return input;
     }
-    
-    private String read(String beschreibung) {
+
+    /**
+     * Erstellt am: 03.11.2014
+     * Erstellt von: czoeller, atrogisch
+     * Verändert am:
+     * Verändert von:
+     * Writes description and reads in a line from console.
+     * @param beschreibung beschreibung des einzulesenden Wertes
+     * @return den eingelesenen Wert
+     */
+    public String read(String beschreibung) {
         ausgabe(beschreibung);
         return read();
     }
@@ -93,11 +108,11 @@ public class IOUtil {
      * @param max Maximum
      * @return zahl
      */
-    public double readNumberBetween( String beschreibung, int min, int max ) {
+    public int readNumberBetween( String beschreibung, int min, int max ) {
         boolean valid = false;
-        double input;
+        int input;
         do {
-            input = readNumber( beschreibung );
+            input = (int) readNumber(beschreibung);
             if( input < min ) {
                 ausgabe("Fehlerhafte Eingabe! Bitte mindestens " + min + " eingeben!");
             } else if( input > max ) {
@@ -139,7 +154,7 @@ public class IOUtil {
     
     public int readMainMenu() {
         printMainMenu("Spielmodus (schwarz beginnt immer): ");
-        return (int) readNumberBetween("", 1, 6);
+        return readNumberBetween("", 1, 6);
     }
     
     private void printMainMenu(String beschreibung) {

@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
@@ -21,7 +27,7 @@ public class PathFinder {
 
     /**
      * Recursive algorithm coordTo traverse fields between two points on the board and add them coordTo a path.
-     * The Precondition is that the move is valid {@link de.kintel.ki.ruleset.RulesChecker#isValidMove(Move)}.
+     * The Precondition is that the move is valid {@link de.kintel.ki.ruleset.RulesChecker#isValidMove(Move, Board)}}.
      *
      * @param board The board coordTo refer
      * @param coordFrom The field coordTo start

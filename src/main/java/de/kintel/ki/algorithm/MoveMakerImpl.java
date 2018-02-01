@@ -1,9 +1,16 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +30,9 @@ public class MoveMakerImpl implements MoveMaker {
      */
     private final HashMap<Move, String> guard = new HashMap<>();
     private final RankMakerImpl rankMaker;
+    /** guard is indented to be used while development to check board is the same before doing and un-doing a move */
+    @Value("${guardEnabled}")
+    private boolean guardEnabled = false;
 
     @Autowired
     public MoveMakerImpl(RankMakerImpl rankMaker) {
@@ -36,7 +46,9 @@ public class MoveMakerImpl implements MoveMaker {
      */
     @Override
     public void makeMove(@Nonnull final Move move, Board board) {
-        guard.put(move, board.toString());
+        if( guardEnabled ) {
+            guard.put(move, board.toString());
+        }
         doMove(move, board, false);
     }
 
@@ -48,14 +60,22 @@ public class MoveMakerImpl implements MoveMaker {
     @Override
     public void undoMove(@Nonnull final Move move, Board board) {
         doMove(move, board, true);
-        final String expected = guard.get(move);
-        final String actual = board.toString();
-        if (!expected.equals(actual)) {
-            String message = "Incorrect undo of move " + move.getUuid() + "! The field after the undo is not the same as before the do - but it should of course. move: " + board.toString();
-            throw new IllegalStateException(message);
+        if( guardEnabled ) {
+            final String expected = guard.get(move);
+            final String actual = board.toString();
+            if (!expected.equals(actual)) {
+                String message = "Incorrect undo of move " + move.getUuid() + "! The field after the undo is not the same as before the do - but it should of course. move: " + board.toString();
+                throw new IllegalStateException(message);
+            }
         }
     }
 
+    /**
+     * Either execute or undo a move on a given board.
+     * @param move move to execute
+     * @param board board, that the move will be executed on
+     * @param undo if true, the given move will be executed in a reverse manner.
+     */
     private void doMove(Move move, Board board, boolean undo) {
         final Coordinate2D coordFrom = move.getSourceCoordinate();
         final Coordinate2D coordTo = move.getTargetCoordinate();
@@ -110,6 +130,11 @@ public class MoveMakerImpl implements MoveMaker {
         logger.debug("After {} move {}: {}", ((undo)? "undo":"do"),move.getUuid(), board.toString());
     }
 
+    /**
+     * Transport all pieces from one field to another while keeping the pieces in the same order.
+     * @param fieldFrom The source field
+     * @param fieldTo The destination field
+     */
     private void transportPieces(Field fieldFrom, Field fieldTo) {
         final Iterator<Piece> it = fieldFrom.getPieces().descendingIterator();
         while (it.hasNext()) {

@@ -1,5 +1,15 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.gui;
 
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.GuiEventType;
 import de.kintel.ki.gui.util.Arrow;
 import de.kintel.ki.model.Coordinate2D;
@@ -97,6 +107,12 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
         // Color for forbidden fields
         gridView.addColorMapping(new Field(true), Color.web("f4f3f3"));
 
+        gridView.setGridModel(gridModel);
+        gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : getRankAwareLabel(cellField));
+        gridView.cellBorderColorProperty().set(Color.DARKGRAY);
+        gridView.cellBorderWidthProperty().set(0.5);
+        // Color for forbidden fields
+        gridView.addColorMapping(new Field(true), Color.web("A4A4A4"));
         gridView.getGridModel().cells().forEach(c -> {
 
             Pane cellPane = gridView.getCellPane(c);

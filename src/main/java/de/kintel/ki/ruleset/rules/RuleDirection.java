@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.ruleset.rules;
 
 import de.kintel.ki.algorithm.MoveClassifier;
@@ -17,6 +23,9 @@ import java.util.Optional;
 @Scope("singleton")
 public class RuleDirection implements IRule {
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean isValidMove(@Nonnull final Move move, Board board) {
         final boolean isForward = move.isForward();
@@ -43,16 +52,7 @@ public class RuleDirection implements IRule {
     }
 
     /**
-     * Get the order value of this object.
-     * <p>Higher values are interpreted as lower priority. As a consequence,
-     * the object with the lowest value has the highest priority (somewhat
-     * analogous to Servlet {@code load-on-startup} values).
-     * <p>Same order values will result in arbitrary sort positions for the
-     * affected objects.
-     *
-     * @return the order value
-     * @see #HIGHEST_PRECEDENCE
-     * @see #LOWEST_PRECEDENCE
+     * {@inheritDoc }
      */
     @Override
     public int getOrder() {

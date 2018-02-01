@@ -1,9 +1,14 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.model;
 
 import com.google.common.base.Objects;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -11,6 +16,9 @@ public class Coordinate2D implements Serializable {
 
     private static final long serialVersionUID = -5775552204030261616L;
 
+    /**
+     * Comparator to compare by distance.
+     */
     class DistanceToOrder implements Comparator<Coordinate2D> {
         @Override
         public int compare(@Nonnull final Coordinate2D e1, @Nonnull final Coordinate2D e2) {
@@ -48,14 +56,12 @@ public class Coordinate2D implements Serializable {
         return dx*dx + dy*dy;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
+    /**
+     * Returns the coordinate between a and b.
+     * @param a coordinate a
+     * @param b coordinate b
+     * @return the coordinate between a and b.
+     */
     public static Coordinate2D between(Coordinate2D a, Coordinate2D b) {
         int x = (a.getX() + b.getX()) / 2;
         int y = (a.getY() + b.getY()) / 2;
@@ -73,14 +79,12 @@ public class Coordinate2D implements Serializable {
         return sb.toString();
     }
 
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        stream.writeInt(x);
-        stream.writeInt(y);
+    public int getX() {
+        return x;
     }
 
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        x = stream.readInt();
-        y = stream.readInt();
+    public int getY() {
+        return y;
     }
 
     @Override

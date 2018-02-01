@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.*;
@@ -65,7 +71,7 @@ public class WeightingHeightAndRank implements Weighting {
                         val = 20;
                         break;
                 }
-                ranks += val * Weight.WIN.getValue();
+                ranks += val;
             }
         }
 
@@ -73,12 +79,12 @@ public class WeightingHeightAndRank implements Weighting {
         int endsieg = 0;
         final List<Move> possibleMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier);
         if( possibleMoves.isEmpty() ) {
-            endsieg = 10000 * Weight.WIN.getValue();
+            return 20000;
         }
 
         int opponentMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier).size();
 
-        return 10*eigeneSteinhoehe + endsieg + ranks + 10*(possibleMoves.size() - 1.5 * opponentMoves);
+        return 10*eigeneSteinhoehe + ranks + 10*(possibleMoves.size() - 1.5 * opponentMoves);
     }
 
     /**
@@ -90,6 +96,6 @@ public class WeightingHeightAndRank implements Weighting {
      */
     @Override
     public double maxEvaluateValue() {
-        return 10000 * Weight.WIN.getValue();
+        return 20000;
     }
 }

@@ -35,10 +35,19 @@ public class SimpleRecord implements Record {
         return colorizedValues.get(column);
     }
 
+    /**
+     * Builder class, to generade a Record
+     */
     public static class Builder {
         private final Map<String, String> values = newLinkedHashMap();
         private final Map<String, String> colorizedValues = newLinkedHashMap();
 
+        /**
+         * Add a value to the {@link SimpleRecord}
+         * @param name
+         * @param value
+         * @return
+         */
         public Builder addValue(String name, Object value) {
             String stringValue = value == null ? "" : value.toString();
             values.put(name, stringValue);
@@ -46,6 +55,12 @@ public class SimpleRecord implements Record {
             return this;
         }
 
+        /**
+         * Add a value to the {@link SimpleRecord} and give it a color
+         * @param name
+         * @param value
+         * @return
+         */
         public Builder addValue(String name, Object value, Color color) {
             String stringValue = value == null ? "" : value.toString();
             values.put(name, stringValue);

@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.player;
 
 import de.kintel.ki.algorithm.MoveClassifier;
@@ -16,20 +22,21 @@ public class HumanPlayer extends Participant {
 
     private static final Logger logger = LoggerFactory.getLogger(HumanPlayer.class);
 
-    private final UMLCoordToCoord2D converter;
     private final MoveClassifier moveClassifier;
     private final MoveMaker moveMaker;
 
     @Autowired
     public HumanPlayer(Board board, UMLCoordToCoord2D converter, Player player, MoveClassifier moveClassifier, MoveMaker moveMaker) {
-        super(board, player);
-        this.converter = converter;
+        super(board, player, converter);
         this.moveClassifier = moveClassifier;
         this.moveMaker = moveMaker;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
-    public Move getNextMove(int depth) {
+    public Move getNextMove() {
         Move move = askUserForMoveInput();
 
         boolean anyMatch;
@@ -52,6 +59,10 @@ public class HumanPlayer extends Participant {
         return move;
     }
 
+    /**
+     * Asks user for the next move to make.
+     * @return the users move input
+     */
     private Move askUserForMoveInput() {
         Scanner s = new Scanner(System.in, "UTF-8");
         Move move = null;
@@ -60,18 +71,25 @@ public class HumanPlayer extends Participant {
         while (!inputCorrect) {
             logger.info("" + this.getPlayer() + " ist am Zug:");
             String humanInput = s.nextLine();
-
+            logger.info("Eingabe: {}", humanInput);
             move = this.transform(humanInput);
             if (move != null) {
                 moveClassifier.classify(move, getBoard());
                 inputCorrect = move.getForwardClassification() != MoveClassifier.MoveType.INVALID;
+                if( !inputCorrect ) {
+                    logger.error("Dieser Zug ist nicht erlaubt.");
+                }
             } else {
                 logger.error("Eingabe ist keine Koordinate!");
             }
         }
+
         return move;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void makeMove(Move move) {
         moveMaker.makeMove(move, getBoard());

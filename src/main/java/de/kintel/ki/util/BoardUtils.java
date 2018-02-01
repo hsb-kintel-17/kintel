@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.util;
 
 import de.kintel.ki.algorithm.MoveClassifier;
@@ -10,7 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BoardUtils {
+/**
+ * Queries on the board.
+ */
+public abstract class BoardUtils {
+
+    /**
+     * This constructor is private to disallow inheritance.
+     */
+    private BoardUtils() {}
 
     private static Logger logger = LoggerFactory.getLogger(BoardUtils.class);
 
@@ -19,8 +33,8 @@ public class BoardUtils {
      *
      * @param board     the board
      * @param coordFrom coord to find surroundings of
-     * @param radius
-     * @return the surrounding fields in diagonal
+     * @param radius    radius of fields to search
+     * @return          the surrounding fields in diagonal
      */
     public static List<Coordinate2D> getDiagonalSurroundings(@Nonnull final Board board, @Nonnull final Coordinate2D coordFrom, int radius) {
         int[][] directions = new int[][]{{-1, -1}, {-1, 1}, {1, 1}, {1, -1}};
@@ -44,7 +58,15 @@ public class BoardUtils {
         return surroundings;
     }
 
-    public static List<Move> getPossibleMoves(Board board, Player currentPlayer, MoveClassifier moveClassifier) {
+    /**
+     * Get possible moves for board and specified user.
+     *
+     * @param board             the board
+     * @param currentPlayer     the current player
+     * @param moveClassifier    the moveClassifier
+     * @return                  List of possible moves
+     */
+    public static List<Move> getPossibleMoves(@Nonnull Board board, @Nonnull Player currentPlayer, @Nonnull MoveClassifier moveClassifier) {
         final List<Move> possibleMoves;
         // Moves the user must do
         final List<Move> zugzwaenge = new ArrayList<>();

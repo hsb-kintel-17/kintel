@@ -1,0 +1,18 @@
+defaultTasks 'check'
+
+apply plugin: 'java'
+
+/* generate Java code coverage reports */
+apply plugin: 'jacoco'
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport
+
+repositories {
+    jcenter()
+}

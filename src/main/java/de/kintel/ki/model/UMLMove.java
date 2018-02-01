@@ -1,13 +1,17 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.model;
 
+import com.google.common.base.MoreObjects;
 import de.kintel.ki.algorithm.MoveClassifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,19 +19,18 @@ import java.util.UUID;
 
 
 /**
- * Storage
  * Created by kintel on 19.12.2017.
  */
-public class UMLMove extends Move  implements Serializable {
+public class UMLMove extends Move implements Serializable {
 
     public static Logger logger = LoggerFactory.getLogger(UMLMove.class);
-    private UUID uuid;
-    private Coordinate2D from;
-    private Coordinate2D to;
-    private Player currentPlayer;
-    private MoveClassifier.MoveType forwardClassification;
-    private Optional<Rank> forwardOpponentRank;
-    private Rank forwardSourceRank;
+    private UUID uuid; //to make a move unique (necessary for the hash)
+    private Coordinate2D from; // coordinate of the source field
+    private Coordinate2D to;// coordinate of the target/destination field
+    private Player currentPlayer; //the player, that executes this move
+    private MoveClassifier.MoveType forwardClassification; //classification of the move. needed for undoing the move.
+    private Optional<Rank> forwardOpponentRank; //save the rank of the opponent piece, if the move was a capture (needed for undoing)
+    private Rank forwardSourceRank; //save the rank of the player piece (needed for undoing)
 
     public UMLMove(@Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
         uuid = UUID.randomUUID();
@@ -36,6 +39,10 @@ public class UMLMove extends Move  implements Serializable {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Returns, weather the {@link UMLMove} is a forward move for the {@link UMLMove#currentPlayer}.
+     * @return true, if the direction of the move is forward
+     */
     public boolean isForward() {
         boolean isForward = getCurrentPlayer().equals(Player.SCHWARZ) ? getSourceCoordinate().getX() < getTargetCoordinate().getX() : getSourceCoordinate().getX() > getTargetCoordinate().getX();
         return isForward;
@@ -43,19 +50,11 @@ public class UMLMove extends Move  implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Move{");
-        sb.append(getSourceCoordinate())
-          .append("(")
-        .append(getSourceCoordinate())
-        .append(")")
-        .append(" to ")
-        .append(getTargetCoordinate())
-          .append("(")
-          .append(getTargetCoordinate())
-          .append(")")
-          .append(" for player ")
-          .append(getCurrentPlayer());
-        return sb.toString();
+        return MoreObjects.toStringHelper(this)
+                          .add("from", getSourceCoordinate())
+                          .add("to", getTargetCoordinate())
+                          .add("for player", getCurrentPlayer())
+                          .toString();
     }
 
     @Override
@@ -71,19 +70,6 @@ public class UMLMove extends Move  implements Serializable {
     @Override
     public Player getCurrentPlayer() {
         return currentPlayer;
-    }
-
-
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeObject(this.from);
-        stream.writeObject(this.to);
-        stream.writeObject(this.currentPlayer);
-    }
-
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        this.from = (Coordinate2D) stream.readObject();
-        this.to = (Coordinate2D) stream.readObject();
-        this.currentPlayer = (Player) stream.readObject();
     }
 
     @Override

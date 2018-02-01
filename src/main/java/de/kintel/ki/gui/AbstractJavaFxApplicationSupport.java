@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.gui;
 
 import de.saxsys.mvvmfx.MvvmFX;
@@ -23,6 +29,7 @@ public abstract class AbstractJavaFxApplicationSupport extends Application imple
     @Override
     public void stop() throws Exception {
         super.stop();
+        stopMvvmfx();
         applicationContext.close();
     }
 

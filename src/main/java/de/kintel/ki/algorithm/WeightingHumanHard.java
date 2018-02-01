@@ -7,6 +7,7 @@
 package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
+import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.util.BoardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 @Component
-@Qualifier("magicFormular")
-public class WeigtingMagicFormular implements Weighting {
+@Qualifier("weightingHumanHard")
+public class WeightingHumanHard implements Weighting {
 
     private MoveClassifier moveClassifier;
 
     @Autowired
-    public WeigtingMagicFormular(MoveClassifier moveClassifier) {
+    public WeightingHumanHard(MoveClassifier moveClassifier) {
         this.moveClassifier = moveClassifier;
     }
 
@@ -36,17 +38,20 @@ public class WeigtingMagicFormular implements Weighting {
      */
     @Override
     public double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer) {
+        final List<Coordinate2D> fieldsOccupiedBy = board.getCoordinatesOccupiedBy(currentPlayer);
         Player opponentPlayer = (currentPlayer == Player.WEISS) ? Player.SCHWARZ : Player.WEISS;
 
-        //int ownMoves = BoardUtils.getPossibleMoves(board, currentPlayer, moveClassifier).size();
-        int opponentMoves = BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier).size();
-
-        if (opponentMoves == 0) {
+        if (BoardUtils.getPossibleMoves(board, opponentPlayer, moveClassifier).isEmpty()) {
             return 10000;
         }
 
-        return 100 - opponentMoves;
+        double heights = fieldsOccupiedBy.stream()
+                .map(board::getField)
+                .mapToDouble(f -> f.getPieces().size()).sum();
+
+        return heights;
     }
+
     /**
      * The absolute maximal value for the evaluate function.
      * This value must not be equal to a possible return value of the evaluation function.

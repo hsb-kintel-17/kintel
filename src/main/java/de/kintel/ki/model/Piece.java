@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
@@ -5,7 +11,6 @@ import de.kintel.ki.algorithm.MoveClassifier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -31,6 +36,11 @@ public class Piece implements Serializable {
         return rank;
     }
 
+    /**
+     * Promote the piece according to its last move
+     * The precondition is, that the moves target location is the opponents 'base'.
+     * @param moveType
+     */
     public void promote(MoveClassifier.MoveType moveType) {
         if( moveType == MoveClassifier.MoveType.MOVE ) {
             if (rank == Rank.normal) {
@@ -41,6 +51,9 @@ public class Piece implements Serializable {
         }
     }
 
+    /**
+     * Set the rank back to {@link Rank#normal}
+     */
     public void degrade() {
         rank = Rank.normal;
     }
@@ -60,16 +73,6 @@ public class Piece implements Serializable {
         }
 
         this.rank = rank;
-    }
-
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        stream.writeObject(owner);
-        stream.writeObject(rank);
-    }
-
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        owner = (Player) stream.readObject();
-        rank = (Rank) stream.readObject();
     }
 
     @Override

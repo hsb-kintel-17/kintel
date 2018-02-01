@@ -1,20 +1,29 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.util;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.kintel.ki.model.Coordinate2D;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by kintel on 17.01.2018.
  */
 @Component
 @Scope("singleton")
+/**
+ * Converts between UML coordinate like b2 and internal coordinates like 51 and vice versa.
+ */
 public class UMLCoordToCoord2D {
 
-    private Map<Character, Integer> mapBoardLetters = new LinkedHashMap<>();
+    private BiMap<Character, Integer> mapBoardLetters = HashBiMap.create();
+    // static initializer
     {
         this.mapBoardLetters.put('g', 1);
         this.mapBoardLetters.put('f', 2);
@@ -25,31 +34,40 @@ public class UMLCoordToCoord2D {
         this.mapBoardLetters.put('a', 7);
     }
 
+    /**
+     * Convert UML coordinate to internal coordinate.
+     * @param umlCoord uml coordinate like b2
+     * @return internal coordinate like 51
+     */
     public Coordinate2D convertUMLCoord(String umlCoord) {
         umlCoord = umlCoord.toLowerCase();
 
-        //check length of input: Must be 2
+        // check length of input must be 2
         if (umlCoord.length() != 2) {
             return null;
         }
 
-        //Check if Letters on position 0
-        //Check if Integers on position 1 between 1 and 9 (1 and 9 inclusive)
-
-        //checks if letter is in List
+        // checks if letter is in mapping
         if (!this.mapBoardLetters.containsKey(umlCoord.charAt(0))) {
             return null;
         } else {
+            // check coordinate is between [1...9]
             if (!(1 <= Character.getNumericValue(umlCoord.charAt(1)) && Character.getNumericValue(umlCoord.charAt(1)) <= 9)) {
                 return null;
             }
         }
+        // calculate offset, because internal coordinates start at 0,0
+        int[] coordinates = { mapBoardLetters.get(umlCoord.charAt(0)) - 1, Character.getNumericValue(umlCoord.charAt(1)) - 1};
 
-        int coordinates[] = { mapBoardLetters.get(umlCoord.charAt(0)) - 1, Character.getNumericValue(umlCoord.charAt(1)) - 1};
-
-        final Coordinate2D coord = new Coordinate2D(coordinates[0], coordinates[1]);
-
-        return coord;
+        return new Coordinate2D(coordinates[0], coordinates[1]);
     }
 
+    /**
+     * Convert internal coordinate to UML coordinate
+     * @param coord internal coordinate like 51
+     * @return uml coordinate like b2
+     */
+    public String convertCoordToUML(Coordinate2D coord) {
+        return "" + mapBoardLetters.inverse().get(coord.getX() + 1) + (coord.getY() + 1);
+    }
 }

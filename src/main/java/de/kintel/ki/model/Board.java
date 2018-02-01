@@ -1,3 +1,9 @@
+/*
+ * hsb-kintel-17
+ * Copyright (C) 2018 hsb-kintel-17
+ * This file is covered by the LICENSE file in the root of this project.
+ */
+
 package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
@@ -6,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +23,7 @@ public class Board implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(Board.class);
 
     private int height;
-
     private int width;
-
     private Field[][] fields;
 
     public Board(final int height, final int width) {
@@ -33,6 +36,11 @@ public class Board implements Serializable {
         this.fields = fields;
     }
 
+    /**
+     * Returns all coordinates that are occupied by the specified player.
+     * @param player the player to search for
+     * @return all coordinates that are occupied by the specified player
+     */
     public List<Coordinate2D> getCoordinatesOccupiedBy(@Nonnull final Player player) {
         final List<Coordinate2D> fieldsCollector = new ArrayList<>();
 
@@ -51,6 +59,12 @@ public class Board implements Serializable {
         return fieldsCollector;
     }
 
+    /**
+     * Retrieves field for the given coordinate like (0,0).
+     * @param x
+     * @param y
+     * @return the field for the given coordinate
+     */
     public Field getField(int x, int y) {
         Preconditions.checkArgument( x < height, "Can't access x out of bounds." );
         Preconditions.checkArgument( y < width, "Can't access y out of bounds." );
@@ -65,8 +79,29 @@ public class Board implements Serializable {
         return field;
     }
 
+    /**
+     * Retrieves field for the given coordinate like (0,0).
+     * @param coordinate2D the coordinate to retrieve
+     * @return the field for the given coordinate.
+     */
     public Field getField(@Nonnull final Coordinate2D coordinate2D) {
         return getField(coordinate2D.getX(), coordinate2D.getY());
+    }
+
+    /**
+     * Creates a deep copy of the board.
+     * @return deep copy of the board
+     */
+    public Board deepCopy() {
+        return SerializationUtils.roundtrip(this);
+    }
+
+    public Field[][] getFields() {
+        return fields;
+    }
+
+    public void setFields(@Nonnull final Field[][] fields) {
+        this.fields = fields;
     }
 
     public int getWidth() {
@@ -107,32 +142,11 @@ public class Board implements Serializable {
         return sb.toString();
     }
 
-    public Field[][] getFields() {
-        return fields;
-    }
-
-    public void setFields(@Nonnull final Field[][] fields) {
-        this.fields = fields;
-    }
-
-    private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
-        stream.writeInt(height);
-        stream.writeInt(width);
-        stream.writeObject(fields);
-    }
-
-    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        height = stream.readInt();
-        width = stream.readInt();
-        fields = (Field[][]) stream.readObject();
-    }
-
-    public Board deepCopy() {
-        return SerializationUtils.roundtrip(this);
-    }
-
-
-
+    /**
+     * Generates a String that is unique for the current state (fields, pieces, colors and their ranks) on the board.
+     * Sequential calls on the same state produce the same string
+     * @return a String that is unique for the current state (fields, pieces, colors and their ranks)
+     */
     public String toStringWithRanks() {
         final StringBuilder sb = new StringBuilder("");
         sb.append("\n");
