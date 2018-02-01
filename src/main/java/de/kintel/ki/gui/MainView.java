@@ -14,6 +14,8 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -21,10 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.fusesource.jansi.Ansi;
 import org.springframework.context.annotation.Scope;
@@ -160,14 +159,24 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
     private void drawArrow(Group group, Color color, Coordinate2D from, Coordinate2D to) {
         int width_offset = 0;
         final Arrow arrow = new Arrow();
+        System.out.println(String.format("Draw arrow from %s to %s", from, to));
+        System.out.println(String.format("group coord %s  %s", group.getLayoutX(), group.getLayoutY()));
+        final Pane cellPane = gridView.getCellPane(gridView.getGridModel().getCell(from.getY(), from.getX() ));
+        final Pane cellPane2 = gridView.getCellPane(gridView.getGridModel().getCell(to.getY() , to.getX()));
+        cellPane.setBackground(new Background(new BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+        cellPane2.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        final Point2D from2d = locate(from);
-        final Point2D to2d = locate(to);
+        Bounds n1InCommonAncestor = getRelativeBounds(cellPane, stackPane);
+        Bounds n2InCommonAncestor = getRelativeBounds(cellPane2, stackPane);
+        Point2D n1Center = getCenter(n1InCommonAncestor);
+        Point2D n2Center = getCenter(n2InCommonAncestor);
 
-        arrow.setStart(from2d.getX(), from2d.getY() + width_offset);
-        arrow.setEnd(to2d.getX(), to2d.getY() + width_offset);
+        System.out.println(n1Center);
+        System.out.println(n2Center);
+
+        arrow.setStart(n1Center.getX(), n1Center.getY());
+        arrow.setEnd(n2Center.getX(), n2Center.getY());
         arrow.draw(color);
-
         group.getChildren().add(arrow);
     }
 
@@ -179,6 +188,15 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
         //Bounds bounds = cellPane.localToScene(new Point2D(0.0, 0.0));
         //return new Point2D(bounds.getMaxX(), bounds.getMaxY()).midpoint(bounds.getMinX(), bounds.getMinY());
         return cellPane.localToScreen(0.0, 0.0);
+    }
+
+    private Bounds getRelativeBounds(Node node, Node relativeTo) {
+        Bounds nodeBoundsInScene = node.localToScene(node.getBoundsInLocal());
+        return relativeTo.sceneToLocal(nodeBoundsInScene);
+    }
+
+    private Point2D getCenter(Bounds b) {
+        return new Point2D(b.getMinX() + b.getWidth() / 2, b.getMinY() + b.getHeight() / 2);
     }
 
 }
