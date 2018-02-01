@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import eu.lestard.grid.GridView?>
-<?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.layout.*?>
 <BorderPane fx:id="root" prefHeight="378.0" prefWidth="481.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.kintel.ki.gui.MainView">
    <center>
         <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
               <GridView fx:id="gridView" prefHeight="378.0" prefWidth="333.0" />
               <Label fx:id="winLabel" visible="false" />
-              <Group fx:id="groupPossibleMoves" />
-              <Group fx:id="groupBestMove" />
+              <Pane fx:id="panePossibleMoves" pickOnBounds="false"/>
+              <Pane fx:id="paneBestMove" pickOnBounds="false" />
             </children>
         </StackPane>
    </center>

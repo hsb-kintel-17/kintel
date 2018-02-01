@@ -6,10 +6,6 @@
 
 package de.kintel.ki.gui;
 
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import de.kintel.ki.event.BestMoveEvent;
 import de.kintel.ki.event.GuiEventType;
 import de.kintel.ki.gui.util.Arrow;
 import de.kintel.ki.model.Coordinate2D;
@@ -28,7 +24,6 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -60,9 +55,9 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
     @FXML
     private GridView<Field> gridView;
     @FXML
-    private Group groupPossibleMoves;
+    private Pane panePossibleMoves;
     @FXML
-    private Group groupBestMove;
+    private Pane paneBestMove;
     @FXML
     private Label winLabel;
 
@@ -107,7 +102,7 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
         // Color for forbidden fields
         gridView.addColorMapping(new Field(true), Color.web("f4f3f3"));
 
-        gridView.setGridModel(gridModel);
+        gridView.setGridModel(viewModel.getGridModel());
         gridView.setNodeFactory(cellField -> "".equals(cellField.getState().toString()) ? null : getRankAwareLabel(cellField));
         gridView.cellBorderColorProperty().set(Color.DARKGRAY);
         gridView.cellBorderWidthProperty().set(0.5);
@@ -132,15 +127,15 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
         Platform.runLater(() -> {
             switch (id) {
                 case BEST_MOVE:
-                    groupBestMove.getChildren().clear();
+                    paneBestMove.getChildren().clear();
                     final Move bestMove = viewModel.bestMoveProperty().get();
-                    drawArrow(groupBestMove, Color.RED, bestMove.getSourceCoordinate(), bestMove.getTargetCoordinate());
+                    drawArrow(paneBestMove, Color.RED, bestMove.getSourceCoordinate(), bestMove.getTargetCoordinate());
                     break;
                 case POSSIBLE_MOVES:
-                    groupPossibleMoves.getChildren().clear();
+                    panePossibleMoves.getChildren().clear();
                     final List<Move> moves = new ArrayList<>(viewModel.possibleMovesProperty());
                     moves.forEach( move -> {
-                        drawArrow(groupPossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
+                        drawArrow(panePossibleMoves, Color.BLACK, move.getSourceCoordinate(), move.getTargetCoordinate());
                     });
                     break;
             }
@@ -172,11 +167,9 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
         return hBox;
     }
 
-    private void drawArrow(Group group, Color color, Coordinate2D from, Coordinate2D to) {
-        int width_offset = 0;
+    private void drawArrow(Pane pane, Color color, Coordinate2D from, Coordinate2D to) {
+        int width_offset = 25;
         final Arrow arrow = new Arrow();
-        System.out.println(String.format("Draw arrow from %s to %s", from, to));
-        System.out.println(String.format("group coord %s  %s", group.getLayoutX(), group.getLayoutY()));
         final Pane cellPane = gridView.getCellPane(gridView.getGridModel().getCell(from.getY(), from.getX() ));
         final Pane cellPane2 = gridView.getCellPane(gridView.getGridModel().getCell(to.getY() , to.getX()));
         cellPane.setBackground(new Background(new BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -187,23 +180,12 @@ public class MainView implements FxmlView<MainViewModel>, Initializable {
         Point2D n1Center = getCenter(n1InCommonAncestor);
         Point2D n2Center = getCenter(n2InCommonAncestor);
 
-        System.out.println(n1Center);
-        System.out.println(n2Center);
-
-        arrow.setStart(n1Center.getX(), n1Center.getY());
-        arrow.setEnd(n2Center.getX(), n2Center.getY());
+        pane.minHeight(500);
+        pane.minWidth(500);
+        arrow.setStart(n1Center.getX(), n1Center.getY() + width_offset);
+        arrow.setEnd(n2Center.getX(), n2Center.getY() + width_offset);
         arrow.draw(color);
-        group.getChildren().add(arrow);
-    }
-
-    private Point2D locate(Coordinate2D coordinate) {
-        final Cell<Field> cell = gridView.getGridModel()
-                                         .getCell(coordinate.getY(), coordinate.getX());
-        final Pane cellPane = gridView.getCellPane(gridView.getGridModel().getCell(coordinate.getY(), coordinate.getX()));
-
-        //Bounds bounds = cellPane.localToScene(new Point2D(0.0, 0.0));
-        //return new Point2D(bounds.getMaxX(), bounds.getMaxY()).midpoint(bounds.getMinX(), bounds.getMinY());
-        return cellPane.localToScreen(0.0, 0.0);
+        pane.getChildren().add(arrow);
     }
 
     private Bounds getRelativeBounds(Node node, Node relativeTo) {
