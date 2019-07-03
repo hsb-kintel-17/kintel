@@ -49,8 +49,8 @@ public class AppConfiguration {
 
     @Bean
     @Scope("singleton")
-    public TablePrinter tablePrinter() {
-        List<String> columns = IntStream.rangeClosed(0, 9).boxed().map(String::valueOf).collect(Collectors.toList());;
+    public TablePrinter tablePrinter(@Value("${board.width}") int boardWidth) {
+        List<String> columns = IntStream.rangeClosed(0, boardWidth).boxed().map(String::valueOf).collect(Collectors.toList());;
         return new TablePrinter("", columns);
     }
 
