@@ -9,8 +9,10 @@ package de.kintel.ki;
 import com.google.common.eventbus.EventBus;
 import de.kintel.ki.algorithm.KI;
 import de.kintel.ki.algorithm.MoveClassifier;
-import de.kintel.ki.algorithm.MoveMaker;
 import de.kintel.ki.algorithm.Weighting;
+import de.kintel.ki.algorithm.MoveMaker;
+import de.kintel.ki.algorithm.MoveMakerGuardDecorator;
+import de.kintel.ki.algorithm.MoveMakerImpl;
 import de.kintel.ki.cli.TablePrinter;
 import de.kintel.ki.model.Board;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,12 @@ public class AppConfiguration {
     @Scope("singleton")
     public Board board(@Value("${board.height}") int boardHeight, @Value("${board.width}") int boardWidth) {
         return new Board(boardHeight, boardWidth);
+    }
+
+    @Bean
+    @Scope("singleton")
+    public MoveMaker moveMaker(@Value("${guardEnabled}") final boolean guardEnabled, final MoveMakerGuardDecorator moveMakerGuardDecorator, final MoveMakerImpl moveMaker) {
+        return guardEnabled ? moveMakerGuardDecorator : moveMaker;
     }
 
     @Bean

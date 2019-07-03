@@ -1,6 +1,6 @@
 /*
  * hsb-kintel-17
- * Copyright (C) 2018 hsb-kintel-17
+ * Copyright (C) 2019 hsb-kintel-17
  * This file is covered by the LICENSE file in the root of this project.
  */
 
@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
