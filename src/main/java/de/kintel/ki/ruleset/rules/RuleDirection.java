@@ -12,10 +12,10 @@ import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Piece;
 import de.kintel.ki.model.Rank;
 import de.kintel.ki.ruleset.IRule;
+import org.eclipse.jdt.annotation.NonNull;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 
@@ -27,7 +27,7 @@ public class RuleDirection implements IRule {
      * {@inheritDoc }
      */
     @Override
-    public boolean isValidMove(@Nonnull final Move move, Board board) {
+    public boolean isValidMove(@NonNull final Move move, Board board) {
         final boolean isForward = move.isForward();
         final MoveClassifier.MoveType moveType = move.getForwardClassification();
         final Optional<Piece> steinOpt = board.getField(move.getSourceCoordinate()).peekHead();

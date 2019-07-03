@@ -6,9 +6,9 @@
 
 package de.kintel.ki.model;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.fusesource.jansi.Ansi;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -39,7 +39,7 @@ public class Field implements Serializable {
     /**
      * Pushes an element onto the top of this field.
      */
-    public void addStein(@Nonnull final Piece s) {
+    public void addStein(@NonNull final Piece s) {
         pieces.push(s);
     }
 

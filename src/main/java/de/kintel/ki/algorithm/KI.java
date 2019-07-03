@@ -12,10 +12,10 @@ import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.util.BoardUtils;
 import fr.avianey.minimax4j.impl.ParallelNegamax;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -34,7 +34,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
     private Player currentPlayer;
     private MoveClassifier moveClassifier;
 
-    public KI(@Nonnull MoveClassifier moveClassifier, @Nonnull MoveMaker moveMaker, @Nonnull Weighting weighting, @Nonnull Board board) {
+    public KI(@NonNull MoveClassifier moveClassifier, @NonNull MoveMaker moveMaker, @NonNull Weighting weighting, @NonNull Board board) {
         this.moveMaker = moveMaker;
         this.weighting = weighting;
         this.board = board;
@@ -60,7 +60,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
      * @see #next()
      */
     @Override
-    public void makeMove(@Nonnull Move move) {
+    public void makeMove(@NonNull Move move) {
         logger.debug("make move " + move);
         moveMaker.makeMove(move, board);
         next();
@@ -75,7 +75,7 @@ public class KI extends ParallelNegamax<Move> implements Serializable {
      * @see #previous()
      */
     @Override
-    public void unmakeMove(@Nonnull Move move) {
+    public void unmakeMove(@NonNull Move move) {
         logger.debug("unmake move " + move);
         moveMaker.undoMove(move, board);
         previous();

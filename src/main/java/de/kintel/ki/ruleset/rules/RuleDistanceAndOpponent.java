@@ -11,10 +11,9 @@ import de.kintel.ki.model.Coordinate2D;
 import de.kintel.ki.model.Move;
 import de.kintel.ki.model.Player;
 import de.kintel.ki.ruleset.IRule;
+import org.eclipse.jdt.annotation.NonNull;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
 
 @Component
 @Scope("singleton")
@@ -24,7 +23,7 @@ public class RuleDistanceAndOpponent implements IRule {
      * {@inheritDoc }
      */
     @Override
-    public boolean isValidMove(@Nonnull Move move, Board board) {
+    public boolean isValidMove(@NonNull Move move, Board board) {
 
         int squaredDistance = move.getSourceCoordinate().distanceSquaredTo(move.getTargetCoordinate());
         if(squaredDistance>8){

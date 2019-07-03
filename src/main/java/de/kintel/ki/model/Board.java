@@ -8,10 +8,10 @@ package de.kintel.ki.model;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.SerializationUtils;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class Board implements Serializable {
         this(height, width, GridFactory.getLaskaInitGrid());
     }
 
-    public Board(final int height, final int width, @Nonnull final Field[][] fields) {
+    public Board(final int height, final int width, @NonNull final Field[][] fields) {
         this.height = height;
         this.width = width;
         this.fields = fields;
@@ -41,7 +41,7 @@ public class Board implements Serializable {
      * @param player the player to search for
      * @return all coordinates that are occupied by the specified player
      */
-    public List<Coordinate2D> getCoordinatesOccupiedBy(@Nonnull final Player player) {
+    public List<Coordinate2D> getCoordinatesOccupiedBy(@NonNull final Player player) {
         final List<Coordinate2D> fieldsCollector = new ArrayList<>();
 
         for (int x = 0; x < height; x++) {
@@ -84,7 +84,7 @@ public class Board implements Serializable {
      * @param coordinate2D the coordinate to retrieve
      * @return the field for the given coordinate.
      */
-    public Field getField(@Nonnull final Coordinate2D coordinate2D) {
+    public Field getField(@NonNull final Coordinate2D coordinate2D) {
         return getField(coordinate2D.getX(), coordinate2D.getY());
     }
 
@@ -100,7 +100,7 @@ public class Board implements Serializable {
         return fields;
     }
 
-    public void setFields(@Nonnull final Field[][] fields) {
+    public void setFields(@NonNull final Field[][] fields) {
         this.fields = fields;
     }
 

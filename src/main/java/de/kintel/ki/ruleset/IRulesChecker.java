@@ -8,8 +8,7 @@ package de.kintel.ki.ruleset;
 
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
-
-import javax.annotation.Nonnull;
+import org.eclipse.jdt.annotation.NonNull;
 
 public interface IRulesChecker {
     /**
@@ -18,5 +17,5 @@ public interface IRulesChecker {
      * @param board the board to check against
      * @return true if valid, false otherwise
      */
-    boolean isValidMove(@Nonnull final Move move, Board board);
+    boolean isValidMove(@NonNull final Move move, Board board);
 }

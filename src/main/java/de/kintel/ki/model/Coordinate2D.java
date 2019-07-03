@@ -7,8 +7,8 @@
 package de.kintel.ki.model;
 
 import com.google.common.base.Objects;
+import org.eclipse.jdt.annotation.NonNull;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -21,7 +21,7 @@ public class Coordinate2D implements Serializable {
      */
     class DistanceToOrder implements Comparator<Coordinate2D> {
         @Override
-        public int compare(@Nonnull final Coordinate2D e1, @Nonnull final Coordinate2D e2) {
+        public int compare(@NonNull final Coordinate2D e1, @NonNull final Coordinate2D e2) {
             int dist1 = distanceSquaredTo(e1);
             int dist2 = distanceSquaredTo(e2);
             return Integer.compare(dist1, dist2);
@@ -50,7 +50,7 @@ public class Coordinate2D implements Serializable {
      * @param that the other point
      * @return the square of the Euclidean distance between this point and that point
      */
-    public int distanceSquaredTo(@Nonnull final Coordinate2D that) {
+    public int distanceSquaredTo(@NonNull final Coordinate2D that) {
         int dx = this.x - that.x;
         int dy = this.y - that.y;
         return dx*dx + dy*dy;

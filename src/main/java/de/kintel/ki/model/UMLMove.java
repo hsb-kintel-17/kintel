@@ -8,10 +8,10 @@ package de.kintel.ki.model;
 
 import com.google.common.base.MoreObjects;
 import de.kintel.ki.algorithm.MoveClassifier;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class UMLMove extends Move implements Serializable {
     private Optional<Rank> forwardOpponentRank; //save the rank of the opponent piece, if the move was a capture (needed for undoing)
     private Rank forwardSourceRank; //save the rank of the player piece (needed for undoing)
 
-    public UMLMove(@Nonnull Coordinate2D from, @Nonnull Coordinate2D to, @Nonnull Player currentPlayer) {
+    public UMLMove(@NonNull Coordinate2D from, @NonNull Coordinate2D to, @NonNull Player currentPlayer) {
         uuid = UUID.randomUUID();
         this.from = from;
         this.to = to;

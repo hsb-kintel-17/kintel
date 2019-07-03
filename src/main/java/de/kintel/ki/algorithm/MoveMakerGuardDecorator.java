@@ -8,6 +8,7 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Move;
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 
 /**
@@ -41,13 +41,13 @@ public class MoveMakerGuardDecorator implements MoveMaker {
     }
 
     @Override
-    public void makeMove(@Nonnull Move move, Board board) {
+    public void makeMove(@NonNull Move move, Board board) {
         guard.put(move, board.toString());
         moveMaker.makeMove(move, board);
     }
 
     @Override
-    public void undoMove(@Nonnull Move move, Board board) {
+    public void undoMove(@NonNull Move move, Board board) {
         moveMaker.undoMove(move, board);
         final String expected = guard.get(move);
         final String actual = board.toString();

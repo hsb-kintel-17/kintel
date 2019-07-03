@@ -8,8 +8,7 @@ package de.kintel.ki.algorithm;
 
 import de.kintel.ki.model.Board;
 import de.kintel.ki.model.Player;
-
-import javax.annotation.Nonnull;
+import org.eclipse.jdt.annotation.NonNull;
 
 public interface Weighting {
     /**
@@ -20,7 +19,7 @@ public interface Weighting {
      * @see #maxEvaluateValue()
      * @param board the board
      */
-    double evaluate(@Nonnull Board board, @Nonnull Player currentPlayer);
+    double evaluate(@NonNull Board board, @NonNull Player currentPlayer);
 
     /**
      * The absolute maximal value for the evaluate function.
